@@ -453,12 +453,4 @@ namespace Edge.Tests
             }
         }
     }
-
-    public static class TestNodeToNet
-        {
-            public static string Test()
-            {
-            	return "Node.js welcomes .NET";
-            }
-        }
 }
