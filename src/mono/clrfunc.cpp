@@ -58,7 +58,7 @@ v8::Local<v8::Function> ClrFunc::Initialize(MonoObject* func)
 
     v8::Local<v8::Value> factoryArgv[] = { Nan::New(proxyFunction), Nan::New<v8::External>((void*)wrap) };
     v8::Local<v8::Function> funcProxy = 
-        (Nan::New(proxyFactory)->Call(Nan::GetCurrentContext()->Global(), 2, factoryArgv)).As<v8::Function>();
+        (Nan::Call(Nan::New(proxyFactory), Nan::GetCurrentContext()->Global(), 2, factoryArgv)).ToLocalChecked().As<v8::Function>();
     Nan::Persistent<v8::Function> funcProxyPersistent(funcProxy);
     funcProxyPersistent.SetWeak((void*)wrap, &clrFuncProxyNearDeath, Nan::WeakCallbackType::kParameter);
 
@@ -438,10 +438,6 @@ v8::Local<v8::Object> ClrFunc::MarshalCLRObjectToV8(MonoObject* netdata, MonoExc
         }
     }
 
-//    if (*exc)
-//    {
-//        return scope.Escape(v8::Local<v8::Object>::Cast(ClrFunc::MarshalCLRExceptionToV8(*exc)));
-//    }
 
     return scope.Escape(result);
 }
