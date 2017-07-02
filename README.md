@@ -1,8 +1,8 @@
 # Edge.js: .NET and Node.js in-process 
-[![Build Status](https://travis-ci.org/agracio/edge.svg)](https://travis-ci.org/agracio/edge)[![Build status](https://ci.appveyor.com/api/projects/status/07mwysgstv5j1q0c?svg=true)](https://ci.appveyor.com/project/agracio/edge)
+[![Build Status](https://travis-ci.org/agracio/edge-js.svg)](https://travis-ci.org/agracio/edge-js)[![Build status](https://ci.appveyor.com/api/projects/status/3hs8xq7jieufw507/branch/master?svg=true)](https://ci.appveyor.com/project/agracio/edge-js/branch/master)
 
 
-> This is a fork of https://github.com/tjanczuk/edge aimed at providing support for Node.js 7.x.
+> This is a fork of https://github.com/tjanczuk/edge aimed at providing support for Node.js 7.x and 8.x as well as various bug fixes.
 
 > NPM package is published to `edge-js`. Use `npm install edge-js` and `require('edge-js')`
 
