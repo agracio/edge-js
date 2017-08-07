@@ -3,8 +3,8 @@
   <PropertyGroup>
     <Description>With Edge.js you can script Node.js in a .NET application. Edge.js allows you to run Node.js and .NET code in one process. You can call Node.js functions from .NET and .NET functions from Node.js. Edge.js takes care of marshalling data between CLR and V8. Edge.js also reconciles threading models of single threaded V8 and multi-threaded CLR. Edge.js ensures correct lifetime of objects on V8 and CLR heaps. This Edge.js NuGet package supports scripting Node.js v6.5.0.</Description>
     <Copyright>Copyright 2015 Tomasz Janczuk</Copyright>
-    <VersionPrefix>6.5.1</VersionPrefix>
-    <TargetFrameworks>net40;netcoreapp1.0</TargetFrameworks>
+    <VersionPrefix>8.1.4</VersionPrefix>
+    <TargetFrameworks>net40;net45;netcoreapp1.1</TargetFrameworks>
     <AssemblyName>EdgeJs</AssemblyName>
     <PackageId>Edge.js</PackageId>
     <PackageTags>node.js;node;.net;edge;edge.js;v8;clr;coreclr;mono;interop;javascript</PackageTags>
@@ -35,17 +35,22 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
     <Compile Remove="dotnet\*.cs" />
     <Compile Include="dotnetcore\*.cs;..\..\common\*.cs" Exclude="dotnet\*.cs;bin\**;obj\**;**\*.xproj;packages\**" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
     <PackageReference Include="System.Console" Version="4.3.0" />
     <PackageReference Include="System.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
