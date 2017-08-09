@@ -43,3 +43,6 @@ Sample105.*
 .settings/
 
 adhoc/
+
+package/
+tools/build
