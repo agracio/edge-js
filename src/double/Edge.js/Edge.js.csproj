@@ -4,7 +4,7 @@
     <Description>With Edge.js you can script Node.js in a .NET application. Edge.js allows you to run Node.js and .NET code in one process. You can call Node.js functions from .NET and .NET functions from Node.js. Edge.js takes care of marshalling data between CLR and V8. Edge.js also reconciles threading models of single threaded V8 and multi-threaded CLR. Edge.js ensures correct lifetime of objects on V8 and CLR heaps. This Edge.js NuGet package supports scripting Node.js v6.5.0.</Description>
     <Copyright>Copyright 2015 Tomasz Janczuk</Copyright>
     <VersionPrefix>8.1.4</VersionPrefix>
-    <TargetFrameworks>net40;net45;netcoreapp1.1</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netcoreapp1.0;netcoreapp1.1</TargetFrameworks>
     <AssemblyName>EdgeJs</AssemblyName>
     <PackageId>Edge.js</PackageId>
     <PackageTags>node.js;node;.net;edge;edge.js;v8;clr;coreclr;mono;interop;javascript</PackageTags>
@@ -51,6 +51,35 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
+    <PackageReference Include="System.Console" Version="4.3.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.3.0" />
+    <PackageReference Include="System.Reflection" Version="4.3.0" />
+    <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
+    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.0" />
+    <PackageReference Include="System.Private.Uri" Version="4.3.0" />
+    <PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.0.0" />
+    <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
+    <PackageReference Include="System.AppContext" Version="4.3.0" />
+  </ItemGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <Compile Remove="dotnet\*.cs" />
+    <Compile Include="dotnetcore\*.cs;..\..\common\*.cs" Exclude="dotnet\*.cs;bin\**;obj\**;**\*.xproj;packages\**" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
     <PackageReference Include="System.Console" Version="4.3.0" />
     <PackageReference Include="System.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
