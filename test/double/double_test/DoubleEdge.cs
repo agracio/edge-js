@@ -58,7 +58,8 @@ namespace double_test
                 }
             ")(".NET").Result;
 
-            Assert.AreEqual(result, "v8.1.2");
+            System.Console.WriteLine(result);
+            Assert.AreEqual(result, "v8.2.1");
         }
 
         [TestMethod]

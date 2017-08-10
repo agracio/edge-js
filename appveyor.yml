@@ -3,11 +3,9 @@ image:
 environment:
   matrix:
     # node.js
-    - nodejs_version: "4.1.1"
-    - nodejs_version: "5.1.0"
-    - nodejs_version: "6.4.0"
-    - nodejs_version: "7.10.0"
-    - nodejs_version: "8.1.2"
+    - nodejs_version: "6.11.2"
+    - nodejs_version: "7.10.1"
+    - nodejs_version: "8.2.1"
 
 install:
   - ps: Install-Product node $env:nodejs_version
