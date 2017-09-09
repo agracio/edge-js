@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/agracio/edge-js.svg)](https://travis-ci.org/agracio/edge-js)[![Build status](https://ci.appveyor.com/api/projects/status/3hs8xq7jieufw507/branch/master?svg=true)](https://ci.appveyor.com/project/agracio/edge-js/branch/master)
 
 
-This is a fork of [Edge.js](https://github.com/tjanczuk/edge) providing additional improvements and bug fixes that are not yet accepted into main Edge.js repo.
+This is a fork of [Edge.js](https://github.com/tjanczuk/edge) providing improvements and bug fixes that are not yet accepted into main Edge.js repo.
 
 NPM package is published to `edge-js`.
 
