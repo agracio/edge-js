@@ -2,9 +2,31 @@
 [![Build Status](https://travis-ci.org/agracio/edge-js.svg)](https://travis-ci.org/agracio/edge-js)[![Build status](https://ci.appveyor.com/api/projects/status/3hs8xq7jieufw507/branch/master?svg=true)](https://ci.appveyor.com/project/agracio/edge-js/branch/master)
 
 
-> This is a fork of https://github.com/tjanczuk/edge aimed at providing support for Node.js 7.x and 8.x as well as various bug fixes.
+This is a fork of [Edge.js](https://github.com/tjanczuk/edge) providing additional improvements and bug fixes that are not yet accepted into main Edge.js repo.
 
-> NPM package is published to `edge-js`. Use `npm install edge-js` and `require('edge-js')`
+NPM package is published to `edge-js`.
+
+Currently there is no support for **nuget** package, precompiled binaries are available from the release page (https://github.com/agracio/edge-js/releases).
+
+Usage is same as edge, replace `require('edge')` with `require('edge-js')`:
+
+```bash
+npm install edge-js
+```
+
+```diff
+-var edge = require('edge');
++var edge = require('edge-js');
+
+var helloWorld = edge.func(function () {/*
+    async (input) => {
+        return ".NET Welcomes " + input.ToString();
+    }
+*/});
+```
+
+Edge.js readme
+==============================
 
 **NEW** Edge.js is now on Slack at https://edgejs.slack.com. Join [here](https://webtask.it.auth0.com/api/run/tjanczuk/edgejs-slack-invite). 
  
