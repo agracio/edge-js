@@ -6,7 +6,7 @@ This is a fork of [Edge.js](https://github.com/tjanczuk/edge) providing improvem
 
 NPM package is published to `edge-js`.
 
-Currently there is no support for **nuget** package, precompiled binaries are available from the release page (https://github.com/agracio/edge-js/releases).
+Currently there is no support for **nuget** package, precompiled binaries are available from [release page](https://github.com/agracio/edge-js/releases).
 
 Usage is same as edge, replace `require('edge')` with `require('edge-js')`:
 

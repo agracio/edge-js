@@ -64,7 +64,17 @@ if %ERRORLEVEL% neq 0 exit /b -1
 cd "%SELF%\..\src\double\Edge.js"
 dotnet restore
 if %ERRORLEVEL% neq 0 exit /b -1
-dotnet build --configuration Release --framework netstandard1.6
+dotnet build --configuration Release
+
+rem if %ERRORLEVEL% neq 0 exit /b -1
+rem dotnet build --configuration Release --framework netstandard1.6
+rem if %ERRORLEVEL% neq 0 exit /b -1
+rem dotnet build --configuration Release --framework netstandard2.0
+rem if %ERRORLEVEL% neq 0 exit /b -1
+rem dotnet build --configuration Release --framework net40
+rem if %ERRORLEVEL% neq 0 exit /b -1
+rem dotnet build --configuration Release --framework net45
+
 if %ERRORLEVEL% neq 0 exit /b -1
 dotnet pack --configuration Release --no-build
 
