@@ -30,5 +30,5 @@ script:
  - mono --version
  - dotnet --version
  - npm test
- - EDGE_USE_CORECLR=1 npm install
- - npm test
+ - EDGE_USE_CORECLR=1 npm test
+
