@@ -18,7 +18,7 @@ install:
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893 ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install mono-devel ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install dotnet-dev-1.0.4 ; fi
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install dotnet-dev-1.0.5 ; fi
  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install glib mono openssl ; fi
  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -sSL -k -o osx-net-core.pkg https://go.microsoft.com/fwlink/?linkid=847009 ; fi
@@ -30,5 +30,5 @@ script:
  - mono --version
  - dotnet --version
  - npm test
- - EDGE_USE_CORECLR=1 npm test
-
+ - EDGE_USE_CORECLR=1 npm install
+ - npm test
