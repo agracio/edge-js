@@ -458,46 +458,34 @@ describe('edge-cs', function () {
     });   
 
     it('fails with a reference to a non-existent assembly without comment in class', function () {
-        assert.throws(function() {
-            edge.func({
-                source: process.env.EDGE_USE_CORECLR ?
-                    function () {/* 
-                        #r "Package.Doesnt.Exist"
-
-                        using System.Threading.Tasks;
-                        using System.Data;
-
-                        public class Startup 
-                        {
-                            public async Task<object> Invoke(object input) 
-                            {
-                                return "Hello, " + input.ToString();
-                            }
-                        }           
-                    */} :
-                    function () {/* 
+        // test no longer a valid for .NET Core
+        if(!process.env.EDGE_USE_CORECLR){
+            assert.throws(function() {
+                    edge.func({
+                        source: function () {/*
                         #r "Package.Doesnt.Exist.dll"
 
                         using System.Threading.Tasks;
                         using System.Data;
 
-                        public class Startup 
+                        public class Startup
                         {
-                            public async Task<object> Invoke(object input) 
+                            public async Task<object> Invoke(object input)
                             {
                                 return "Hello, " + input.ToString();
                             }
-                        }           
+                        }
                     */}
-            });
-        },
-        function (error) {
-            if ((error instanceof Error) && error.message.match(/Unable to resolve reference to Package\.Doesnt\.Exist|Package\.Doesnt\.Exist\.dll' could not be found/)) {
-                return true;
-            }
-            return false;
-        },
-        'Unexpected result');
+                    });
+                },
+                function (error) {
+                    if ((error instanceof Error) && error.message.match(/Unable to resolve reference to Package\.Doesnt\.Exist|Package\.Doesnt\.Exist\.dll' could not be found/)) {
+                        return true;
+                    }
+                    return false;
+                },
+                'Unexpected result');
+        }
     });
 
     if (process.env.EDGE_USE_CORECLR) {
