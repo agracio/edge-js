@@ -12,23 +12,23 @@ node_js:
  - "8.8.1"
 
 install:
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list ; fi
+ #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF ; fi
+ #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list' ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893 ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install mono-devel ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install dotnet-dev-1.0.4 ; fi
  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
- - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install glib mono openssl ; fi
+ #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install glib mono openssl ; fi
  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -sSL -k -o osx-net-core.pkg https://go.microsoft.com/fwlink/?linkid=847009 ; fi
  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo installer -verboseR -pkg osx-net-core.pkg -target / ; fi
  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=/usr/local/share/dotnet:$PATH ; fi
  - npm install
 
 script:
- - mono --version
+ #- mono --version
  - dotnet --version
- - npm test
+ #- npm test
  - EDGE_USE_CORECLR=1 npm test
 
