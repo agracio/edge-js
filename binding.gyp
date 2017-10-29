@@ -333,7 +333,7 @@
                         'lib/bootstrap/*.cs'
                       ],
                       'outputs': [
-                        'lib/bootstrap/bin/$(BUILDTYPE)/netstandard1.6/bootstrap.dll'
+                        'lib/bootstrap/bin/$(BUILDTYPE)/netcoreapp1.1/bootstrap.dll'
                       ],
                       'action': [
                         'bash',
