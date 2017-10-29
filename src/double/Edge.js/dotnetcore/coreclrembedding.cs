@@ -209,7 +209,7 @@ public class CoreCLREmbedding
 
         public void LoadDependencyManifest(string dependencyManifestFile)
         {
-            DebugMessage("EdgeAssemblyResolver::LoadDependencyManifest (CLR) - Loading dependency manifest from {0}", dependencyManifestFile);
+            Console.WriteLine("EdgeAssemblyResolver::LoadDependencyManifest (CLR) - Loading dependency manifest from {0}", dependencyManifestFile);
             
             DependencyContextJsonReader dependencyContextReader = new DependencyContextJsonReader();
 
@@ -254,8 +254,8 @@ public class CoreCLREmbedding
 
             foreach (CompilationLibrary compileLibrary in dependencyContext.CompileLibraries)
             {
-				Console.WriteLine("Processing compile library {0}", compileLibrary.Name);
-				Console.WriteLine("Processing compile library {0}", compileLibrary.Assemblies == null);
+				//Console.WriteLine("Processing compile library {0}", compileLibrary.Name);
+				//Console.WriteLine("Processing compile library {0}", compileLibrary.Assemblies == null);
 
                 if (compileLibrary.Assemblies == null || compileLibrary.Assemblies.Count == 0)
                 {
@@ -269,7 +269,7 @@ public class CoreCLREmbedding
                     ? Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)))
                     : Path.Combine(_packagesPath, compileLibrary.Name, compileLibrary.Version, compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar));
 					
-				if(compileLibrary.Name.Contains("Microsoft.AspNetCore.Hosting.Abstractions") && File.Exists(assemblyPath)) Console.WriteLine(assemblyPath);
+				//if(compileLibrary.Name.Contains("Microsoft.AspNetCore.Hosting.Abstractions") && File.Exists(assemblyPath)) Console.WriteLine(assemblyPath);
                 if (!CompileAssemblies.ContainsKey(compileLibrary.Name))
                 {
                     if (File.Exists(assemblyPath))
@@ -291,7 +291,7 @@ public class CoreCLREmbedding
             {
 
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing runtime dependency {1} {0}", runtimeLibrary.Name, runtimeLibrary.Type);
-                Console.WriteLine("EdgeAssemblyResolver::AddDependencies (CLR) - Processing runtime dependency {1} {0}", runtimeLibrary.Name, runtimeLibrary.Type);
+                //Console.WriteLine("EdgeAssemblyResolver::AddDependencies (CLR) - Processing runtime dependency {1} {0}", runtimeLibrary.Name, runtimeLibrary.Type);
 
                 List<string> assets = runtimeLibrary.RuntimeAssemblyGroups.GetRuntimeAssets(DotNetRuntimeEnvironment.GetRuntimeIdentifier()).ToList();
 
@@ -310,14 +310,14 @@ public class CoreCLREmbedding
                             : Path.Combine(_packagesPath, runtimeLibrary.Name, runtimeLibrary.Version, assetPath.Replace('/', Path.DirectorySeparatorChar));
                     string libraryNameFromPath = Path.GetFileNameWithoutExtension(assemblyPath);
 					
-					Console.WriteLine("Processing runtime dependency {0}", libraryNameFromPath);
+					//Console.WriteLine("Processing runtime dependency {0}", libraryNameFromPath);
 
                     if (!File.Exists(assemblyPath))
                     {
                         assemblyPath = Path.Combine(RuntimeEnvironment.RuntimePath, Path.GetFileName(assemblyPath));
                     }
 					
-					if(libraryNameFromPath.Contains("Microsoft.AspNetCore.Hosting.Abstractions") && File.Exists(assemblyPath)) Console.WriteLine(assemblyPath);
+					//if(libraryNameFromPath.Contains("Microsoft.AspNetCore.Hosting.Abstractions") && File.Exists(assemblyPath)) Console.WriteLine(assemblyPath);
 
 
                     if (!_libraries.ContainsKey(runtimeLibrary.Name))
@@ -440,7 +440,7 @@ public class CoreCLREmbedding
 
         internal void AddCompiler(string bootstrapDependencyManifest)
         {
-            DebugMessage("EdgeAssemblyResolver::AddCompiler (CLR) - Adding the compiler from dependency manifest file {0}", bootstrapDependencyManifest);
+            Console.WriteLine("EdgeAssemblyResolver::AddCompiler (CLR) - Adding the compiler from dependency manifest file {0}", bootstrapDependencyManifest);
 
             DependencyContextJsonReader dependencyContextReader = new DependencyContextJsonReader();
 
