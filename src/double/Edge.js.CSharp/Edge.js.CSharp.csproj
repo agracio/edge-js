@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Edge.js enables scripting CLR languages from Node.js. This package is a dependency of Edge.js and supports scripting C# from Node.</Description>
+    <AssemblyTitle>C# compiler for Edge.js</AssemblyTitle>
+    <VersionPrefix>1.2.0</VersionPrefix>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <AssemblyName>Edge.js.CSharp</AssemblyName>
+    <PackageId>Edge.js.CSharp</PackageId>
+    <PackageProjectUrl>https://github.com/tjanczuk/edge</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/tjanczuk/edge-cs/blob/master/LICENSE.txt</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="1.3.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

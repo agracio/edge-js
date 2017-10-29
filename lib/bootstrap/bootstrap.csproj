@@ -9,7 +9,8 @@
 
   <ItemGroup >
     <ProjectReference Include="..\..\src\double\Edge.js\Edge.js.csproj" />
-    <PackageReference Include="Edge.js.CSharp" Version="1.2.0" />
+    <ProjectReference Include="..\..\src\double\Edge.js.CSharp\Edge.js.CSharp.csproj" />
+    <!-- <PackageReference Include="Edge.js.CSharp" Version="1.2.0" /> -->
   </ItemGroup>
 
 </Project>

@@ -14,7 +14,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\double\Edge.js\Edge.js.csproj"/>
-    <PackageReference Include="Edge.js.CSharp" Version="1.2.0" />
+    <ProjectReference Include="..\src\double\Edge.js.CSharp\Edge.js.CSharp.csproj" />
+    <!-- <PackageReference Include="Edge.js.CSharp" Version="1.2.0" /> -->
     <PackageReference Include="System.AppContext" Version="4.3.0" />
     <PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
     <PackageReference Include="System.Console" Version="4.3.0" />
