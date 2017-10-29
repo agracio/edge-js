@@ -42,13 +42,12 @@ NAN_MODULE_INIT(init)
 {
     debugMode = HasEnvironmentVariable("EDGE_DEBUG");
     DBG("edge::init");
-	printf("edge::init");
 
     V8SynchronizationContext::Initialize();
     CallbackHelper::Initialize();
 
 #ifdef HAVE_CORECLR
-    if (FAILED(CoreClrEmbedding::Initialize(debugMode)))
+    if (FAILED(CoreClrEmbedding::Initialize(true)))
 	{
 		DBG("Error occurred during CoreCLR initialization");
 		printf("Error occurred during CoreCLR initialization");
