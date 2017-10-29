@@ -475,7 +475,7 @@ public class CoreCLREmbedding
     {
         try
         {
-            DebugMessage("CoreCLREmbedding::Initialize (CLR) - Starting");
+            Console.WriteLine("CoreCLREmbedding::Initialize (CLR) - Starting");
 
             EdgeBootstrapperContext bootstrapperContext = Marshal.PtrToStructure<EdgeBootstrapperContext>(context);
 
@@ -489,12 +489,12 @@ public class CoreCLREmbedding
                 Resolver.LoadDependencyManifest(RuntimeEnvironment.DependencyManifestFile);
             }
             
-            DebugMessage("CoreCLREmbedding::Initialize (CLR) - Complete");
+            Console.WriteLine("CoreCLREmbedding::Initialize (CLR) - Complete");
         }
 
         catch (Exception e)
         {
-            DebugMessage("CoreCLREmbedding::Initialize (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
+            Console.WriteLine("CoreCLREmbedding::Initialize (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
 
             V8Type v8Type;
             Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
