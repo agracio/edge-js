@@ -259,13 +259,16 @@ public class CoreCLREmbedding
                 {
                     continue;
                 }
-
+				
+				if(compileLibrary.Name.Contains("Microsoft.AspNetCore.Hosting.Abstractions")) Console.WriteLine(compileLibrary.Name);
+					
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing compile dependency {0}", compileLibrary.Name);
 
                 string assemblyPath = standalone && File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar))))
                     ? Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)))
                     : Path.Combine(_packagesPath, compileLibrary.Name, compileLibrary.Version, compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar));
-
+					
+				if(compileLibrary.Name.Contains("Microsoft.AspNetCore.Hosting.Abstractions") && File.Exists(assemblyPath)) Console.WriteLine(assemblyPath);
                 if (!CompileAssemblies.ContainsKey(compileLibrary.Name))
                 {
                     if (File.Exists(assemblyPath))
@@ -304,11 +307,16 @@ public class CoreCLREmbedding
                             ? Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(assetPath))
                             : Path.Combine(_packagesPath, runtimeLibrary.Name, runtimeLibrary.Version, assetPath.Replace('/', Path.DirectorySeparatorChar));
                     string libraryNameFromPath = Path.GetFileNameWithoutExtension(assemblyPath);
+					
+					if(libraryNameFromPath.Contains("Microsoft.AspNetCore.Hosting.Abstractions")) Console.WriteLine(libraryNameFromPath);
 
                     if (!File.Exists(assemblyPath))
                     {
                         assemblyPath = Path.Combine(RuntimeEnvironment.RuntimePath, Path.GetFileName(assemblyPath));
                     }
+					
+					if(libraryNameFromPath.Contains("Microsoft.AspNetCore.Hosting.Abstractions") && File.Exists(assemblyPath)) Console.WriteLine(assemblyPath);
+
 
                     if (!_libraries.ContainsKey(runtimeLibrary.Name))
                     {
