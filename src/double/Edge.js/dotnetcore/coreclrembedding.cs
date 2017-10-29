@@ -254,13 +254,14 @@ public class CoreCLREmbedding
 
             foreach (CompilationLibrary compileLibrary in dependencyContext.CompileLibraries)
             {
+				Console.WriteLine("Processing compile library {0}", compileLibrary.Name);
+				Console.WriteLine("Processing compile library {0}", compileLibrary.Assemblies == null);
 
                 if (compileLibrary.Assemblies == null || compileLibrary.Assemblies.Count == 0)
                 {
                     continue;
                 }
 				
-				Console.WriteLine("Processing compile dependency {0}", compileLibrary.Name);
 					
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing compile dependency {0}", compileLibrary.Name);
 
@@ -290,6 +291,7 @@ public class CoreCLREmbedding
             {
 
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing runtime dependency {1} {0}", runtimeLibrary.Name, runtimeLibrary.Type);
+                Console.WriteLine("EdgeAssemblyResolver::AddDependencies (CLR) - Processing runtime dependency {1} {0}", runtimeLibrary.Name, runtimeLibrary.Type);
 
                 List<string> assets = runtimeLibrary.RuntimeAssemblyGroups.GetRuntimeAssets(DotNetRuntimeEnvironment.GetRuntimeIdentifier()).ToList();
 
