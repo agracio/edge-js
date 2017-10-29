@@ -47,7 +47,7 @@ NAN_MODULE_INIT(init)
     CallbackHelper::Initialize();
 
 #ifdef HAVE_CORECLR
-    if (FAILED(CoreClrEmbedding::Initialize(true)))
+    if (FAILED(CoreClrEmbedding::Initialize(debugMode)))
 	{
 		DBG("Error occurred during CoreCLR initialization");
 		printf("Error occurred during CoreCLR initialization");
