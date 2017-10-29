@@ -260,7 +260,7 @@ public class CoreCLREmbedding
                     continue;
                 }
 				
-				if(compileLibrary.Name.Contains("Microsoft.AspNetCore.Hosting.Abstractions")) Console.WriteLine(compileLibrary.Name);
+				Console.WriteLine("Processing compile dependency {0}", compileLibrary.Name);
 					
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing compile dependency {0}", compileLibrary.Name);
 
@@ -308,7 +308,7 @@ public class CoreCLREmbedding
                             : Path.Combine(_packagesPath, runtimeLibrary.Name, runtimeLibrary.Version, assetPath.Replace('/', Path.DirectorySeparatorChar));
                     string libraryNameFromPath = Path.GetFileNameWithoutExtension(assemblyPath);
 					
-					if(libraryNameFromPath.Contains("Microsoft.AspNetCore.Hosting.Abstractions")) Console.WriteLine(libraryNameFromPath);
+					Console.WriteLine("Processing runtime dependency {0}", libraryNameFromPath);
 
                     if (!File.Exists(assemblyPath))
                     {
