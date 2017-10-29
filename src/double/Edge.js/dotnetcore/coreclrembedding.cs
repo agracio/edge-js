@@ -390,10 +390,19 @@ public class CoreCLREmbedding
                     foreach (string nativeAssembly in nativeAssemblies)
                     {
                         string nativeAssemblyPath = Path.Combine(_packagesPath, runtimeLibrary.Name, runtimeLibrary.Version, nativeAssembly.Replace('/', Path.DirectorySeparatorChar));
-
-                        DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Adding native assembly {0} at {1}",
+						
+						if (File.Exists(nativeAssemblyPath))
+                        {
+                            _nativeLibraries[Path.GetFileNameWithoutExtension(nativeAssembly)] = nativeAssemblyPath;
+                            DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Adding native assembly {0} at {1}",
                             Path.GetFileNameWithoutExtension(nativeAssembly), nativeAssemblyPath);
-                        _nativeLibraries[Path.GetFileNameWithoutExtension(nativeAssembly)] = nativeAssemblyPath;
+                        }
+                        else
+                        {
+                            DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Could not resolve native assembly {0} at {1}",
+                            Path.GetFileNameWithoutExtension(nativeAssembly), nativeAssemblyPath);
+                        }
+						
                     }
                 }
             }
@@ -1335,7 +1344,7 @@ public class CoreCLREmbedding
     {
         if (DebugMode)
         {
-            Console.WriteLine(message, parameters);
+            DebugMessage(message, parameters);
         }
     }
 
