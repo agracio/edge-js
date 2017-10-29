@@ -12,6 +12,7 @@ ROBOCOPY tools/build/nuget/content/edge/x64 package/content/edge/x64 *.* /NFL /N
 
 ROBOCOPY src\double\Edge.js\bin\Release\net45 package\lib\net45 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
 ROBOCOPY src\double\Edge.js\bin\Release\netcoreapp1.1 package\lib\netcoreapp1.1 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
+ROBOCOPY src\double\Edge.js\bin\Release\netcoreapp2.0 package\lib\netcoreapp2.0 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
 
 
 

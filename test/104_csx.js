@@ -501,6 +501,34 @@ describe('edge-cs', function () {
     });
 
     if (process.env.EDGE_USE_CORECLR) {
+        it.only('succeeds with dll from nuget package', function (done) {
+            var func = edge.func(function () {/*
+            #r "Newtonsoft.Json.dll"
+            using Newtonsoft.Json;
+            using System.Threading.Tasks;
+            public class MyObject
+            {
+                public string Message { get; set; }
+            }
+            public class Startup
+            {
+                public async Task<object> Invoke(object input)
+                {
+                    return JsonConvert.DeserializeObject<MyObject>("{ 'message': 'Hello from .NET' }");
+                }
+            }
+        */
+            });
+
+            func("JavaScript", function (error, result) {
+                assert.ifError(error);
+                assert.equal(result.Message, 'Hello from .NET');
+                done();
+            });
+        });
+    }
+
+    if (process.env.EDGE_USE_CORECLR) {
         it.skip('fails when dynamically loading an assembly that doesn\'t exist', function () {
             assert.throws(function() {
                 var func = edge.func({
