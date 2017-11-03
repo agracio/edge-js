@@ -40,9 +40,9 @@ if not exist "%SELF%\build\node-%1" (
 	popd
 )
 
-call :build_node %1 x86 ia32
+call :build_node %1 x86
 if %ERRORLEVEL% neq 0 exit /b -1
-call :build_node %1 x64 x64
+call :build_node %1 x64
 if %ERRORLEVEL% neq 0 exit /b -1
 
 if not exist "%SELF%\build\node-%1-x86\node.exe" (
@@ -53,9 +53,9 @@ if not exist "%SELF%\build\node-%1-x64\node.exe" (
 	"%SELF%\build\download.exe" http://nodejs.org/dist/v%1/win-x64/node.exe "%SELF%\build\node-%1-x64\node.exe"
 )
 
-call :build_edge %1 x86
+call :build_edge %1 x86 ia32
 if %ERRORLEVEL% neq 0 exit /b -1
-call :build_edge %1 x64
+call :build_edge %1 x64 x64
 if %ERRORLEVEL% neq 0 exit /b -1
 
 csc /out:"%SELF%\..\src\double\Edge.js\bin\Release\net40\EdgeJs.dll" /target:library "%SELF%\..\src\double\Edge.js\dotnet\EdgeJs.cs"
