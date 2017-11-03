@@ -40,9 +40,9 @@ if not exist "%SELF%\build\node-%1" (
 	popd
 )
 
-call :build_node %1 x86
+call :build_node %1 x86 ia32
 if %ERRORLEVEL% neq 0 exit /b -1
-call :build_node %1 x64
+call :build_node %1 x64 x64
 if %ERRORLEVEL% neq 0 exit /b -1
 
 if not exist "%SELF%\build\node-%1-x86\node.exe" (
@@ -102,7 +102,7 @@ set GYP=%APPDATA%\npm\node_modules\node-gyp\bin\node-gyp.js
 pushd "%SELF%\.."
 
 "%NODEEXE%" "%GYP%" configure --msvs_version=2017
-"%SELF%\build\repl.exe" ./build/edge_nativeclr.vcxproj "%USERPROFILE%\.node-gyp\%1\%2\node.lib" "%SELF%build\node-%1-%2\node.lib"
+"%SELF%\build\repl.exe" ./build/edge_nativeclr.vcxproj "%USERPROFILE%\.node-gyp\%1\%3\node.lib" "%SELF%build\node-%1-%2\node.lib"
 "%NODEEXE%" "%GYP%" build
 mkdir "%SELF%\build\nuget\content\edge\%2" > nul 2>&1
 copy /y build\release\edge_nativeclr.node "%SELF%\build\nuget\content\edge\%2"
