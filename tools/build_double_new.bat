@@ -24,9 +24,9 @@ if %ERRORLEVEL% neq 0 exit /b -1
 call :download_node_exe %1
 if %ERRORLEVEL% neq 0 exit /b -1
 
-call :build_edge %1 x86
+call :build_edge %1 x86 ia32
 if %ERRORLEVEL% neq 0 exit /b -1
-call :build_edge %1 x64
+call :build_edge %1 x64 x64
 if %ERRORLEVEL% neq 0 exit /b -1
 
 exit /b 0
@@ -149,7 +149,7 @@ exit /b 0
 
 REM ===========================================================
 :build_edge
-echo :build_edge %1 %2
+echo :build_edge %1 %2 %3
 
 rem takes 2 parameters: 1 - node version, 2 - x86 or x64
 
@@ -164,7 +164,7 @@ set GYP=%APPDATA%\npm\node_modules\node-gyp\bin\node-gyp.js
 pushd "%SELF%\.."
 
 "%NODEEXE%" "%GYP%" configure --msvs_version=2017
-"%SELF%\build\repl.exe" ./build/edge_nativeclr.vcxproj "%USERPROFILE%\.node-gyp\%1\%2\node.lib" "%SELF%\build\node-%1-%2\node.lib"
+"%SELF%\build\repl.exe" ./build/edge_nativeclr.vcxproj "%USERPROFILE%\.node-gyp\%1\%3\node.lib" "%SELF%\build\node-%1-%2\node.lib"
 "%NODEEXE%" "%GYP%" build
 mkdir "%SELF%\build\nuget\content\edge\%2" > nul 2>&1
 copy /y build\release\edge_nativeclr.node "%SELF%\build\nuget\content\edge\%2"

@@ -53,9 +53,9 @@ if not exist "%SELF%\build\node-%1-x64\node.exe" (
 	"%SELF%\build\download.exe" http://nodejs.org/dist/v%1/win-x64/node.exe "%SELF%\build\node-%1-x64\node.exe"
 )
 
-call :build_edge %1 x86
+call :build_edge %1 x86 ia32
 if %ERRORLEVEL% neq 0 exit /b -1
-call :build_edge %1 x64
+call :build_edge %1 x64 x64
 if %ERRORLEVEL% neq 0 exit /b -1
 
 csc /out:"%SELF%\..\src\double\Edge.js\bin\Release\net40\EdgeJs.dll" /target:library "%SELF%\..\src\double\Edge.js\dotnet\EdgeJs.cs"
@@ -101,8 +101,8 @@ set GYP=%APPDATA%\npm\node_modules\node-gyp\bin\node-gyp.js
 
 pushd "%SELF%\.."
 
-"%NODEEXE%" "%GYP%" configure --msvs_version=2017
-"%SELF%\build\repl.exe" ./build/edge_nativeclr.vcxproj "%USERPROFILE%\.node-gyp\%1\%2\node.lib" "%SELF%build\node-%1-%2\node.lib"
+"%NODEEXE%" "%GYP%" configure --msvs_version=2015
+"%SELF%\build\repl.exe" ./build/edge_nativeclr.vcxproj "%USERPROFILE%\.node-gyp\%1\%3\node.lib" "%SELF%build\node-%1-%2\node.lib"
 "%NODEEXE%" "%GYP%" build
 mkdir "%SELF%\build\nuget\content\edge\%2" > nul 2>&1
 copy /y build\release\edge_nativeclr.node "%SELF%\build\nuget\content\edge\%2"
