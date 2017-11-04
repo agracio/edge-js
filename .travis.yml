@@ -10,6 +10,7 @@ node_js:
  - "6.11.5"
  - "7.10.1"
  - "8.8.1"
+ - "9.0.0"
 
 install:
  #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF ; fi
