@@ -29,7 +29,7 @@ public class EdgeCompiler
     {
         if (DebuggingSelfEnabled)
         {
-            Console.WriteLine(format, args);
+            //Console.WriteLine(format, args);
         }
     }
 
