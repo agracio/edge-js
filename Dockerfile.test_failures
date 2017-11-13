@@ -1,0 +1,26 @@
+﻿FROM microsoft/dotnet:2.0-sdk
+
+RUN groupadd node && useradd -m -g node node
+
+# install node
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
+RUN apt -y update
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN apt -y install nodejs
+
+# add the code
+ADD . /tmp/code
+RUN chown -R node:node /tmp/code
+
+# install build deps
+RUN apt -y install sudo make g++ 
+
+# install and test
+USER node
+WORKDIR /tmp/code
+
+RUN rm -fR node_modules build package-lock.json && npm install
+ENV EDGE_USE_CORECLR=1
+
+CMD npm test
