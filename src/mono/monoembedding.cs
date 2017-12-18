@@ -154,4 +154,14 @@ public static class MonoEmbedding
             return null;
         }
     }
+
+    // used for ExpandoObject & IDictionary<string, object> to add values
+    static public void AddPropertyToObject( object obj, string propName, object val)
+    {
+        var eo = obj as IDictionary<string, object>;
+        if ( eo == null )
+            return;
+
+        eo.Add(propName, val);
+    }
 }

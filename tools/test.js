@@ -15,7 +15,7 @@ if (!process.env.EDGE_USE_CORECLR) {
 	spawn(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, {
 		stdio: 'inherit'
 	}).on('close', runOnSuccess);
-} 
+}
 
 else {
 	spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], { 
