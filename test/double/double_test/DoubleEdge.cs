@@ -59,7 +59,7 @@ namespace double_test
             ")(".NET").Result;
 
             System.Console.WriteLine(result);
-            Assert.AreEqual(result, "v9.0.0");
+            Assert.AreEqual(result, "v9.3.0");
         }
 
         [TestMethod]

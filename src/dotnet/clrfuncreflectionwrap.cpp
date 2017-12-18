@@ -21,8 +21,8 @@ ClrFuncReflectionWrap^ ClrFuncReflectionWrap::Create(
     return wrap;
 }
 
-Task<System::Object^>^ ClrFuncReflectionWrap::Call(System::Object^ payload)
+System::Threading::Tasks::Task<System::Object^>^ ClrFuncReflectionWrap::Call(System::Object^ payload)
 {
-    return (Task<System::Object^>^)this->invokeMethod->Invoke(
+    return (System::Threading::Tasks::Task<System::Object^>^)this->invokeMethod->Invoke(
                 this->instance, gcnew array<System::Object^> { payload });
 }

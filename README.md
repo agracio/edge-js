@@ -1243,7 +1243,7 @@ To build one of the versions of Node.js officially released by [Node.js](http://
 
 ```
 cd tools
-build.bat release 8.9.0
+build.bat release 8.9.3
 ```
 
 Note: the Node.js version number you provide must be version number corresponding to one of the subdirectories of http://nodejs.org/dist. The command will build both x32 and x64 architectures (assuming you use x64 machine). The command will also copy the edge\_\*.node executables to appropriate locations under lib\native directory where they are looked up from at runtime. The `npm install` step copies the C standard library shared DLL to the location of the edge\_\*.node files for the component to be ready to go.
@@ -1393,7 +1393,7 @@ You need Windows with:
 * [Edge.js NuGet package](https://www.nuget.org/packages/Edge.js)  
 * [Node.js](http://nodejs.org) (optional, if you want to use additional NPM packages)
 
-Edge.js support for scripting Node.js ships as a NuGet Package called `Edge.js`. It comes with everything you need to get started writing applications for x86 and x64 architectures. However, if you want to use additional Node.js packages from NPM, you must separately install Node.js runtime to access the NPM package manager. The latest Edge.js NuGet package has been developed and tested with Node.js v8.9.0. Older Edge.js packages exist for prior versions of Node.js. If you choose a different version of Node.js to install NPM packages, your mileage can vary. 
+Edge.js support for scripting Node.js ships as a NuGet Package called `Edge.js`. It comes with everything you need to get started writing applications for x86 and x64 architectures. However, if you want to use additional Node.js packages from NPM, you must separately install Node.js runtime to access the NPM package manager. The latest Edge.js NuGet package has been developed and tested with Node.js v8.9.3. Older Edge.js packages exist for prior versions of Node.js. If you choose a different version of Node.js to install NPM packages, your mileage can vary. 
 
 **NOTE** you cannot use native Node.js extensions when scripting Node.js from CLR using Edge. 
 
@@ -1708,14 +1708,14 @@ These are unstructions for building the Edge.js NuGet package on Windows. The pa
 Preprequisties:
 
 * Visual Studio 2015   
-* Node.js (tested with v8.9.0)  
+* Node.js (tested with v8.9.3)  
 * Python 2.7.x  
 * node-gyp (tested with 3.6.1)  
 
 To buid the NuGet package, open the Visual Studio 2013 Developer Command Prompt and call:
 
 ```
-tools\build_double.bat 8.9.0
+tools\build_double.bat 8.9.3
 ```
 
 (you can substitite another version of Node.js).

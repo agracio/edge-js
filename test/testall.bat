@@ -13,12 +13,12 @@ if "%run32%"=="Y" (
 	call "%SELF%\test.bat" ia32 9.0.0
 	call "%SELF%\test.bat" ia32 8.9.0
 	call "%SELF%\test.bat" ia32 7.10.1
-	call "%SELF%\test.bat" ia32 6.11.5
+	call "%SELF%\test.bat" ia32 6.12.2
 )
 
 if "%run64%"=="Y" (
 	call "%SELF%\test.bat" x64 9.0.0
 	call "%SELF%\test.bat" x64 8.9.0
 	call "%SELF%\test.bat" x64 7.10.1
-	call "%SELF%\test.bat" x64 6.11.5
+	call "%SELF%\test.bat" x64 6.12.2
 )

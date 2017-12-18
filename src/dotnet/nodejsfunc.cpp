@@ -38,7 +38,7 @@ NodejsFunc::!NodejsFunc()
     V8SynchronizationContext::ExecuteAction(uv_edge_async);
 }
 
-Task<System::Object^>^ NodejsFunc::FunctionWrapper(System::Object^ payload)
+System::Threading::Tasks::Task<System::Object^>^ NodejsFunc::FunctionWrapper(System::Object^ payload)
 {
     DBG("NodejsFunc::FunctionWrapper");
     NodejsFuncInvokeContext^ context = gcnew NodejsFuncInvokeContext(this, payload);

@@ -50,7 +50,7 @@ private:
 public:
 
     property System::Object^ Payload;
-    property Task<System::Object^>^ Task;
+    property System::Threading::Tasks::Task<System::Object^>^ Task;
     property bool Sync;
 
     ClrFuncInvokeContext(v8::Local<v8::Value> callbackOrSync);
@@ -70,7 +70,7 @@ public:
     ~NodejsFunc();
     !NodejsFunc();
 
-    Task<System::Object^>^ FunctionWrapper(System::Object^ payload);
+    System::Threading::Tasks::Task<System::Object^>^ FunctionWrapper(System::Object^ payload);
 };
 
 ref class PersistentDisposeContext {
@@ -99,7 +99,7 @@ private:
 
 public:
 
-    property TaskCompletionSource<System::Object^>^ TaskCompletionSource;
+    property System::Threading::Tasks::TaskCompletionSource<System::Object^>^ TaskCompletionSource;
 
     NodejsFuncInvokeContext(
         NodejsFunc^ functionContext, System::Object^ payload);
@@ -121,12 +121,12 @@ private:
 public:
 
     static ClrFuncReflectionWrap^ Create(Assembly^ assembly, System::String^ typeName, System::String^ methodName);
-    Task<System::Object^>^ Call(System::Object^ payload);
+    System::Threading::Tasks::Task<System::Object^>^ Call(System::Object^ payload);
 };
 
 ref class ClrFunc {
 private:
-    System::Func<System::Object^,Task<System::Object^>^>^ func;
+    System::Func<System::Object^,System::Threading::Tasks::Task<System::Object^>^>^ func;
 
     ClrFunc();
 
@@ -134,7 +134,7 @@ private:
 
 public:
     static NAN_METHOD(Initialize);
-    static v8::Local<v8::Function> Initialize(System::Func<System::Object^,Task<System::Object^>^>^ func);
+    static v8::Local<v8::Function> Initialize(System::Func<System::Object^,System::Threading::Tasks::Task<System::Object^>^>^ func);
     v8::Local<v8::Value> Call(v8::Local<v8::Value> payload, v8::Local<v8::Value> callback);
     static v8::Local<v8::Value> MarshalCLRToV8(System::Object^ netdata);
     static v8::Local<v8::Value> MarshalCLRExceptionToV8(System::Exception^ exception);
