@@ -22,12 +22,12 @@ class NodejsFunc
     [MethodImplAttribute(MethodImplOptions.InternalCall)]
     static extern void Release(IntPtr nativeNodejsFunc); 
 
-    Func<object, Task<object>> GetFunc()
+    Func<object, System.Threading.Tasks.Task<object>> GetFunc()
     {
-        return new Func<object, Task<object>>(this.FunctionWrapper);
+        return new Func<object, System.Threading.Tasks.Task<object>>(this.FunctionWrapper);
     }
 
-    Task<object> FunctionWrapper(object payload)
+    System.Threading.Tasks.Task<object> FunctionWrapper(object payload)
     {
         NodejsFuncInvokeContext ctx = new NodejsFuncInvokeContext(this, payload);
         ExecuteActionOnV8Thread(ctx.CallFuncOnV8Thread);

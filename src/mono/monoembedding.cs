@@ -42,11 +42,11 @@ public static class MonoEmbedding
         return typeof(Uri);
     }
 
-    static public Func<Object, Task<Object>> GetFunc(string assemblyFile, string typeName, string methodName)
+    static public Func<Object, System.Threading.Tasks.Task<Object>> GetFunc(string assemblyFile, string typeName, string methodName)
     {
         var assembly = Assembly.LoadFrom(assemblyFile);
         var wrap = ClrFuncReflectionWrap.Create(assembly, typeName, methodName);
-        return new Func<Object, Task<Object>>(wrap.Call);
+        return new Func<Object, System.Threading.Tasks.Task<Object>>(wrap.Call);
     }
 
     static public DateTime CreateDateTime(double ticks)
@@ -116,19 +116,19 @@ public static class MonoEmbedding
 
     static public Type GetFuncType()
     {
-        return typeof(Func<Object, Task<Object>>);
+        return typeof(Func<Object, System.Threading.Tasks.Task<Object>>);
     }
 
-    static public void edgeAppCompletedOnCLRThread(Task<object> task, object state)
+    static public void edgeAppCompletedOnCLRThread(System.Threading.Tasks.Task<object> task, object state)
     {
         var context = (ClrFuncInvokeContext)state;
         context.CompleteOnCLRThread(task);
     }
 
-    static public void ContinueTask(Task<object> task, object state)
+    static public void ContinueTask(System.Threading.Tasks.Task<object> task, object state)
     {
         // Will complete asynchronously. Schedule continuation to finish processing.
-        task.ContinueWith(new Action<Task<object>, object>(edgeAppCompletedOnCLRThread), state);
+        task.ContinueWith(new Action<System.Threading.Tasks.Task<object>, object>(edgeAppCompletedOnCLRThread), state);
     }
 
     static public string ObjectToString(object o)

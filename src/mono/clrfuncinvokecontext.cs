@@ -8,15 +8,15 @@ class ClrFuncInvokeContext
     IntPtr native;
 #pragma warning disable 169 // assigned from clrfuncinvokecontext.cpp through embedding APIs
     Object Payload;
-    Task<Object> Task;
+    System.Threading.Tasks.Task<Object> Task;
     bool Sync;
 #pragma warning restore 169
 #pragma warning restore 649
 
     [MethodImplAttribute(MethodImplOptions.InternalCall)]
-    static extern void CompleteOnCLRThreadICall(IntPtr ptr, Task<object> task);
+    static extern void CompleteOnCLRThreadICall(IntPtr ptr, System.Threading.Tasks.Task<object> task);
 
-    internal void CompleteOnCLRThread(Task<object> task)
+    internal void CompleteOnCLRThread(System.Threading.Tasks.Task<object> task)
     {
         CompleteOnCLRThreadICall(native, task);
     }
