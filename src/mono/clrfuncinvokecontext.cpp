@@ -100,13 +100,13 @@ v8::Local<v8::Value> ClrFuncInvokeContext::CompleteOnV8Thread(bool completedSync
     v8::Local<v8::Value> argv[] = { Nan::Undefined(), Nan::Undefined() };
     int argc = 1;
 
-    switch (System::Threading::Tasks::Task::Status(this->Task())) {
+    switch (SystemThreading::Task::Status(this->Task())) {
     default:
         argv[0] = Nan::New<v8::String>("The operation reported completion in an unexpected state.").ToLocalChecked();
         break;
     case TaskStatusFaulted:
-        if (System::Threading::Tasks::Task::Exception(this->Task()) != NULL) {
-            argv[0] = ClrFunc::MarshalCLRExceptionToV8(System::Threading::Tasks::Task::Exception(this->Task()));
+        if (SystemThreading::Task::Exception(this->Task()) != NULL) {
+            argv[0] = ClrFunc::MarshalCLRExceptionToV8(SystemThreading::Task::Exception(this->Task()));
         }
         else {
             argv[0] = Nan::New<v8::String>("The operation has failed with an undetermined error.").ToLocalChecked();
@@ -118,7 +118,7 @@ v8::Local<v8::Value> ClrFuncInvokeContext::CompleteOnV8Thread(bool completedSync
     case TaskStatusRanToCompletion:
         argc = 2;
         MonoException* exc = NULL;
-        argv[1] = ClrFunc::MarshalCLRToV8(System::Threading::Tasks::Task::Result(this->Task()), &exc);
+        argv[1] = ClrFunc::MarshalCLRToV8(SystemThreading::Task::Result(this->Task()), &exc);
         if (exc) 
         {
             argc = 1;

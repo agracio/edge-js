@@ -45,7 +45,7 @@ typedef struct clrActionContext {
 
 // wrapper for System.Threading.Task
 
-namespace System::Threading::Tasks{
+namespace SystemThreading{
     class Task
     {
     public:

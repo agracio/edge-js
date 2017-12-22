@@ -28,6 +28,8 @@ obj/
 *.suo
 packages/*
 _ReSharper*
+src/*.sln
+src/EdgeJs.vcxproj
 
 Edge.Tests.*
 node.exe
