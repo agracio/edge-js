@@ -45,13 +45,16 @@ typedef struct clrActionContext {
 
 // wrapper for System.Threading.Task
 
-class Task
-{
-public: 
-    static TaskStatus Status(MonoObject* _this);
-    static MonoException* Exception(MonoObject* _this);
-    static MonoObject* Result(MonoObject* _this);
-};
+namespace System::Threading::Tasks{
+    class Task
+    {
+    public:
+        static TaskStatus Status(MonoObject* _this);
+        static MonoException* Exception(MonoObject* _this);
+        static MonoObject* Result(MonoObject* _this);
+    };
+}
+
 
 // wrapper for System.Collections.Generic.Dictionary
 

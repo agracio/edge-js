@@ -1,6 +1,6 @@
 #include "edge.h"
 
-TaskStatus Task::Status(MonoObject* _this)
+TaskStatus System::Threading::Tasks::Task::Status(MonoObject* _this)
 {
     MonoProperty* prop = mono_class_get_property_from_name(mono_object_get_class(_this), "Status");
     MonoObject* statusBoxed = mono_property_get_value(prop, _this, NULL, NULL);
@@ -8,14 +8,14 @@ TaskStatus Task::Status(MonoObject* _this)
     return status;
 }
 
-MonoException* Task::Exception(MonoObject* _this)
+MonoException* System::Threading::Tasks::Task::Exception(MonoObject* _this)
 {
     MonoProperty* prop = mono_class_get_property_from_name(mono_object_get_class(_this), "Exception");
     MonoObject* exception = mono_property_get_value(prop, _this, NULL, NULL);
     return (MonoException*)exception;
 }
 
-MonoObject* Task::Result(MonoObject* _this)
+MonoObject* System::Threading::Tasks::Task::Result(MonoObject* _this)
 {
     MonoProperty* prop = mono_class_get_property_from_name(mono_object_get_class(_this), "Result");
     MonoObject* result = mono_property_get_value(prop, _this, NULL, NULL);
