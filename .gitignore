@@ -54,3 +54,5 @@ tools/build
 /test/obj/
 /test/bin/
 
+package-lock.json
+
