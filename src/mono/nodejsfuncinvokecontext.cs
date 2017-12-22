@@ -27,7 +27,7 @@ class NodejsFuncInvokeContext {
 
     public void Complete(object exception, object result)
     {
-        System.Threading.Tasks.Task.Run(() => {
+        Task.Run(() => {
             if (exception != null)
             {
                 var e = exception as Exception;
