@@ -58,3 +58,7 @@ tools/build
 
 package-lock.json
 
+tools/nuget/content
+tools/nuget/lib
+tools/nuget/*.nupkg
+

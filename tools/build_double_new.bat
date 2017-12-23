@@ -2,10 +2,13 @@
 set SELF=%~dp0
 
 if "%1" equ "" (
-    echo Usage: build_double.bat {node_version}
-    echo e.g. build_double.bat 5.9.1
+    echo Usage: build_double_new.bat {node_version}
+    echo e.g. build_double_new.bat 5.9.1
     exit /b -1
 )
+
+rmdir "nuget/content" /s /q
+rmdir "nuget/lib" /s /q
 
 call :build_tools
 if %ERRORLEVEL% neq 0 exit /b -1
@@ -27,6 +30,11 @@ if %ERRORLEVEL% neq 0 exit /b -1
 call :build_edge %1 x86 ia32
 if %ERRORLEVEL% neq 0 exit /b -1
 call :build_edge %1 x64 x64
+if %ERRORLEVEL% neq 0 exit /b -1
+
+call :clean_nuget_package
+if %ERRORLEVEL% neq 0 exit /b -1
+call :copy_nuget_package
 if %ERRORLEVEL% neq 0 exit /b -1
 
 exit /b 0
@@ -93,8 +101,11 @@ dotnet build --configuration Release
 
 if %ERRORLEVEL% neq 0 exit /b -1
 mkdir "%SELF%\build\nuget\lib"
-robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\x64\Release" "%SELF%\build\nuget\lib"
-robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\net40" "%SELF%\build\nuget\lib\net40"
+robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release" "%SELF%\build\nuget\lib"
+rem robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\net40" "%SELF%\build\nuget\lib\net40"
+rem robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\net45" "%SELF%\build\nuget\lib\net45"
+rem robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\netcoreapp1.1" "%SELF%\build\nuget\lib\netcoreapp1.1"
+rem robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\netcoreapp2.0" "%SELF%\build\nuget\lib\netcoreapp2.0"
 
 cd "%SELF%"
 exit /b 0
@@ -151,7 +162,7 @@ REM ===========================================================
 :build_edge
 echo :build_edge %1 %2 %3
 
-rem takes 2 parameters: 1 - node version, 2 - x86 or x64
+rem takes 3 parameters: 1 - node version, 2 - x86 or x64, 3 - ia32 or x64
 
 if exist "%SELF%\build\nuget\content\edge\%2\edge_nativeclr.node" (
  echo "%SELF%\build\nuget\content\edge\%2\edge_nativeclr.node" already built.
@@ -171,5 +182,29 @@ copy /y build\release\edge_nativeclr.node "%SELF%\build\nuget\content\edge\%2"
 copy /y "%SELF%\build\node-%1-%2\node.dll" "%SELF%\build\nuget\content\edge\%2"
 
 popd
+
+exit /b 0
+
+REM ===========================================================
+:clean_nuget_package
+echo :cleaning nuget publish folder
+
+rmdir "nuget/content" /s /q
+rmdir "nuget/lib" /s /q
+
+exit /b 0
+
+REM ===========================================================
+:copy_nuget_package
+echo :copying build to nuget publish folder
+
+ROBOCOPY ../lib nuget/content/edge/ *.js /NFL /NDL /NJH /NJS /nc /ns /np
+ROBOCOPY build/nuget/content/edge/x86 nuget/content/edge/x86 *.* /NFL /NDL /NJH /NJS /nc /ns /np
+ROBOCOPY build/nuget/content/edge/x64 nuget/content/edge/x64 *.* /NFL /NDL /NJH /NJS /nc /ns /np
+
+ROBOCOPY build/nuget/lib/net40 nuget/lib/net40 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
+ROBOCOPY build/nuget/lib/net45 nuget/lib/net45 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
+ROBOCOPY build/nuget/lib/netcoreapp1.1 nuget/lib/netcoreapp1.1 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
+ROBOCOPY build/nuget/lib/netcoreapp2.0 nuget/lib/netcoreapp2.0 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
 
 exit /b 0

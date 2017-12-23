@@ -3,8 +3,8 @@
   <PropertyGroup>
     <Description>With Edge.js you can script Node.js in a .NET application. Edge.js allows you to run Node.js and .NET code in one process. You can call Node.js functions from .NET and .NET functions from Node.js. Edge.js takes care of marshalling data between CLR and V8. Edge.js also reconciles threading models of single threaded V8 and multi-threaded CLR. Edge.js ensures correct lifetime of objects on V8 and CLR heaps. This Edge.js NuGet package supports scripting Node.js v6.5.0.</Description>
     <Copyright>Copyright 2015 Tomasz Janczuk</Copyright>
-    <VersionPrefix>9.0.0</VersionPrefix>
-    <TargetFrameworks>net45;netcoreapp1.1</TargetFrameworks>
+    <VersionPrefix>9.3.0</VersionPrefix>
+    <TargetFrameworks>net45;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
     <AssemblyName>EdgeJs</AssemblyName>
     <PackageId>Edge.js</PackageId>
     <PackageTags>node.js;node;.net;edge;edge.js;v8;clr;coreclr;mono;interop;javascript</PackageTags>
@@ -64,8 +64,8 @@
       <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
       <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
       <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.0" />
-      <PackageReference Include="Microsoft.CodeAnalysis" Version="2.3.2" />
-      <PackageReference Include="Microsoft.CSharp" Version="4.3.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis" Version="2.6.1" />
+      <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
       <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.0.0" />
     </ItemGroup>
