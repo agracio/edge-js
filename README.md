@@ -6,7 +6,7 @@ This is a fork of [Edge.js](https://github.com/tjanczuk/edge) providing improvem
 
 NPM package is published to `edge-js`.
 
-Currently there is no support for **nuget** package, precompiled binaries are available from [release page](https://github.com/agracio/edge-js/releases).
+**NuGet** package is published as [EdgeJs](https://www.nuget.org/packages/EdgeJs).
 
 Usage is same as edge, replace `require('edge')` with `require('edge-js')`:
 
@@ -30,7 +30,7 @@ Edge.js readme
 
 **NEW** Edge.js is now on Slack at https://edgejs.slack.com. Join [here](https://webtask.it.auth0.com/api/run/tjanczuk/edgejs-slack-invite). 
  
-An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, MacOS, and Linux. 
+An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, macOS, and Linux. 
 
 ![image](https://cloud.githubusercontent.com/assets/822369/11969685/e9476f3a-a8d1-11e5-94d4-847bfc4ed960.png)
 
@@ -155,7 +155,7 @@ Listen to the [Edge.js podcast on Herdingcode](http://herdingcode.com/herding-co
 
 ## Introduction 
 
-Edge.js allows you to run Node.js and .NET code in one process on Windows, MacOS, and Linux. 
+Edge.js allows you to run Node.js and .NET code in one process on Windows, macOS, and Linux. 
 
 You can call .NET functions from Node.js and Node.js functions from .NET. Edge.js takes care of marshalling data between CLR and V8. Edge.js also reconciles threading models of single threaded V8 and multi-threaded CLR. Edge.js ensures correct lifetime of objects on V8 and CLR heaps. The CLR code can be pre-compiled or specified as C#, F#, Python, or PowerShell source: Edge.js can compile CLR scripts at runtime. Edge can be extended to support other CLR languages or DSLs.
 
@@ -164,7 +164,7 @@ You can call .NET functions from Node.js and Node.js functions from .NET. Edge.j
 Edge.js provides an asynchronous, in-process mechanism for interoperability between Node.js and .NET. You can use this mechanism to:
 
 * script Node.js from a .NET application (console app, ASP.NET, etc.)
-* script C# from a Node.js application on Windows, MacOS, and Linux
+* script C# from a Node.js application on Windows, macOS, and Linux
 * access MS SQL from Node.js using ADO.NET [more...](http://blog.codeship.io/2014/04/22/leverage-sql-server-with-node-js-using-edge-js.html)  
 * use CLR multi-threading from Node.js for CPU intensive work [more...](http://tomasz.janczuk.org/2013/02/cpu-bound-workers-for-nodejs.html)  
 * write native extensions to Node.js in C# instead of C/C++  
@@ -176,7 +176,7 @@ Read more about the background and motivations of the project [here](http://toma
 
 ## Scripting CLR from Node.js
 
-If you are writing a Node.js application, this section explains how you include and run CLR code in your app. It works on Windows, MacOS, and Linux.
+If you are writing a Node.js application, this section explains how you include and run CLR code in your app. It works on Windows, macOS, and Linux.
 
 ### What you need
 
@@ -1383,7 +1383,7 @@ node sample.js
 
 ## Scripting Node.js from CLR
 
-If you are writing a CLR application (e.g. a C# console application or ASP.NET web app), this section explains how you include and run Node.js code in your app. Currently it works on Windows using desktop CLR, but support for MacOS, and Linux as well as .NET Core is coming soon. 
+If you are writing a CLR application (e.g. a C# console application or ASP.NET web app), this section explains how you include and run Node.js code in your app. Currently it works on Windows using desktop CLR, but support for macOS, and Linux as well as .NET Core is coming soon. 
 
 ### What you need
 
