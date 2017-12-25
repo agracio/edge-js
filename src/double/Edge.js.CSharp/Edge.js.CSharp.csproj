@@ -11,7 +11,7 @@
     <PackageLicenseUrl>https://github.com/tjanczuk/edge-cs/blob/master/LICENSE.txt</PackageLicenseUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' OR '$(TargetFramework)' == 'netcoreapp2.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' OR '$(TargetFramework)' == 'netcoreapp2.0' ">
     <PackageReference Include="Microsoft.CodeAnalysis" Version="2.6.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
   </ItemGroup>
