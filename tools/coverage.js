@@ -14,7 +14,8 @@ if (!process.env.EDGE_USE_CORECLR) {
 
     spawn(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, {
         stdio: 'inherit'
-    }).on('close', runOnSuccess);
+    //}).on('close', runOnSuccess);
+    }).on('close', function(code){runOnSuccess(code, 'net')});
 }
 
 else {
@@ -26,7 +27,8 @@ else {
             spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], {
                 stdio: 'inherit',
                 cwd: testDir
-            }).on('close', runOnSuccess);
+            //}).on('close', runOnSuccess);
+            }).on('close', function(code){runOnSuccess(code, 'coreclr')});
         }
     });
 }
@@ -35,7 +37,7 @@ function runOnSuccess(code, signal) {
     if (code === 0) {
         process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'netcoreapp1.1');
 
-        spawn('node', [mocha, testDir, '-R', 'mocha-junit-reporter', '-t', '10000', '-gc'], {
+        spawn('node', [mocha, testDir, '-R', 'mocha-junit-reporter', '-t', '10000', '-gc', '--reporter-options', 'mochaFile=./test-results-' + signal + '.xml'], {
             stdio: 'inherit'
         }).on('error', function(err) {
             console.log(err);
