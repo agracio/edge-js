@@ -28,6 +28,7 @@
     "nan": "^2.7.0"
   },
   "devDependencies": {
+    "junit-report-merger": "0.0.5",
     "mocha": "3.5.3",
     "mocha-junit-reporter": "^1.14.0"
   },

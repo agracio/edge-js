@@ -6,6 +6,7 @@ var output = path.resolve(testDir, 'Edge.Tests.dll');
 var buildParameters = ['-target:library', '/debug', '-out:' + output, input];
 var mocha = path.resolve(__dirname, '../node_modules/mocha/bin/mocha');
 var fs = require('fs');
+const merge = require('junit-report-merger');
 
 if (!process.env.EDGE_USE_CORECLR) {
     if (process.platform !== 'win32') {
@@ -39,8 +40,21 @@ function runOnSuccess(code, signal) {
 
         spawn('node', [mocha, testDir, '-R', 'mocha-junit-reporter', '-t', '10000', '-gc', '--reporter-options', 'mochaFile=./test-results-' + signal + '.xml'], {
             stdio: 'inherit'
+        }).on('close', function(code) {
+            var source = [];
+            if(fs.existsSync('./test-results-coreclr.xml')){
+                source.push('./test-results-coreclr.xml');
+            }
+            if(fs.existsSync('./test-results-net.xml')){
+                source.push('./test-results-net.xml');
+            }
+            merge.mergeFiles('./test-results.xml', source, function(err) {
+                if(err)
+                    console.log(err)
+            })
         }).on('error', function(err) {
             console.log(err);
         });
+
     }
 }
