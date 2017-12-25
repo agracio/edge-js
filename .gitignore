@@ -55,10 +55,12 @@ tools/build
 /src/Debug/
 /test/obj/
 /test/bin/
+/test/Properties/
 
 package-lock.json
 
 tools/nuget/content
 tools/nuget/lib
 tools/nuget/*.nupkg
+tools/nuget/*.zip
 
