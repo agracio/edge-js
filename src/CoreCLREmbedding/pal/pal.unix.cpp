@@ -27,15 +27,6 @@
 
 pal::string_t pal::to_string(int value) { return std::to_string(value); }
 
-pal::string_t replace(pal::string_t& str, const std::string& from, const std::string& to) {
-    pal::string_t ret = str;
-    size_t start_pos = ret.find(from);
-    if(start_pos == std::string::npos)
-        return ret;
-    ret.replace(start_pos, from.length(), to);
-    return ret;
-}
-
 pal::string_t pal::to_lower(const pal::string_t& in)
 {
     pal::string_t ret = in;

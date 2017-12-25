@@ -4,7 +4,9 @@
 #ifndef __DEPS_ENTRY_H_
 #define __DEPS_ENTRY_H_
 
+#if EDGE_PLATFORM_NIX
 #include "../edge.h"
+#endif
 #include <iostream>
 #include <array>
 #include <vector>

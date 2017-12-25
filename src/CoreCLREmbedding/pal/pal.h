@@ -170,7 +170,6 @@ namespace pal
 	inline int strncasecmp(const char_t* str1, const char_t* str2, int len) { return ::strncasecmp(str1, str2, len); }
 
 	pal::string_t to_lower(const pal::string_t& in);
-	pal::string_t replace(pal::string_t& str, const std::string& from, const std::string& to);
 
 	inline size_t strlen(const char_t* str) { return ::strlen(str); }
 	inline void err_vprintf(const char_t* format, va_list vl) { ::vfprintf(stderr, format, vl); ::fputc('\n', stderr); }
