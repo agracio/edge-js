@@ -9,28 +9,64 @@ var fs = require('fs');
 const merge = require('junit-report-merger');
 
 if (!process.env.EDGE_USE_CORECLR) {
-    if (process.platform !== 'win32') {
-        buildParameters = buildParameters.concat(['-sdk:4.5']);
-    }
+    // if (process.platform !== 'win32') {
+    //     buildParameters = buildParameters.concat(['-sdk:4.5']);
+    // }
+    //
+    // spawn(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, {
+    //     stdio: 'inherit'
+    // //}).on('close', runOnSuccess);
+    // }).on('close', function(code){runOnSuccess(code, 'net')});
 
-    spawn(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, {
-        stdio: 'inherit'
-    //}).on('close', runOnSuccess);
-    }).on('close', function(code){runOnSuccess(code, 'net')});
+    run(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, runOnSuccess, 'net');
 }
 
 else {
-    spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], {
-        stdio: 'inherit',
-        cwd: testDir
-    }).on('close', function(code, signal) {
+    // spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], {
+    //     stdio: 'inherit',
+    //     cwd: testDir
+    // }).on('close', function(code, signal) {
+    //     if (code === 0) {
+    //         spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], {
+    //             stdio: 'inherit',
+    //             cwd: testDir
+    //         //}).on('close', runOnSuccess);
+    //         }).on('close', function(code){runOnSuccess(code, 'coreclr')});
+    //     }
+    // });
+
+    run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], function(code, signal) {
         if (code === 0) {
-            spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], {
-                stdio: 'inherit',
-                cwd: testDir
-            //}).on('close', runOnSuccess);
-            }).on('close', function(code){runOnSuccess(code, 'coreclr')});
+            run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], runOnSuccess, 'coreclr');
+            // spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], {
+            //     stdio: 'inherit',
+            //     cwd: testDir
+            // }).on('close', runOnSuccess);
         }
+    });
+}
+
+function run(cmd, args, onClose, signal){
+
+    var params = process.env.EDGE_USE_CORECLR ? {cwd: testDir} : {};
+    var command = spawn(cmd, args, params);
+    var result = '';
+    var error = '';
+    command.stdout.on('data', function(data) {
+        result += data.toString();
+    });
+    command.stderr.on('data', function(data) {
+        error += data.toString();
+    });
+
+    command.on('error', function(err) {
+        console.log(error);
+        console.log(err);
+    });
+
+    command.on('close', function(code){
+        console.log(result);
+        onClose(code, signal);
     });
 }
 
