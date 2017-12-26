@@ -12,23 +12,35 @@ if (!process.env.EDGE_USE_CORECLR) {
 		buildParameters = buildParameters.concat(['-sdk:4.5']);
 	}
 
-	spawn(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, {
+	var child = spawn(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, {
 		stdio: 'inherit'
-	}).on('close', runOnSuccess);
+	});
+
+    child.on('error', function(err) {
+        console.log(err);
+    });
+	child.on('close', runOnSuccess);
 }
 
 else {
-	spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], { 
+    var child = spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], {
 		stdio: 'inherit', 
 		cwd: testDir 
-	}).on('close', function(code, signal) {
-		if (code === 0) {
-			spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], { 
-				stdio: 'inherit', 
-				cwd: testDir 
-			}).on('close', runOnSuccess);
-		}
 	});
+
+    child.on('error', function(err) {
+        console.log(err);
+    });
+
+    child.on('close', function(code, signal) {
+        if (code === 0) {
+            spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], {
+                stdio: 'inherit',
+                cwd: testDir
+            }).on('close', runOnSuccess);
+        }
+    });
+
 }
 
 function runOnSuccess(code, signal) {
