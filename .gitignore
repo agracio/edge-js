@@ -56,6 +56,7 @@ tools/build
 /test/obj/
 /test/bin/
 /test/Properties/
+/test/test.nuget.cache
 
 package-lock.json
 
@@ -64,3 +65,5 @@ tools/nuget/lib
 tools/nuget/*.nupkg
 tools/nuget/*.zip
 
+
+test-results*.*

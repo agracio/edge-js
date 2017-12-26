@@ -1,10 +1,11 @@
 var edge = require('../lib/edge.js'), assert = require('assert'), path = require('path');
 
 var edgeTestDll = process.env.EDGE_USE_CORECLR ? 'test' : path.join(__dirname, 'Edge.Tests.dll');
+var prefix = process.env.EDGE_USE_CORECLR ? '[CoreCLR]' : '[.NET]';
 
 describe('call patterns', function () {
 
-    it('sync call to exported .NET lambda', function () {
+    it(prefix + ' sync call to exported .NET lambda', function () {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -17,7 +18,7 @@ describe('call patterns', function () {
         assert.equal(result, '.NET welcomes Node.js');
     });
 
-    it('async call to exported .NET lambda', function (done) {
+    it(prefix + ' async call to exported .NET lambda', function (done) {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -33,7 +34,7 @@ describe('call patterns', function () {
         });
     });
 
-    it('call exported .NET lambda with closure over CLR state', function () {
+    it(prefix + ' call exported .NET lambda with closure over CLR state', function () {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -46,7 +47,7 @@ describe('call patterns', function () {
         assert.equal(lambda(null, true), 14);
     });
 
-    it('successfuly marshals .net exception thrown on V8 thread from exported CLR lambda', function () {
+    it(prefix + ' successfuly marshals .net exception thrown on V8 thread from exported CLR lambda', function () {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -67,7 +68,7 @@ describe('call patterns', function () {
         );
     });
 
-    it('successfuly marshals .net exception thrown on CLR thread from exported CLR lambda', function (done) {
+    it(prefix + ' successfuly marshals .net exception thrown on CLR thread from exported CLR lambda', function (done) {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -84,7 +85,7 @@ describe('call patterns', function () {
     });
 
     // Regression test for https://github.com/tjanczuk/edge/issues/39
-    it('large number of concurrent callbacks from C# to JavaScript (issue #39)', function (done) {
+    it(prefix + ' large number of concurrent callbacks from C# to JavaScript (issue #39)', function (done) {
         var edgetest = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -108,7 +109,7 @@ describe('call patterns', function () {
     }); 
 
     // Regression test for https://github.com/tjanczuk/edge/issues/22
-    it('two async callouts each with async callin (issue #22)', function (done) {
+    it(prefix + ' two async callouts each with async callin (issue #22)', function (done) {
         var log = [];
 
         var callin = function (input, callback) {
@@ -139,7 +140,7 @@ describe('call patterns', function () {
         callout({ payload: 'callin2', callin: callin }, callback);
     });
 
-    it('call JS func exported to .NET as a result of calling a JS func from .NET', function (done) {
+    it(prefix + ' call JS func exported to .NET as a result of calling a JS func from .NET', function (done) {
         var callout = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -160,7 +161,7 @@ describe('call patterns', function () {
         );
     });
 
-    it('exception when marshaling CLR data to V8 when calling exported JS function', function (done) {
+    it(prefix + ' exception when marshaling CLR data to V8 when calling exported JS function', function (done) {
         var callout = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -179,7 +180,7 @@ describe('call patterns', function () {
         );
     }); 
 
-    it('exception when marshaling CLR data to V8 when completing a synchronous call from JS to .NET', function () {
+    it(prefix + ' exception when marshaling CLR data to V8 when completing a synchronous call from JS to .NET', function () {
         var callout = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -198,7 +199,7 @@ describe('call patterns', function () {
         );
     });
 
-    it('exception when marshaling CLR data to V8 when completing an asynchronous call from JS to .NET', function (done) {
+    it(prefix + ' exception when marshaling CLR data to V8 when completing an asynchronous call from JS to .NET', function (done) {
         var callout = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -215,7 +216,7 @@ describe('call patterns', function () {
 
 
     if (process.env.EDGE_USE_CORECLR) {
-        it('merged dependencies choose correct version', function (done) {
+        it(prefix + ' merged dependencies choose correct version', function (done) {
             var func = edge.func({
                 assemblyFile: edgeTestDll,
                 typeName: 'Edge.Tests.Startup',
@@ -228,7 +229,7 @@ describe('call patterns', function () {
             });
         });
 
-        it('can use DependencyContext.Default', function (done) {
+        it(prefix + ' can use DependencyContext.Default', function (done) {
             var func = edge.func({
                 assemblyFile: edgeTestDll,
                 typeName: 'Edge.Tests.Startup',
@@ -241,7 +242,7 @@ describe('call patterns', function () {
             });
         });
 
-        it('can use native libraries', function (done) {
+        it(prefix + ' can use native libraries', function (done) {
             var func = edge.func({
                 assemblyFile: edgeTestDll,
                 typeName: 'Edge.Tests.Startup',
@@ -254,7 +255,7 @@ describe('call patterns', function () {
             });
         });
 
-        it('can deserialize using XmlSerializer', function (done) {
+        it(prefix + ' can deserialize using XmlSerializer', function (done) {
             var func = edge.func({
                 assemblyFile: edgeTestDll,
                 typeName: 'Edge.Tests.Startup',

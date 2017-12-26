@@ -18,10 +18,11 @@ var edge = require('../lib/edge.js'), assert = require('assert')
 	, path = require('path');
 
 var edgeTestDll = process.env.EDGE_USE_CORECLR ? 'test' : path.join(__dirname, 'Edge.Tests.dll');
+var prefix = process.env.EDGE_USE_CORECLR ? '[CoreCLR]' : '[.NET]';
 
 describe('async call from .net to node.js', function () {
 
-	it('succeeds for hello world', function (done) {
+	it(prefix + ' succeeds for hello world', function (done) {
 		var func = edge.func({
 			assemblyFile: edgeTestDll,
 			typeName: 'Edge.Tests.Startup',
@@ -39,7 +40,7 @@ describe('async call from .net to node.js', function () {
 		});
 	});
 
-	it('successfuly marshals data from .net to node.js', function (done) {
+	it(prefix + ' successfuly marshals data from .net to node.js', function (done) {
 		var func = edge.func({
 			assemblyFile: edgeTestDll,
 			typeName: 'Edge.Tests.Startup',
@@ -77,7 +78,7 @@ describe('async call from .net to node.js', function () {
 		});
 	});
 
-	it('successfuly marshals object hierarchy from .net to node.js', function (done) {
+	it(prefix + ' successfuly marshals object hierarchy from .net to node.js', function (done) {
 		var func = edge.func({
 			assemblyFile: edgeTestDll,
 			typeName: 'Edge.Tests.Startup',
@@ -93,7 +94,7 @@ describe('async call from .net to node.js', function () {
 		});
 	});
 
-	it('successfuly marshals data from node.js to .net', function (done) {
+	it(prefix + ' successfuly marshals data from node.js to .net', function (done) {
 		var func = edge.func({
 			assemblyFile: edgeTestDll,
 			typeName: 'Edge.Tests.Startup',
@@ -122,7 +123,7 @@ describe('async call from .net to node.js', function () {
 		});
 	});
 
-	it('successfuly handles process.nextTick() in JS callback', function (done) {
+	it(prefix + ' successfuly handles process.nextTick() in JS callback', function (done) {
 		var func = edge.func({
 			assemblyFile: edgeTestDll,
 			typeName: 'Edge.Tests.Startup',
@@ -142,7 +143,7 @@ describe('async call from .net to node.js', function () {
 		});
 	});
 
-	it('successfuly marshals v8 exception on invoking thread', function (done) {
+	it(prefix + ' successfuly marshals v8 exception on invoking thread', function (done) {
 		var func = edge.func({
 			assemblyFile: edgeTestDll,
 			typeName: 'Edge.Tests.Startup',
@@ -161,7 +162,7 @@ describe('async call from .net to node.js', function () {
 		});
 	});
 
-	it('successfuly marshals v8 exception in callback', function (done) {
+	it(prefix + ' successfuly marshals v8 exception in callback', function (done) {
 		var func = edge.func({
 			assemblyFile: edgeTestDll,
 			typeName: 'Edge.Tests.Startup',
@@ -183,7 +184,7 @@ describe('async call from .net to node.js', function () {
 		});
 	});
 
-	it('successfuly marshals empty buffer', function (done) {
+	it(prefix + ' successfuly marshals empty buffer', function (done) {
 		var func = edge.func({
 			assemblyFile: edgeTestDll,
 			typeName: 'Edge.Tests.Startup',
@@ -201,13 +202,13 @@ describe('async call from .net to node.js', function () {
 
 describe('delayed call from node.js to .net', function () {
 
-	it('succeeds for one callback after Task', function (done) {
+	it(prefix + ' succeeds for one callback after Task', function (done) {
 		var expected = [
 			'InvokeBackAfterCLRCallHasFinished#EnteredCLR',
 			'InvokeBackAfterCLRCallHasFinished#LeftCLR',
 			'InvokeBackAfterCLRCallHasFinished#ReturnedToNode',
 			'InvokeBackAfterCLRCallHasFinished#CallingCallbackFromDelayedTask',
-		]
+		];
 
 		var func = edge.func({
 			assemblyFile: edgeTestDll,
@@ -236,7 +237,7 @@ describe('delayed call from node.js to .net', function () {
 					done();
 				});
 			}
-		}
+		};
 
 		func(payload, function (error, result) {
 			assert.ifError(error);

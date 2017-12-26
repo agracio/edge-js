@@ -2,10 +2,11 @@ var edge = require('../lib/edge.js'), assert = require('assert')
     , path = require('path');
 
 var edgeTestDll = process.env.EDGE_USE_CORECLR ? 'test' : path.join(__dirname, 'Edge.Tests.dll');
+var prefix = process.env.EDGE_USE_CORECLR ? '[CoreCLR]' : '[.NET]';
 
 describe('sync call from node.js to .net', function () {
 
-    it('succeeds for hello world', function () {
+    it(prefix + ' succeeds for hello world', function () {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -15,7 +16,7 @@ describe('sync call from node.js to .net', function () {
         assert.equal(result, '.NET welcomes Node.js');
     });
 
-    it('succeeds for hello world when called sync and async', function (done) {
+    it(prefix + ' succeeds for hello world when called sync and async', function (done) {
         // create the func
         var func = edge.func({
             assemblyFile: edgeTestDll,
@@ -35,7 +36,7 @@ describe('sync call from node.js to .net', function () {
         });
     });
 
-    it('successfuly marshals data from node.js to .net', function () {
+    it(prefix + ' successfuly marshals data from node.js to .net', function () {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -57,7 +58,7 @@ describe('sync call from node.js to .net', function () {
         assert.equal(result, 'yes');
     });
 
-    it('successfuly marshals .net exception thrown on v8 thread from .net to node.js', function () {
+    it(prefix + ' successfuly marshals .net exception thrown on v8 thread from .net to node.js', function () {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -75,7 +76,7 @@ describe('sync call from node.js to .net', function () {
         );
     });
 
-    it('fails if C# method does not complete synchronously', function () {
+    it(prefix + ' fails if C# method does not complete synchronously', function () {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',

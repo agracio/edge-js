@@ -2,10 +2,11 @@ var edge = require('../lib/edge.js'), assert = require('assert')
     , path = require('path');
 
 var edgeTestDll = process.env.EDGE_USE_CORECLR ? 'test' : path.join(__dirname, 'Edge.Tests.dll');
+var prefix = process.env.EDGE_USE_CORECLR ? '[CoreCLR]' : '[.NET]';
 
 describe('edge-cs', function () {
 
-    it('succeeds with literal lambda', function (done) {
+    it(prefix + ' succeeds with literal lambda', function (done) {
         var func = edge.func('async (input) => { return "Hello, " + input.ToString(); }');
         func("JavaScript", function (error, result) {
             assert.ifError(error);
@@ -15,7 +16,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with csx file with lambda', function (done) {
+    it(prefix + ' succeeds with csx file with lambda', function (done) {
         var func = edge.func(path.join(__dirname, 'hello_lambda.csx'));
         func("JavaScript", function (error, result) {
             assert.ifError(error);
@@ -24,7 +25,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with lambda in function', function (done) {
+    it(prefix + ' succeeds with lambda in function', function (done) {
         var func = edge.func(function () {/* async (input) => { return "Hello, " + input.ToString(); } */});
         func("JavaScript", function (error, result) {
             assert.ifError(error);
@@ -33,7 +34,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with literal class', function (done) {
+    it(prefix + ' succeeds with literal class', function (done) {
         var func = edge.func('using System.Threading.Tasks; public class Startup { ' +
             ' public async Task<object> Invoke(object input) { return "Hello, " + input.ToString(); } }');
         func("JavaScript", function (error, result) {
@@ -43,7 +44,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with csx file with class', function (done) {
+    it(prefix + ' succeeds with csx file with class', function (done) {
         var func = edge.func(path.join(__dirname, 'hello_class.csx'));
         func("JavaScript", function (error, result) {
             assert.ifError(error);
@@ -52,7 +53,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with cs file with class', function (done) {
+    it(prefix + ' succeeds with cs file with class', function (done) {
         var func = edge.func(path.join(__dirname, 'hello_class.cs'));
         func("JavaScript", function (error, result) {
             assert.ifError(error);
@@ -61,7 +62,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with class in function', function (done) {
+    it(prefix + ' succeeds with class in function', function (done) {
         var func = edge.func(function () {/* 
             using System.Threading.Tasks;
 
@@ -80,7 +81,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with custom class and method name', function (done) {
+    it(prefix + ' succeeds with custom class and method name', function (done) {
         var func = edge.func({
             source: function () {/* 
                 using System.Threading.Tasks;
@@ -106,7 +107,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('fails with malformed literal lambda', function () {
+    it(prefix + ' fails with malformed literal lambda', function () {
         assert.throws(
             function () { edge.func('async_foo (input) => { return "Hello, " + input.ToString(); }'); },
             function (error) {
@@ -119,7 +120,7 @@ describe('edge-cs', function () {
         );
     });
 
-    it('fails with malformed class in function', function () {
+    it(prefix + ' fails with malformed class in function', function () {
         assert.throws(
             function () {
                 edge.func(function () {/* 
@@ -144,7 +145,7 @@ describe('edge-cs', function () {
         );
     });
 
-    it('fails when Invoke method is missing', function () {
+    it(prefix + ' fails when Invoke method is missing', function () {
         assert.throws(
             function () {
                 edge.func(function () {/* 
@@ -169,7 +170,7 @@ describe('edge-cs', function () {
         );
     });
 
-    it('fails when Startup class is missing', function () {
+    it(prefix + ' fails when Startup class is missing', function () {
         assert.throws(
             function () {
                 edge.func(function () {/* 
@@ -194,7 +195,7 @@ describe('edge-cs', function () {
         );
     });
 
-    it('succeeds with System.Data.dll reference as comment in class', function (done) {
+    it(prefix + ' succeeds with System.Data.dll reference as comment in class', function (done) {
         var func = edge.func({
             source: process.env.EDGE_USE_CORECLR ?
                 function () {/* 
@@ -233,7 +234,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with System.Data.dll reference without comment in class', function (done) {
+    it(prefix + ' succeeds with System.Data.dll reference without comment in class', function (done) {
         var func = edge.func({
             source: process.env.EDGE_USE_CORECLR ?
                 function () {/* 
@@ -272,7 +273,7 @@ describe('edge-cs', function () {
         });
     });    
 
-    it('succeeds with System.Data.dll reference as comment in async lambda', function (done) {
+    it(prefix + ' succeeds with System.Data.dll reference as comment in async lambda', function (done) {
         var func = edge.func({
             source: process.env.EDGE_USE_CORECLR ?
                 function () {/* 
@@ -299,7 +300,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with System.Data.dll reference without comment in async lambda', function (done) {
+    it(prefix + ' succeeds with System.Data.dll reference without comment in async lambda', function (done) {
         var func = edge.func({
             source: process.env.EDGE_USE_CORECLR ?
                 function () {/* 
@@ -326,7 +327,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with System.Data.dll reference and a using statement in async lambda', function (done) {
+    it(prefix + ' succeeds with System.Data.dll reference and a using statement in async lambda', function (done) {
         var func = edge.func({
             source: process.env.EDGE_USE_CORECLR ?
                 function () {/* 
@@ -357,7 +358,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with dynamic input to async lambda', function (done) {
+    it(prefix + ' succeeds with dynamic input to async lambda', function (done) {
         var func = edge.func({
             source: function () {/* 
                 async (dynamic input) => 
@@ -374,7 +375,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with nested dynamic input to async lambda', function (done) {
+    it(prefix + ' succeeds with nested dynamic input to async lambda', function (done) {
         var func = edge.func({
             source: function () {/* 
                 async (dynamic input) => 
@@ -391,7 +392,7 @@ describe('edge-cs', function () {
         });
     });
 
-    it('succeeds with dynamic input to Invoke method', function (done) {
+    it(prefix + ' succeeds with dynamic input to Invoke method', function (done) {
         var func = edge.func({
             source: function () {/* 
                 using System.Threading.Tasks;
@@ -413,7 +414,7 @@ describe('edge-cs', function () {
         });
     });    
 
-    it('succeeds with nested dynamic input to Invoke method', function (done) {
+    it(prefix + ' succeeds with nested dynamic input to Invoke method', function (done) {
         var func = edge.func({
             source: function () {/* 
                 using System.Threading.Tasks;
@@ -435,7 +436,7 @@ describe('edge-cs', function () {
         });
     }); 
 
-    it('succeeds with dictionary input to Invoke method', function (done) {
+    it(prefix + ' succeeds with dictionary input to Invoke method', function (done) {
         var func = edge.func({
             source: function () {/* 
                 using System.Threading.Tasks;
@@ -457,7 +458,7 @@ describe('edge-cs', function () {
         });
     });   
 
-    it('fails with a reference to a non-existent assembly without comment in class', function () {
+    it(prefix + ' fails with a reference to a non-existent assembly without comment in class', function () {
         assert.throws(function() {
             edge.func({
                 source: process.env.EDGE_USE_CORECLR ?
@@ -501,7 +502,7 @@ describe('edge-cs', function () {
     });
 
     if (process.env.EDGE_USE_CORECLR) {
-        it('succeeds with dll from nuget package', function (done) {
+        it(prefix + ' succeeds with dll from nuget package', function (done) {
             var func = edge.func(function () {/*
             #r "Newtonsoft.Json.dll"
             using Newtonsoft.Json;
@@ -529,7 +530,7 @@ describe('edge-cs', function () {
     }
 
     if (process.env.EDGE_USE_CORECLR) {
-        it.skip('fails when dynamically loading an assembly that doesn\'t exist', function () {
+        it.skip(prefix + ' fails when dynamically loading an assembly that doesn\'t exist', function () {
             assert.throws(function() {
                 var func = edge.func({
                     source: function () {/* 

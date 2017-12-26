@@ -2,6 +2,7 @@ var edge = require('../lib/edge.js'), assert = require('assert')
     , path = require('path');
 
 var edgeTestDll = process.env.EDGE_USE_CORECLR ? 'test' : path.join(__dirname, 'Edge.Tests.dll');
+var prefix = process.env.EDGE_USE_CORECLR ? '[CoreCLR]' : '[.NET]';
 
 describe('async call from node.js to .net', function () {
 
@@ -11,7 +12,7 @@ describe('async call from node.js to .net', function () {
     //     console.log('AFTER GC!');
     // });
 
-    it('succeeds for hello world', function (done) {
+    it(prefix + ' succeeds for hello world', function (done) {
         var func = edge.func({
         	assemblyFile: edgeTestDll,
         	typeName: 'Edge.Tests.Startup',
@@ -24,7 +25,7 @@ describe('async call from node.js to .net', function () {
         });
     });
 
-    it('successfuly marshals data from node.js to .net', function (done) {
+    it(prefix + ' successfuly marshals data from node.js to .net', function (done) {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -49,7 +50,7 @@ describe('async call from node.js to .net', function () {
         });
     });
 
-    it('successfuly marshals data from .net to node.js', function (done) {
+    it(prefix + ' successfuly marshals data from .net to node.js', function (done) {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -80,7 +81,7 @@ describe('async call from node.js to .net', function () {
         });
     });
 
-    it('successfuly marshals .net exception thrown on v8 thread from .net to node.js', function () {
+    it(prefix + ' successfuly marshals .net exception thrown on v8 thread from .net to node.js', function () {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -98,7 +99,7 @@ describe('async call from node.js to .net', function () {
         );
     });
 
-    it('successfuly marshals .net exception thrown on CLR thread from .net to node.js', function (done) {
+    it(prefix + ' successfuly marshals .net exception thrown on CLR thread from .net to node.js', function (done) {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',
@@ -113,7 +114,7 @@ describe('async call from node.js to .net', function () {
         });
     });
 
-    it('successfuly marshals structured .net exception from .net to node.js', function (done) {
+    it(prefix + ' successfuly marshals structured .net exception from .net to node.js', function (done) {
         var func = edge.func({
         	assemblyFile: edgeTestDll,
         	typeName: 'Edge.Tests.Startup',
@@ -133,7 +134,7 @@ describe('async call from node.js to .net', function () {
         });
     });
 
-    it('successfuly marshals empty buffer', function (done) {
+    it(prefix + ' successfuly marshals empty buffer', function (done) {
         var func = edge.func({
         	assemblyFile: edgeTestDll,
         	typeName: 'Edge.Tests.Startup',
@@ -147,7 +148,7 @@ describe('async call from node.js to .net', function () {
         })
     });
 
-    it('successfuly roundtrips unicode characters', function (done) {
+    it(prefix + ' successfuly roundtrips unicode characters', function (done) {
         var func = edge.func({
         	assemblyFile: edgeTestDll,
         	typeName: 'Edge.Tests.Startup',
@@ -162,7 +163,7 @@ describe('async call from node.js to .net', function () {
         })
     });
 
-    it('successfuly roundtrips empty string', function (done) {
+    it(prefix + ' successfuly roundtrips empty string', function (done) {
         var func = edge.func({
         	assemblyFile: edgeTestDll,
         	typeName: 'Edge.Tests.Startup',
@@ -179,7 +180,7 @@ describe('async call from node.js to .net', function () {
 
     // Note: This doesn't seem to be sufficient to force the repro of the hang,
     // but it's a good test to make sure works.
-    it('successfuly handles process.nextTick in the callback', function (done) {
+    it(prefix + ' successfuly handles process.nextTick in the callback', function (done) {
         var func = edge.func({
             assemblyFile: edgeTestDll,
             typeName: 'Edge.Tests.Startup',

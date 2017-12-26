@@ -9,32 +9,10 @@ var fs = require('fs');
 const merge = require('junit-report-merger');
 
 if (!process.env.EDGE_USE_CORECLR) {
-    // if (process.platform !== 'win32') {
-    //     buildParameters = buildParameters.concat(['-sdk:4.5']);
-    // }
-    //
-    // spawn(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, {
-    //     stdio: 'inherit'
-    // //}).on('close', runOnSuccess);
-    // }).on('close', function(code){runOnSuccess(code, 'net')});
-
     run(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, runOnSuccess, 'net');
 }
 
 else {
-    // spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], {
-    //     stdio: 'inherit',
-    //     cwd: testDir
-    // }).on('close', function(code, signal) {
-    //     if (code === 0) {
-    //         spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], {
-    //             stdio: 'inherit',
-    //             cwd: testDir
-    //         //}).on('close', runOnSuccess);
-    //         }).on('close', function(code){runOnSuccess(code, 'coreclr')});
-    //     }
-    // });
-
     run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], function(code, signal) {
         if (code === 0) {
             run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], runOnSuccess, 'coreclr');

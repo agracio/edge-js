@@ -1,11 +1,12 @@
 var edge = require('../lib/edge.js'), assert = require('assert'), path = require('path');
 
 var edgeTestDll = process.env.EDGE_USE_CORECLR ? 'test' : path.join(__dirname, 'Edge.Tests.dll');
+var prefix = process.env.EDGE_USE_CORECLR ? '[CoreCLR]' : '[.NET]';
 
 describe('serialization', function () {
 
     if (!process.env.EDGE_USE_CORECLR) {
-        it('complex exception serialization', function (done) {
+        it(prefix + ' complex exception serialization', function (done) {
             var func = edge.func({
                 source: function () {/*
                  #r "System.Data.dll"
