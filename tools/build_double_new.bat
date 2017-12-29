@@ -7,9 +7,6 @@ if "%1" equ "" (
     exit /b -1
 )
 
-rmdir "nuget/content" /s /q
-rmdir "nuget/lib" /s /q
-
 call :build_tools
 if %ERRORLEVEL% neq 0 exit /b -1
 
