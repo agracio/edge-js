@@ -16,10 +16,6 @@ else {
     run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], function(code, signal) {
         if (code === 0) {
             run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], runOnSuccess, 'coreclr');
-            // spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], {
-            //     stdio: 'inherit',
-            //     cwd: testDir
-            // }).on('close', runOnSuccess);
         }
     });
 }

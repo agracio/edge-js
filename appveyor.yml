@@ -27,5 +27,6 @@ after_test:
       $url = "https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)"
       $file = '.\test-results.xml'
       (New-Object 'System.Net.WebClient').UploadFile($url, (Resolve-Path '.\test-results.xml'))
+      Push-AppveyorArtifact (Resolve-Path '.\test-results.xml')
 
 build: off

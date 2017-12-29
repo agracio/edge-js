@@ -12,45 +12,14 @@ if (!process.env.EDGE_USE_CORECLR) {
 		buildParameters = buildParameters.concat(['-sdk:4.5']);
 	}
 
-	console.log(buildParameters);
-
-    // var command = spawn(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, {
-		// stdio: 'inherit'
-    // });
-    //
-    // command.on('error', function(err) {
-    //     console.log(err);
-    // });
-    // command.on('close', runOnSuccess);
 	run(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, runOnSuccess);
 }
 
 else {
-    // var command = spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], {
-		// stdio: 'inherit',
-		// cwd: testDir
-    // });
-    //
-    // command.on('error', function(err) {
-    //     console.log(err);
-    // });
-    //
-    // command.on('close', function(code, signal) {
-    //     if (code === 0) {
-    //         spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], {
-    //             stdio: 'inherit',
-    //             cwd: testDir
-    //         }).on('close', runOnSuccess);
-    //     }
-    // });
 
     run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], function(code, signal) {
         if (code === 0) {
         	run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], runOnSuccess);
-            // spawn(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], {
-            //     stdio: 'inherit',
-            //     cwd: testDir
-            // }).on('close', runOnSuccess);
         }
     });
 

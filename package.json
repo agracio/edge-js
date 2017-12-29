@@ -25,12 +25,12 @@
   "license": "Apache-2.0",
   "dependencies": {
     "edge-cs": "1.2.1",
-    "nan": "^2.7.0"
+    "nan": "^2.8.0"
   },
   "devDependencies": {
     "junit-report-merger": "0.0.5",
-    "mocha": "3.5.3",
-    "mocha-junit-reporter": "^1.14.0"
+    "mocha": "4.1.0",
+    "mocha-junit-reporter": "^1.15.0"
   },
   "homepage": "https://github.com/agracio/edge-js",
   "repository": {
