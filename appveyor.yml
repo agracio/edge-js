@@ -12,6 +12,7 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version x64
   - npm install
+  - npm i xunit-viewer
 
 test_script:
   - node --version
@@ -28,5 +29,7 @@ after_test:
       $file = '.\test-results.xml'
       (New-Object 'System.Net.WebClient').UploadFile($url, (Resolve-Path '.\test-results.xml'))
       Push-AppveyorArtifact (Resolve-Path '.\test-results.xml')
+      Push-AppveyorArtifact (Resolve-Path '.\test-results-xunit-viewer.xml')
+      Push-AppveyorArtifact (Resolve-Path '.\test-results-xunit-viewer.html')
 
 build: off
