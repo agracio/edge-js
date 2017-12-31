@@ -8,7 +8,7 @@ declare module 'edge-js' {
 
     interface Source {
         source: string | Function
-        references: string[]
+        references?: string[]
     }
 
     interface Func<TInput, TOutput> {
