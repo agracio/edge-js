@@ -5,7 +5,7 @@
 
 This is a fork of [Edge.js](https://github.com/tjanczuk/edge) providing improvements and bug fixes that are not yet accepted into main Edge.js repo.
 
-NPM package is published to `edge-js`.
+**NPM** package is published as `edge-js`. https://www.npmjs.com/package/edge-js.
 
 **NuGet** package is published as [EdgeJs](https://www.nuget.org/packages/EdgeJs).
 
@@ -25,6 +25,14 @@ var helloWorld = edge.func(function () {/*
     }
 */});
 ```
+
+## Main differences from `edge`
+
+* Support for Node.Js 6.x, 7.x, 8.x, 9.x
+* Support for .NET Core 1.0.1 - 2.0 on Windows/Linux/macOS.
+* Support for Mono runtime 4.8.x - 5.x. 
+* Fixes AccessViolationException when running Node.js code from C# [PR #573](https://github.com/tjanczuk/edge/pull/573).
+* Fixes StackOverflowException [PR #566](https://github.com/tjanczuk/edge/pull/566) that occurs when underlying C# code throws complex exception.
 
 Edge.js readme
 ==============================
@@ -431,7 +439,7 @@ var add7 = edge.func({
 });
 ```
 
-If you are using .NET Core and are using the .NET Core SDK and CLI, you must have a `project.json` file (specification [here](https://github.com/aspnet/Home/wiki/Project.json-file)) that specifies the dependencies for the application.  This list of dependencies must also include the [Edge.js runtime package](https://www.nuget.org/packages/Edge.js/) and, if you need to be able to dynamically compile your code, the package(s) for the compilers that you plan to use, like [Edge.js.CSharp](https://www.nuget.org/packages/Edge.js.CSharp/).  You must have run the `dotnet restore` (to restore the dependencies) and `dotnet build` (to build your project and generate the dependency manifest) commands in that project's directory to generate a `.deps.json` file under `bin/[configuration]/[framework]`, i.e. `bin/Release/netstandard1.6/MyProject.deps.json`.  This `.deps.json` file must either be in the current working directory that `node` is executed in or you must specify its directory by setting the `EDGE_APP_ROOT` environment variable.  For example, if for a `netstandard1.6` project in the `c:\DotNet\MyProject` directory, you would run something like:
+If you are using .NET Core and are using the .NET Core SDK and CLI, you must have a `project.json` file (specification [here](https://github.com/aspnet/Home/wiki/Project.json-file)) that specifies the dependencies for the application.  This list of dependencies must also include the [Edge.js runtime package](https://www.nuget.org/packages/EdgeJs/) and, if you need to be able to dynamically compile your code, the package(s) for the compilers that you plan to use, like [Edge.js.CSharp](https://www.nuget.org/packages/Edge.js.CSharp/).  You must have run the `dotnet restore` (to restore the dependencies) and `dotnet build` (to build your project and generate the dependency manifest) commands in that project's directory to generate a `.deps.json` file under `bin/[configuration]/[framework]`, i.e. `bin/Release/netstandard1.6/MyProject.deps.json`.  This `.deps.json` file must either be in the current working directory that `node` is executed in or you must specify its directory by setting the `EDGE_APP_ROOT` environment variable.  For example, if for a `netstandard1.6` project in the `c:\DotNet\MyProject` directory, you would run something like:
 
 ```
 set EDGE_APP_ROOT=c:\DotNet\MyProject\bin\Release\netstandard1.6
@@ -1391,14 +1399,14 @@ If you are writing a CLR application (e.g. a C# console application or ASP.NET w
 You need Windows with:
 
 * [.NET 4.5](http://www.microsoft.com/en-us/download/details.aspx?id=30653)  
-* [Edge.js NuGet package](https://www.nuget.org/packages/Edge.js)  
+* [Edge.js NuGet package](https://www.nuget.org/packages/EdgeJs)  
 * [Node.js](http://nodejs.org) (optional, if you want to use additional NPM packages)
 
 Edge.js support for scripting Node.js ships as a NuGet Package called `Edge.js`. It comes with everything you need to get started writing applications for x86 and x64 architectures. However, if you want to use additional Node.js packages from NPM, you must separately install Node.js runtime to access the NPM package manager. The latest Edge.js NuGet package has been developed and tested with Node.js v8.9.3. Older Edge.js packages exist for prior versions of Node.js. If you choose a different version of Node.js to install NPM packages, your mileage can vary. 
 
 **NOTE** you cannot use native Node.js extensions when scripting Node.js from CLR using Edge. 
 
-You can install the [Edge.js NuGet package](https://www.nuget.org/packages/Edge.js) using the Visual Studio built-in NuGet package management functionality or using the stand-alone [NuGet client](http://docs.nuget.org/docs/start-here/installing-nuget). 
+You can install the [Edge.js NuGet package](https://www.nuget.org/packages/EdgeJs) using the Visual Studio built-in NuGet package management functionality or using the stand-alone [NuGet client](http://docs.nuget.org/docs/start-here/installing-nuget). 
 
 ### How to: Node.js hello, world
 
@@ -1716,7 +1724,7 @@ Preprequisties:
 To buid the NuGet package, open the Visual Studio 2013 Developer Command Prompt and call:
 
 ```
-tools\build_double.bat 8.9.3
+tools\build_double_new.bat 8.9.3
 ```
 
 (you can substitite another version of Node.js).
@@ -1731,7 +1739,7 @@ The script takes several minutes to complete and does the following:
 * builds managed EdgeJs.dll library that bootstraps running Node.js in a CLR process and provides the Edge.Func programming model  
 * packs everything into a NuGet package
 
-If everything goes well, the resulting NuGet package is located in the `tools\build\nuget` directory. 
+If everything goes well, the resulting NuGet package is located in the `tools\nuget` directory. 
 
 ### Running tests of scripting Node.js in C#
 
