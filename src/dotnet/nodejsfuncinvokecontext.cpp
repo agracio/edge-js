@@ -66,7 +66,7 @@ NodejsFuncInvokeContext::!NodejsFuncInvokeContext()
 #pragma managed(push, off)
 static Nan::Persistent<v8::Function> callbackFactory;
 static Nan::Persistent<v8::Function> callbackFunction;
-#pragma managed(pop)
+#pragma managed(push, pop)
 
 void NodejsFuncInvokeContext::CallFuncOnV8Thread()
 {
