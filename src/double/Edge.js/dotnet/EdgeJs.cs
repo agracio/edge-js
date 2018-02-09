@@ -7,9 +7,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-#if DOTNETVERSION
-[assembly:AssemblyVersionAttribute("8.9.3.0")]
-#endif
 namespace EdgeJs
 {
     public class Edge
