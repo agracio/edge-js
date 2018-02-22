@@ -204,4 +204,5 @@ ROBOCOPY build/nuget/lib/net45 nuget/lib/net45 *.dll /NFL /NDL /NJH /NJS /nc /ns
 ROBOCOPY build/nuget/lib/netcoreapp1.1 nuget/lib/netcoreapp1.1 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
 ROBOCOPY build/nuget/lib/netcoreapp2.0 nuget/lib/netcoreapp2.0 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
 
+rem nuget pack
 exit /b 0

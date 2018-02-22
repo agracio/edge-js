@@ -334,7 +334,7 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 
 	host_mode_t mode = coreclr_exists_in_dir(edgeAppDir) ? host_mode_t::standalone : host_mode_t::muxer;
 
-	if (mode == host_mode_t::standalone && dotnetExecutablePath.empty())
+	if (mode != host_mode_t::standalone && dotnetExecutablePath.empty())
 	{
 		throwV8Exception("This is not a published, standalone application and we are unable to locate the .NET Core SDK.  Please make sure that it is installed; see http://microsoft.com/net/core for more details.");
 	}
