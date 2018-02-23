@@ -15,7 +15,8 @@ ClrFuncReflectionWrap^ ClrFuncReflectionWrap::Create(
     if (wrap->invokeMethod == nullptr) 
     {
         throw gcnew System::InvalidOperationException(
-            "Unable to access the CLR method to wrap through reflection. Make sure it is a public instance method.");
+            System::String::Format("Unable to access the CLR method to wrap through reflection. Make sure it is a public instance method.\r\nType: {0}, Method: {1}, Assembly: {2}", 
+            	typeName, methodName, assembly->GetName()->FullName));
     }
     
     return wrap;
