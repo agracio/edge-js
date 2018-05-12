@@ -474,7 +474,7 @@ v8::Local<v8::Value> CoreClrFunc::MarshalCLRToV8(void* marshalData, int payloadT
 			v8::Local<v8::String> name = v8::Local<v8::String>::Cast(result->Get(Nan::New<v8::String>("Name").ToLocalChecked()));
 			v8::Local<v8::String> message = v8::Local<v8::String>::Cast(result->Get(Nan::New<v8::String>("Message").ToLocalChecked()));
 
-			result->SetPrototype(v8::Exception::Error(message));
+			result->SetPrototype(Nan::GetCurrentContext(), v8::Exception::Error(message));
 			result->Set(Nan::New<v8::String>("message").ToLocalChecked(), message);
 			result->Set(Nan::New<v8::String>("name").ToLocalChecked(), name);
 		}

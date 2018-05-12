@@ -362,7 +362,7 @@ v8::Local<v8::Value> ClrFunc::MarshalCLRExceptionToV8(MonoException* exception)
     
     // Construct an error that is just used for the prototype - not verify efficient
     // but 'typeof Error' should work in JavaScript
-    result->SetPrototype(v8::Exception::Error(message));
+    result->SetPrototype(Nan::GetCurrentContext(), v8::Exception::Error(message));
     result->Set(Nan::New<v8::String>("message").ToLocalChecked(), message);
     
     // Recording the actual type - 'name' seems to be the common used property

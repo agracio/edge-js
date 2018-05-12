@@ -7,10 +7,11 @@ os:
 dist: trusty
 
 node_js:
- - "6.13.1"
+ - "6.14.2"
  - "7.10.1"
- - "8.10.0"
- - "9.8.0"
+ - "8.11.1"
+ - "9.11.1"
+ - "10.1.0"
 
 install:
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF ; fi
