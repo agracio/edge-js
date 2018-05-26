@@ -1,5 +1,6 @@
 declare module 'edge-js' {
-    function func<TInput, TOutput>(language: string = 'cs', params: string | Function | Params | Source | TSQL): Func<TInput, TOutput>
+    function func<TInput, TOutput>(params: string | Function | Params | Source | TSQL): Func<TInput, TOutput>
+    function func<TInput, TOutput>(language: string, params: string | Function | Params | Source | TSQL): Func<TInput, TOutput>
     interface Params {
         assemblyFile: string
         typeName?: string
