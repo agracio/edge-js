@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>bootstrap</AssemblyName>
     <PackageId>bootstrap</PackageId>
@@ -10,7 +10,6 @@
   <ItemGroup >
     <ProjectReference Include="..\..\src\double\Edge.js\Edge.js.csproj" />
     <ProjectReference Include="..\..\src\double\Edge.js.CSharp\Edge.js.CSharp.csproj" />
-    <!-- <PackageReference Include="Edge.js.CSharp" Version="1.2.0" /> -->
   </ItemGroup>
 
 </Project>
