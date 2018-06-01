@@ -38,13 +38,6 @@
 #include <chrono>
 #endif
 
-#ifndef _WIN32
-//#include <boost/algorithm/string.hpp>
-#if !defined(ANDROID) && !defined(__ANDROID__) // CodePlex 269
-#include <xlocale.h>
-#endif
-#endif
-
 /// Various utilities for string conversions and date and time manipulation.
 namespace utility
 {
