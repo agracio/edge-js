@@ -182,6 +182,8 @@ public class CoreCLREmbedding
         internal readonly Dictionary<string, string> CompileAssemblies = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, string> _libraries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, string> _nativeLibraries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private readonly IList<string> _knownPaths = new List<string>();
+        
         private readonly string _packagesPath;
 
         public EdgeAssemblyResolver()
@@ -410,9 +412,11 @@ public class CoreCLREmbedding
 
         public string GetAssemblyPath(string assemblyName)
         {
+            DebugMessage("CoreCLREmbedding::GetAssemblyPath (CLR) - Resolving assembly {0}", assemblyName);
+            
             if (!_libraries.ContainsKey(assemblyName))
             {
-                return null;
+                if (!TryAddAssembly(assemblyName)) return null;
             }
 
             return _libraries[assemblyName];
@@ -426,6 +430,16 @@ public class CoreCLREmbedding
             }
 
             return _nativeLibraries[libraryName];
+        }
+
+        internal void AddAssemblyPath(string assemblyPath)
+        {
+            DebugMessage("CoreCLREmbedding::AddAssemblyPath (CLR) - Adding known assembly path {0}", assemblyPath);
+            
+            if (!_knownPaths.Contains(assemblyPath))
+            {
+                _knownPaths.Add(assemblyPath);
+            }
         }
 
         internal void AddCompiler(string bootstrapDependencyManifest)
@@ -443,6 +457,30 @@ public class CoreCLREmbedding
 
                 DebugMessage("EdgeAssemblyResolver::AddCompiler (CLR) - Finished");
             }
+        }
+
+        private bool TryAddAssembly(string assemblyName)
+        {
+            foreach (var path in _knownPaths)
+            {
+                var assembly = Path.Combine(path, assemblyName + ".dll");
+                if (File.Exists(assembly))
+                {
+                    _libraries[assemblyName] = assembly;
+                    return true;
+                }
+                else
+                {
+                    assembly = Path.Combine(path, assemblyName + ".exe");
+                    if (File.Exists(assembly))
+                    {
+                        _libraries[assemblyName] = assembly;
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
     
@@ -504,8 +542,9 @@ public class CoreCLREmbedding
         {
             return LoadContext.LoadFromAssemblyName(arg2);
         }
-
+        
         DebugMessage("CoreCLREmbedding::Assembly_Resolving (CLR) - Unable to resolve the assembly using the manifest list, returning null");
+        
         return null;
     }
 
@@ -523,6 +562,11 @@ public class CoreCLREmbedding
                 if (!Path.IsPathRooted(assemblyFile))
                 {
                     assemblyFile = Path.Combine(Directory.GetCurrentDirectory(), assemblyFile);
+                    Resolver.AddAssemblyPath(Directory.GetCurrentDirectory());
+                }
+                else
+                {
+                    Resolver.AddAssemblyPath(Path.GetDirectoryName(assemblyFile));
                 }
 
                 assembly = LoadContext.LoadFromAssemblyPath(assemblyFile);
@@ -1344,7 +1388,7 @@ public class CoreCLREmbedding
     {
         if (DebugMode)
         {
-            DebugMessage(message, parameters);
+            Console.WriteLine(message, parameters);
         }
     }
 
