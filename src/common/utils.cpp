@@ -15,6 +15,7 @@ v8::Local<Value> throwV8Exception(const char* format, ...)
 	size_t size = vsnprintf(NULL, 0, format, args);
 	char* message = new char[size + 1];
 
+	va_start(args, format);
 	vsnprintf(message, size + 1, format, args);
 
 	Nan::EscapableHandleScope scope;
