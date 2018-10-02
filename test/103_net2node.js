@@ -248,3 +248,41 @@ describe('delayed call from node.js to .net', function () {
 		});
 	});
 });
+
+describe('.net returns Func to node.js', function () { 
+	it(prefix + ' releases the func', function (done) {
+
+		assert.ok(global.gc, 'This test must be run with --expose-gc set');
+
+		var returnDotNetFunc = edge.func({
+			assemblyFile: edgeTestDll,
+			typeName: 'Edge.Tests.Startup',
+			methodName: 'ReturnDotNetFunc'
+		});
+
+		var ensureDotNetFuncIsCollected = edge.func({
+			assemblyFile: edgeTestDll,
+			typeName: 'Edge.Tests.Startup',
+			methodName: 'EnsureDotNetFuncIsCollected'
+		});
+
+		returnDotNetFunc(null, function(error, result) {
+
+			assert.ifError(error);
+
+			// Check for collections after the callback is completed
+			// The func is still referenced by the callback context so it won't be collected if we run inline
+			setTimeout(() => {
+
+				// Force a GC to release the func returned by returnDotNetFunc is freed
+				global.gc();
+
+				ensureDotNetFuncIsCollected(null, function(error, result) {
+					assert.ifError(error);
+					assert.ok(result);
+					done();
+				});
+			});
+		});
+	});
+});

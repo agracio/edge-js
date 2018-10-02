@@ -124,6 +124,7 @@ private:
     static v8::Local<v8::Object> MarshalCLRObjectToV8(MonoObject* netdata, MonoException** exc);
 
 public:
+    ~ClrFunc();
     static NAN_METHOD(Initialize);
     static v8::Local<v8::Function> Initialize(MonoObject* func);
     v8::Local<v8::Value> Call(v8::Local<v8::Value> payload, v8::Local<v8::Value> callback);

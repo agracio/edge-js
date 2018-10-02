@@ -259,7 +259,32 @@ namespace Edge.Tests
                 succeed = true;
             }
             weakRefToNodejsFunc = null;            
+            var result = new TaskCompletionSource<object>();
+            result.SetResult(succeed);
+            return result.Task;
+        }
 
+        private static WeakReference weakRefToDotNetFunc;
+
+        public Task<object> ReturnDotNetFunc(dynamic input)
+        {
+            // The func we create here must create a closure
+            // Otherwise it will be optimized to a static singleton and never released
+            Func<object, Task<object>> func = new Func<object, Task<object>>(_ => this.ReturnDotNetFunc(_));
+
+            weakRefToDotNetFunc = new WeakReference(func);
+
+            var result = new TaskCompletionSource<object>();
+            result.SetResult(func);
+
+            return result.Task;
+        }
+
+        public Task<object> EnsureDotNetFuncIsCollected(dynamic input) {
+
+            GC.Collect();
+            var succeed = !weakRefToDotNetFunc.IsAlive;
+            weakRefToDotNetFunc = null;
             var result = new TaskCompletionSource<object>();
             result.SetResult(succeed);
             return result.Task;
