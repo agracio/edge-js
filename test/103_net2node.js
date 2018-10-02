@@ -231,11 +231,16 @@ describe('delayed call from node.js to .net', function () {
 				for (var i = 0; i < expected.length; i++) {
 					assert.ok(expected[i] === trace[i]);
 				}
-				ensureNodejsFuncIsCollected(null, function(error, result) {
-					assert.ifError(error);
-					assert.ok(result);
-					done();
-				});
+
+				// Check for collections after the callback is completed
+				// The func is still referenced by the callback context so it won't be collected if we run inline
+				setTimeout(function() {
+					ensureNodejsFuncIsCollected(null, function(error, result) {
+						assert.ifError(error);
+						assert.ok(result);
+						done();
+					});
+				}, 10);
 			}
 		};
 

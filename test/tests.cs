@@ -215,7 +215,7 @@ namespace Edge.Tests
             return result;
         }       
 
-        private WeakReference weakRefToNodejsFunc;
+        private static WeakReference weakRefToNodejsFunc;
         public Task<object> InvokeBackAfterCLRCallHasFinished(dynamic input)
         {
             var trace = new List<string>();
@@ -245,19 +245,8 @@ namespace Edge.Tests
 
         public Task<object> EnsureNodejsFuncIsCollected(dynamic input) {
 
-            var succeed = false;
             GC.Collect();
-            try
-            {
-                // Throws an exception if the object the weak reference
-                // points to is GCed.
-                GC.GetGeneration(weakRefToNodejsFunc);
-            }
-            catch(Exception)
-            {
-                // The NodejsFunc is GCed.
-                succeed = true;
-            }
+            var succeed = !weakRefToNodejsFunc.IsAlive;
             weakRefToNodejsFunc = null;            
             var result = new TaskCompletionSource<object>();
             result.SetResult(succeed);
