@@ -10,6 +10,12 @@ ClrFunc::ClrFunc()
     // empty
 }
 
+ClrFunc::~ClrFunc()
+{
+    DBG("ClrFunc::~ClrFunc");
+    mono_gchandle_free(func);
+}
+
 NAN_METHOD(clrFuncProxy)
 {
     DBG("clrFuncProxy");

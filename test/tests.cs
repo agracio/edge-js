@@ -215,7 +215,7 @@ namespace Edge.Tests
             return result;
         }       
 
-        private WeakReference weakRefToNodejsFunc;
+        private static WeakReference weakRefToNodejsFunc;
         public Task<object> InvokeBackAfterCLRCallHasFinished(dynamic input)
         {
             var trace = new List<string>();
@@ -245,21 +245,35 @@ namespace Edge.Tests
 
         public Task<object> EnsureNodejsFuncIsCollected(dynamic input) {
 
-            var succeed = false;
             GC.Collect();
-            try
-            {
-                // Throws an exception if the object the weak reference
-                // points to is GCed.
-                GC.GetGeneration(weakRefToNodejsFunc);
-            }
-            catch(Exception)
-            {
-                // The NodejsFunc is GCed.
-                succeed = true;
-            }
+            var succeed = !weakRefToNodejsFunc.IsAlive;
             weakRefToNodejsFunc = null;            
+            var result = new TaskCompletionSource<object>();
+            result.SetResult(succeed);
+            return result.Task;
+        }
 
+        private static WeakReference weakRefToDotNetFunc;
+
+        public Task<object> ReturnDotNetFunc(dynamic input)
+        {
+            // The func we create here must create a closure
+            // Otherwise it will be optimized to a static singleton and never released
+            Func<object, Task<object>> func = new Func<object, Task<object>>(_ => this.ReturnDotNetFunc(_));
+
+            weakRefToDotNetFunc = new WeakReference(func);
+
+            var result = new TaskCompletionSource<object>();
+            result.SetResult(func);
+
+            return result.Task;
+        }
+
+        public Task<object> EnsureDotNetFuncIsCollected(dynamic input) {
+
+            GC.Collect();
+            var succeed = !weakRefToDotNetFunc.IsAlive;
+            weakRefToDotNetFunc = null;
             var result = new TaskCompletionSource<object>();
             result.SetResult(succeed);
             return result.Task;

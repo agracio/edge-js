@@ -5,6 +5,12 @@ CoreClrFunc::CoreClrFunc()
 	functionHandle = NULL;
 }
 
+CoreClrFunc::~CoreClrFunc()
+{
+	DBG("CoreClrFunc::~CoreClrFunc");
+	CoreClrEmbedding::FreeHandle(functionHandle);
+}
+
 NAN_METHOD(coreClrFuncProxy)
 {
     DBG("coreClrFuncProxy");

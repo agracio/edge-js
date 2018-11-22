@@ -121,6 +121,7 @@ class CoreClrFunc
 		static v8::Local<v8::Function> InitializeInstance(CoreClrGcHandle functionHandle);
 
 	public:
+		~CoreClrFunc();
 		static NAN_METHOD(Initialize);
 		v8::Local<v8::Value> Call(v8::Local<v8::Value> payload, v8::Local<v8::Value> callbackOrSync);
 		static void FreeMarshalData(void* marshalData, int payloadType);
