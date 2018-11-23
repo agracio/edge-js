@@ -30,7 +30,7 @@ install:
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt install dotnet-sdk-2.1 ; fi
  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install glib mono openssl ; fi
- - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -sSL -k -o osx-net-core.pkg https://www.microsoft.com/net/download/thank-you/dotnet-sdk-2.1.500-macos-x64-installer ; fi
+ - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -sSL -k -o osx-net-core.pkg https://download.visualstudio.microsoft.com/download/pr/59a7b78f-4e86-473b-b230-c84d15505cec/766e3e5f35e7bb9677dd785071c5fbf7/dotnet-sdk-2.1.500-osx-x64.pkg ; fi
  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo installer -verboseR -pkg osx-net-core.pkg -target / ; fi
  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=/usr/local/share/dotnet:$PATH ; fi
  - npm install
