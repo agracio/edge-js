@@ -4,7 +4,7 @@ os:
   - linux
   - osx
 
-dist: trusty
+dist: xenial
 
 mono:
  - latest
@@ -21,13 +21,10 @@ node_js:
 
 install:
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb https://download.mono-project.com/repo/ubuntu stable-xenial main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list ; fi
-# - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb ; fi
-# - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; sudo dpkg -i packages-microsoft-prod.deb ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-trusty-prod trusty main" > /etc/apt/sources.list.d/dotnetdev.list' ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt install apt-transport-https ; fi
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb https://download.mono-project.com/repo/ubuntu stable-xenial main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list ; fi
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb ; fi
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo dpkg -i packages-microsoft-prod.deb ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt update ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt install mono-devel ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt install dotnet-sdk-2.1 ; fi
