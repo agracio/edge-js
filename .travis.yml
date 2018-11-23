@@ -24,7 +24,7 @@ install:
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt install apt-transport-https ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb https://download.mono-project.com/repo/ubuntu stable-xenial main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; sudo dpkg -i packages-microsoft-prod.deb ; fi
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; sudo dpkg -i packages-microsoft-prod.deb
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt update ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt install mono-devel ; fi
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt install dotnet-sdk-2.1 ; fi
