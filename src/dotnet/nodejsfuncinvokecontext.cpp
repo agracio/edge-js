@@ -74,6 +74,9 @@ void NodejsFuncInvokeContext::CallFuncOnV8Thread()
 
     //static Nan::Persistent<v8::Function> callbackFactory;
     //static Nan::Persistent<v8::Function> callbackFunction;
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
 
     Nan::HandleScope scope;
     try
@@ -86,9 +89,12 @@ void NodejsFuncInvokeContext::CallFuncOnV8Thread()
         {
             v8::Local<v8::Function> v8FuncCallbackFunction = Nan::New<v8::FunctionTemplate>(v8FuncCallback)->GetFunction();
             callbackFunction.Reset(v8FuncCallbackFunction);
-            v8::Local<v8::String> code = Nan::New<v8::String>(
-                "(function (cb, ctx) { return function (e, d) { return cb(e, d, ctx); }; })").ToLocalChecked();
-            v8::Local<v8::Function> callbackFactoryFunction = v8::Local<v8::Function>::Cast(v8::Script::Compile(code)->Run());
+            v8::Local<v8::String> code = Nan::New<v8::String>("(function (cb, ctx) { return function (e, d) { return cb(e, d, ctx); }; })").ToLocalChecked();
+            
+            v8::Local<v8::Function> callbackFactoryFunction =
+                v8::Local<v8::Function>::Cast(
+                    v8::Script::Compile(context, code, nullptr).ToLocalChecked()
+                    ->Run(context).ToLocalChecked());
             callbackFactory.Reset(callbackFactoryFunction);
         }
 

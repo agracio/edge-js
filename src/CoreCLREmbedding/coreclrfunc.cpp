@@ -37,6 +37,8 @@ v8::Local<v8::Function> CoreClrFunc::InitializeInstance(CoreClrGcHandle function
 
     static Nan::Persistent<v8::Function> proxyFactory;
     static Nan::Persistent<v8::Function> proxyFunction;
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
 
     Nan::EscapableHandleScope scope;
 
@@ -55,7 +57,10 @@ v8::Local<v8::Function> CoreClrFunc::InitializeInstance(CoreClrGcHandle function
 		proxyFunction.Reset(clrFuncProxyFunction);
 		v8::Local<v8::String> code = Nan::New<v8::String>(
 			"(function (f, ctx) { return function (d, cb) { return f(d, cb, ctx); }; })").ToLocalChecked();
-		v8::Local<v8::Function> codeFunction = v8::Local<v8::Function>::Cast(v8::Script::Compile(code)->Run());
+		v8::Local<v8::Function> codeFunction =
+                v8::Local<v8::Function>::Cast(
+                    v8::Script::Compile(context, code, nullptr).ToLocalChecked()
+                    ->Run(context).ToLocalChecked());
 		proxyFactory.Reset(codeFunction);
     }
 

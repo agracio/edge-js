@@ -74,6 +74,8 @@ void CoreClrNodejsFuncInvokeContext::InvokeCallback(void* data)
 
 	static Nan::Persistent<v8::Function> callbackFactory;
 	static Nan::Persistent<v8::Function> callbackFunction;
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    v8::Local<v8::Context> localContext = isolate->GetCurrentContext();
 
 	Nan::HandleScope scope;
 
@@ -84,7 +86,10 @@ void CoreClrNodejsFuncInvokeContext::InvokeCallback(void* data)
 		callbackFunction.Reset(v8FuncCallbackFunction);
 		v8::Local<v8::String> code = Nan::New<v8::String>(
 			"(function (cb, ctx) { return function (e, d) { return cb(e, d, ctx); }; })").ToLocalChecked();
-		v8::Local<v8::Function> callbackFactoryFunction = v8::Local<v8::Function>::Cast(v8::Script::Compile(code)->Run());
+		v8::Local<v8::Function> callbackFactoryFunction =
+		    v8::Local<v8::Function>::Cast(
+                    v8::Script::Compile(localContext, code, nullptr).ToLocalChecked()
+                    ->Run(localContext).ToLocalChecked());
 		callbackFactory.Reset(callbackFactoryFunction);
 	}
 

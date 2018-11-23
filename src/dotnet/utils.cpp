@@ -18,7 +18,8 @@ v8::Local<v8::String> stringCLR2V8(System::String^ text)
 System::String^ stringV82CLR(v8::Local<v8::String> text)
 {
     Nan::HandleScope scope;
-    v8::String::Utf8Value utf8text(text);
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    v8::String::Utf8Value utf8text(isolate, text);
     if (*utf8text)
     {
         return gcnew System::String(
@@ -45,13 +46,15 @@ System::String^ stringV82CLR(v8::String::Utf8Value& utf8text)
 }
 System::String^ exceptionV82stringCLR(v8::Local<v8::Value> exception)
 {
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
     Nan::HandleScope scope;
     if (exception->IsObject())
     {
-        v8::Local<v8::Value> stack = exception->ToObject()->Get(Nan::New<v8::String>("stack").ToLocalChecked());
+        v8::Local<v8::Value> stack = exception->ToObject(context).ToLocalChecked()->Get(Nan::New<v8::String>("stack").ToLocalChecked());
         if (stack->IsString())
         {
-            return gcnew System::String(stringV82CLR(stack->ToString()));
+            return gcnew System::String(stringV82CLR(stack->ToString(context).ToLocalChecked()));
         }
     }
 

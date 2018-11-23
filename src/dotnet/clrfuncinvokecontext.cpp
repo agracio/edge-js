@@ -19,6 +19,8 @@
 ClrFuncInvokeContext::ClrFuncInvokeContext(v8::Local<v8::Value> callbackOrSync)
 {
     DBG("ClrFuncInvokeContext::ClrFuncInvokeContext");
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
     if (callbackOrSync->IsFunction())
     {
         this->callback = new Nan::Callback(v8::Local<v8::Function>::Cast(callbackOrSync));
@@ -26,7 +28,7 @@ ClrFuncInvokeContext::ClrFuncInvokeContext(v8::Local<v8::Value> callbackOrSync)
     }
     else
     {
-        this->Sync = callbackOrSync->BooleanValue();
+        this->Sync = callbackOrSync->BooleanValue(context).ToChecked();
     }
 
     this->uv_edge_async = NULL;
