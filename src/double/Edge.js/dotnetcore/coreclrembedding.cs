@@ -715,40 +715,46 @@ public class CoreCLREmbedding
             DebugMessage("CoreCLREmbedding::CallFunc (CLR) - Marshalling data of type {0} and calling the .NET method", ((V8Type)payloadType).ToString("G"));
             Task<Object> functionTask = wrapperFunc(MarshalV8ToCLR(payload, (V8Type)payloadType));
 
-            if (functionTask.IsFaulted)
+            
+            // Read the task status only once - you can't assume that an asychronous task's state won't change between reads
+            TaskStatus taskStatus = functionTask.Status;
+            Marshal.WriteInt32(taskState, (int)taskStatus);
+
+            switch (taskStatus)
             {
-                DebugMessage("CoreCLREmbedding::CallFunc (CLR) - .NET method ran synchronously and faulted, marshalling exception data for V8");
+                case TaskStatus.Faulted:
+                {
+                    DebugMessage("CoreCLREmbedding::CallFunc (CLR) - .NET method ran synchronously and faulted, marshalling exception data for V8");
 
-                V8Type taskExceptionType;
+                    V8Type taskExceptionType;
 
-                Marshal.WriteInt32(taskState, (int)TaskStatus.Faulted);
-                Marshal.WriteIntPtr(result, MarshalCLRToV8(functionTask.Exception, out taskExceptionType));
-                Marshal.WriteInt32(resultType, (int)V8Type.Exception);
-            }
+                    Marshal.WriteIntPtr(result, MarshalCLRToV8(functionTask.Exception, out taskExceptionType));
+                    Marshal.WriteInt32(resultType, (int)V8Type.Exception);
+                    break;
+                }
+                case TaskStatus.RanToCompletion:
+                {
+                    DebugMessage("CoreCLREmbedding::CallFunc (CLR) - .NET method ran synchronously, marshalling data for V8");
 
-            else if (functionTask.IsCompleted)
-            {
-                DebugMessage("CoreCLREmbedding::CallFunc (CLR) - .NET method ran synchronously, marshalling data for V8");
+                    V8Type taskResultType;
+                    IntPtr marshalData = MarshalCLRToV8(functionTask.Result, out taskResultType);
 
-                V8Type taskResultType;
-                IntPtr marshalData = MarshalCLRToV8(functionTask.Result, out taskResultType);
+                    DebugMessage("CoreCLREmbedding::CallFunc (CLR) - Method return data is of type {0}", taskResultType.ToString("G"));
 
-                DebugMessage("CoreCLREmbedding::CallFunc (CLR) - Method return data is of type {0}", taskResultType.ToString("G"));
+                    Marshal.WriteIntPtr(result, marshalData);
+                    Marshal.WriteInt32(resultType, (int)taskResultType);
+                    break;
+                }
+                default:
+                {
+                    DebugMessage("CoreCLREmbedding::CallFunc (CLR) - .NET method ran asynchronously, returning task handle and status");
 
-                Marshal.WriteInt32(taskState, (int)TaskStatus.RanToCompletion);
-                Marshal.WriteIntPtr(result, marshalData);
-                Marshal.WriteInt32(resultType, (int)taskResultType);
-            }
+                    GCHandle taskHandle = GCHandle.Alloc(functionTask);
 
-            else
-            {
-                DebugMessage("CoreCLREmbedding::CallFunc (CLR) - .NET method ran asynchronously, returning task handle and status");
-
-                GCHandle taskHandle = GCHandle.Alloc(functionTask);
-
-                Marshal.WriteInt32(taskState, (int)functionTask.Status);
-                Marshal.WriteIntPtr(result, GCHandle.ToIntPtr(taskHandle));
-                Marshal.WriteInt32(resultType, (int)V8Type.Task);
+                    Marshal.WriteIntPtr(result, GCHandle.ToIntPtr(taskHandle));
+                    Marshal.WriteInt32(resultType, (int)V8Type.Task);
+                    break;
+                }
             }
 
             DebugMessage("CoreCLREmbedding::CallFunc (CLR) - Finished");
