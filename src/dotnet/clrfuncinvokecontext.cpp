@@ -28,7 +28,7 @@ ClrFuncInvokeContext::ClrFuncInvokeContext(v8::Local<v8::Value> callbackOrSync)
     }
     else
     {
-        this->Sync = callbackOrSync->BooleanValue(context).ToChecked();
+        this->Sync = callbackOrSync->BooleanValue(context).FromJust();
     }
 
     this->uv_edge_async = NULL;

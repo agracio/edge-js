@@ -4,12 +4,12 @@ image:
 environment:
   matrix:
     # node.js
-    - nodejs_version: "6.14.2"
+    - nodejs_version: "6.15.0"
     - nodejs_version: "7.10.1"
-    - nodejs_version: "8.13.0"
+    - nodejs_version: "8.14.0"
     - nodejs_version: "9.11.2"
-    - nodejs_version: "10.13.0"
-    - nodejs_version: "11.2.0"
+    - nodejs_version: "10.14.0"
+    - nodejs_version: "11.3.0"
 
 install:
   - ps: Install-Product node $env:nodejs_version x64

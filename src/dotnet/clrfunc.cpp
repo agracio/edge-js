@@ -92,9 +92,9 @@ NAN_METHOD(ClrFunc::Initialize)
         v8::Local<v8::Value> jsassemblyFile = options->Get(Nan::New<v8::String>("assemblyFile").ToLocalChecked());
         if (jsassemblyFile->IsString()) {
             // reference .NET code through pre-compiled CLR assembly
-            v8::String::Utf8Value assemblyFile(isolate, jsassemblyFile);
-            v8::String::Utf8Value nativeTypeName(isolate, options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
-            v8::String::Utf8Value nativeMethodName(isolate, options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
+            v8::String::Utf8Value assemblyFile(jsassemblyFile);
+            v8::String::Utf8Value nativeTypeName(options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
+            v8::String::Utf8Value nativeMethodName(options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
 
             typeName = stringV82CLR(nativeTypeName);
             methodName = stringV82CLR(nativeMethodName);
@@ -107,7 +107,7 @@ NAN_METHOD(ClrFunc::Initialize)
         }
         else {
             // reference .NET code throgh embedded source code that needs to be compiled
-            v8::String::Value compilerFile(isolate, options->Get(Nan::New<v8::String>("compiler").ToLocalChecked()));
+            v8::String::Value compilerFile(options->Get(Nan::New<v8::String>("compiler").ToLocalChecked()));
             cli::array<unsigned char>^ buffer = gcnew cli::array<unsigned char>(compilerFile.length() * 2);
             for (int k = 0; k < compilerFile.length(); k++)
             {
@@ -466,7 +466,7 @@ System::Object^ ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
     else if (jsdata->IsDate())
     {
         v8::Local<v8::Date> jsdate = v8::Local<v8::Date>::Cast(jsdata);
-        long long  ticks = (long long)jsdate->NumberValue(context).ToChecked();
+        long long  ticks = (long long)jsdate->NumberValue(context).FromJust();
         long long MinDateTimeTicks = 621355968000000000;// (new DateTime(1970, 1, 1, 0, 0, 0)).Ticks;
         System::DateTime ^netobject = gcnew System::DateTime(ticks * 10000 + MinDateTimeTicks, System::DateTimeKind::Utc);
         return netobject;
@@ -479,7 +479,7 @@ System::Object^ ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
         for (unsigned int i = 0; i < propertyNames->Length(); i++)
         {
             v8::Local<v8::String> name = v8::Local<v8::String>::Cast(propertyNames->Get(i));
-            v8::String::Utf8Value utf8name(isolate, name);
+            v8::String::Utf8Value utf8name(name);
             System::String^ netname = gcnew System::String(*utf8name);
             System::Object^ netvalue = ClrFunc::MarshalV8ToCLR(jsobject->Get(name));
             netobject->Add(netname, netvalue);
@@ -493,19 +493,19 @@ System::Object^ ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
     }
     else if (jsdata->IsBoolean())
     {
-        return jsdata->BooleanValue(context).ToChecked();
+        return jsdata->BooleanValue(context).FromJust();
     }
     else if (jsdata->IsInt32())
     {
-        return jsdata->Int32Value(context).ToChecked();
+        return jsdata->Int32Value(context).FromJust();
     }
     else if (jsdata->IsUint32())
     {
-        return jsdata->Uint32Value(context).ToChecked();
+        return jsdata->Uint32Value(context).FromJust();
     }
     else if (jsdata->IsNumber())
     {
-        return jsdata->NumberValue(context).ToChecked();
+        return jsdata->NumberValue(context).FromJust();
     }
     else if (jsdata->IsUndefined() || jsdata->IsNull())
     {
