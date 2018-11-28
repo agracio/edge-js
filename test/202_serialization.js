@@ -30,7 +30,7 @@ describe('serialization', function () {
                 var exception = error.toString();
                 var contains = exception.indexOf('A network-related or instance-specific error occurred while establishing a connection to SQL Server') !== -1
                     || exception.indexOf('Server does not exist or connection refused') !== -1;
-
+                console.log(exception);
                 assert.ok(contains);
 
                 done();

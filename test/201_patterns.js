@@ -224,7 +224,7 @@ describe('call patterns', function () {
             });
 
             func(null, function (error, result) {
-                assert.equal(result, "9.0.0.0");
+                assert.equal(result, "12.0.0.0");
                 done();
             });
         });
@@ -237,20 +237,7 @@ describe('call patterns', function () {
             });
 
             func(null, function (error, result) {
-                assert.equal(result, "9.0.1");
-                done();
-            });
-        });
-
-        it(prefix + ' can use native libraries', function (done) {
-            var func = edge.func({
-                assemblyFile: edgeTestDll,
-                typeName: 'Edge.Tests.Startup',
-                methodName: 'CanUseNativeLibraries'
-            });
-
-            func(null, function (error, result) {
-                assert.ok(result > 0);
+                assert.equal(result, "12.0.1");
                 done();
             });
         });
