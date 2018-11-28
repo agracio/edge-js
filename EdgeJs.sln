@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edge.js", "src\double\Edge.js\Edge.js.csproj", "{D232E683-ED16-4B7B-BD76-44A9DE96F79E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{E94194B3-965D-4CC5-8080-C897A9B607E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edge.js.CSharp", "src\double\Edge.js.CSharp\Edge.js.CSharp.csproj", "{18C88EB2-F3C0-463A-A07B-6CA3570C7FAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bootstrap", "lib\bootstrap\bootstrap.csproj", "{9AF3DB99-E51A-463F-896A-A9F6123C6999}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D232E683-ED16-4B7B-BD76-44A9DE96F79E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D232E683-ED16-4B7B-BD76-44A9DE96F79E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D232E683-ED16-4B7B-BD76-44A9DE96F79E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D232E683-ED16-4B7B-BD76-44A9DE96F79E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E94194B3-965D-4CC5-8080-C897A9B607E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E94194B3-965D-4CC5-8080-C897A9B607E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E94194B3-965D-4CC5-8080-C897A9B607E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E94194B3-965D-4CC5-8080-C897A9B607E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18C88EB2-F3C0-463A-A07B-6CA3570C7FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18C88EB2-F3C0-463A-A07B-6CA3570C7FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18C88EB2-F3C0-463A-A07B-6CA3570C7FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18C88EB2-F3C0-463A-A07B-6CA3570C7FAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AF3DB99-E51A-463F-896A-A9F6123C6999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AF3DB99-E51A-463F-896A-A9F6123C6999}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AF3DB99-E51A-463F-896A-A9F6123C6999}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AF3DB99-E51A-463F-896A-A9F6123C6999}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
