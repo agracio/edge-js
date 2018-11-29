@@ -15,7 +15,7 @@ environment:
 install:
   - cmd: powershell Install-Product node $env:nodejs_version
   - sh: sudo apt-get update
-  - sh: sudo apt-get install -y apt-transport-https build-essential libgconf-2-4 python
+  - sh: sudo apt-get install -y apt-transport-https build-essential libgconf-2-4 python libglib2.0-dev
   - sh: nvm install $nodejs_version
   - npm install
   - npm i xunit-viewer
