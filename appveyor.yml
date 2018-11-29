@@ -20,11 +20,11 @@ test_script:
   - node --version
   - npm --version
   - dotnet --version
-  - cmd: dir "C:\Program Files\dotnet\shared\Microsoft.NETCore.App"
+  - dir "C:\Program Files\dotnet\shared\Microsoft.NETCore.App"
   - npm test
   - node tools/coverage.js
-  - cmd: SET EDGE_USE_CORECLR=1 & npm test
-  - cmd: SET EDGE_USE_CORECLR=1 & node tools/coverage.js
+  - SET EDGE_USE_CORECLR=1 & npm test
+  - SET EDGE_USE_CORECLR=1 & node tools/coverage.js
 
 after_test:
   - ps: |
