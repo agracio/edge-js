@@ -12,7 +12,7 @@ environment:
     - nodejs_version: "11.3.0"
 
 install:
-  - ps: Install-Product node $env:nodejs_version x64
+  - cmd: powershell Install-Product node $env:nodejs_version
   - npm install
   - npm i xunit-viewer
 
@@ -22,8 +22,9 @@ test_script:
   - dotnet --version
   - npm test
   - node tools/coverage.js
-  - SET EDGE_USE_CORECLR=1 & npm test
-  - SET EDGE_USE_CORECLR=1 & node tools/coverage.js
+  - cmd: dir "C:\Program Files\dotnet\shared\Microsoft.NETCore.App"
+  - cmd: SET EDGE_USE_CORECLR=1 & npm test
+  - cmd: SET EDGE_USE_CORECLR=1 & node tools/coverage.js
 
 after_test:
   - ps: |
