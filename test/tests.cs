@@ -28,7 +28,6 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyModel;
 using System.Linq;
 using System.Net;
-using Microsoft.AspNetCore.Server.Kestrel.Internal.Networking;
 // ReSharper disable UnusedMember.Global
 #endif
 
