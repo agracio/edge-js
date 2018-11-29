@@ -17,6 +17,7 @@ install:
   - cmd: powershell Expand-Archive -Path nvm-setup.zip -DestinationPath .
   - cmd: start /wait nvm-setup.exe /SILENT /SUPPRESSMSGBOXES /q /s
   - cmd: start /wait "%AppData%\nvm\nvm.exe" install $env:nodejs_version 64
+  - cmd: start /wait "%AppData%\nvm\nvm.exe" use $env:nodejs_version 64
   #- cmd: powershell Install-Product node $env:nodejs_version x64
   - sh: sudo apt-get -qq update
   - sh: sudo apt-get -y -qq install build-essential libgconf-2-4 python libglib2.0-dev
