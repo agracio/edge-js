@@ -26,8 +26,10 @@ test_script:
   - dotnet --version
   - npm test
   - node tools/coverage.js
-  - SET EDGE_USE_CORECLR=1 & npm test
-  - SET EDGE_USE_CORECLR=1 & node tools/coverage.js
+  - cmd: SET EDGE_USE_CORECLR=1 & npm test
+  - cmd: SET EDGE_USE_CORECLR=1 & node tools/coverage.js
+  - sh: EDGE_USE_CORECLR=1 npm test
+  - sh: EDGE_USE_CORECLR=1 node tools/coverage.js
 
 after_test:
   - ps: |
