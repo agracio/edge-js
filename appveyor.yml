@@ -14,11 +14,12 @@ environment:
 
 install:
   - cmd: powershell Install-Product node $env:nodejs_version x64
+  - cmd: powershell $PSVersionTable.PSVersion
   - sh: sudo apt-get -qq update
   - sh: sudo apt-get -y -qq install build-essential libgconf-2-4 python libglib2.0-dev
   - sh: nvm install $nodejs_version
   - npm install
-  - npm i -q xunit-viewer
+  - npm i xunit-viewer --silent &> /dev/null
 
 test_script:
   - node --version
