@@ -1,5 +1,5 @@
 image:
-- Visual Studio 2017
+- Visual Studio 2015
 - Ubuntu
 
 environment:
@@ -13,7 +13,8 @@ environment:
     - nodejs_version: "11.3.0"
 
 install:
-  - ps: Install-Product node $env:nodejs_version x64
+  - cmd: powershell Install-Product node $env:nodejs_version
+  - sh: nvm install $nodejs_version
   - npm install
   - npm i xunit-viewer
 
