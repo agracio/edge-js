@@ -17,8 +17,10 @@ install:
   - cmd: powershell Expand-Archive -Path nvm-setup.zip -DestinationPath .
   - cmd: start /wait nvm-setup.exe /SILENT /SUPPRESSMSGBOXES /q /s
   - cmd: start /wait "%AppData%\nvm\nvm.exe" install $env:nodejs_version 64
-  - cmd: start /wait "%AppData%\nvm\nvm.exe" use $env:nodejs_version 64
-  #- cmd: powershell Install-Product node $env:nodejs_version x64
+  - cmd: start "%AppData%\nvm\nvm.exe" use $env:nodejs_version 64
+  - node -p "[process.version,process.arch].join(' ')"
+  - npm --version
+  - dotnet --version  #- cmd: powershell Install-Product node $env:nodejs_version x64
   - sh: sudo apt-get -qq update
   - sh: sudo apt-get -y -qq install build-essential libgconf-2-4 python libglib2.0-dev
   - sh: nvm install $nodejs_version
@@ -27,9 +29,7 @@ install:
   - cmd: npm i xunit-viewer >nul
 
 test_script:
-  - node -p "[process.version,process.arch].join(' ')"
-  - npm --version
-  - dotnet --version
+
   - npm test
   - node tools/coverage.js
   - cmd: SET EDGE_USE_CORECLR=1 & npm test
