@@ -1,4 +1,5 @@
 image:
+  - Ubuntu
   - Visual Studio 2015
 
 environment:
@@ -12,7 +13,10 @@ environment:
     - nodejs_version: "11.3.0"
 
 install:
-  - ps: Install-Product node $env:nodejs_version
+  - cmd: powershell Install-Product node $env:nodejs_version x64
+  - sh: sudo apt-get update
+  - sh: sudo apt-get install -y build-essential libgconf-2-4 python libglib2.0-dev
+  - sh: nvm install $nodejs_version
   - npm install
   - npm i xunit-viewer
 
@@ -20,11 +24,12 @@ test_script:
   - node --version
   - npm --version
   - dotnet --version
-  - dir "C:\Program Files\dotnet\shared\Microsoft.NETCore.App"
   - npm test
   - node tools/coverage.js
-  - SET EDGE_USE_CORECLR=1 & npm test
-  - SET EDGE_USE_CORECLR=1 & node tools/coverage.js
+  - cmd: SET EDGE_USE_CORECLR=1 & npm test
+  - cmd: SET EDGE_USE_CORECLR=1 & node tools/coverage.js
+  - sh: EDGE_USE_CORECLR=1 npm test
+  - sh: EDGE_USE_CORECLR=1 node tools/coverage.js
 
 after_test:
   - ps: |
