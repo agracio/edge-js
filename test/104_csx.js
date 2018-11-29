@@ -136,7 +136,7 @@ describe('edge-cs', function () {
                 */});
             },
             function (error) {
-                if ((error instanceof Error) && error.message.match(/Expected class, delegate, enum, interface, or|expecting `class', `delegate', `enum', `interface', `partial', or `struct'|The type or namespace name 'classes' could not be found/)) {
+                if ((error instanceof Error) && error.message.match(/Expected class, delegate, enum, interface, or|expecting `class', `delegate', `enum', `interface', `partial', `ref', or `struct'|The type or namespace name 'classes' could not be found/)) {
                     return true;
                 }
                 return false;
