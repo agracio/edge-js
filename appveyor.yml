@@ -14,7 +14,7 @@ environment:
 
 init:
   - cmd: powershell >-
-      $app = Get-WmiObject -Class Win32_Product -Filter "Vendor = 'Node.js Foundation'"
+      $app = Get-WmiObject -Class Win32_Product -Filter """Vendor = 'Node.js Foundation'"""
       Write-Host $app
       if ($app) {
         $app.Uninstall()
