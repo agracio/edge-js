@@ -12,14 +12,21 @@ environment:
     - nodejs_version: "10.14.0"
     - nodejs_version: "11.3.0"
 
+init:
+  - cmd: powershell >-
+      $app = Get-WmiObject -Class Win32_Product -Filter "Vendor = 'Node.js Foundation'"
+      Write-Host $app
+      if ($app) {
+        $app.Uninstall()
+      }
+
 install:
   - cmd: powershell wget -UseBasicParsing https://github.com/coreybutler/nvm-windows/releases/download/1.1.7/nvm-setup.zip -OutFile nvm-setup.zip
   - cmd: powershell Expand-Archive -Path nvm-setup.zip -DestinationPath .
-  - cmd: powershell $app = Get-WmiObject -Class Win32_Product -Filter "Name = 'Node.js'"
-  - cmd: powershell Write-Host $app
   - cmd: powershell Start-Process -Wait -FilePath 'nvm-setup.exe' -ArgumentList '/SILENT /SUPPRESSMSGBOXES /q /s' -PassThru
-  - cmd: powershell Start-Process -Wait -FilePath '%AppData%\nvm\nvm.exe' -ArgumentList 'install $env:nodejs_version 64'
-  - cmd: powershell Start-Process -Wait -FilePath '%AppData%\nvm\nvm.exe' -ArgumentList 'use $env:nodejs_version 64'
+  - cmd: SET PATH=%AppData%\nvm;%PATH%
+  - cmd: nvm.exe install $env:nodejs_version 64
+  - cmd: nvm.exe use $env:nodejs_version 64
   - node -p "[process.version,process.arch].join(' ')"
   - npm --version
   - dotnet --version  #- cmd: powershell Install-Product node $env:nodejs_version x64
