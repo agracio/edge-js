@@ -16,9 +16,8 @@ install:
   - cmd: powershell wget -UseBasicParsing https://github.com/coreybutler/nvm-windows/releases/download/1.1.7/nvm-setup.zip -OutFile nvm-setup.zip
   - cmd: powershell Expand-Archive -Path nvm-setup.zip -DestinationPath .
   - cmd: powershell Start-Process -Wait -FilePath 'nvm-setup.exe' -ArgumentList '/SILENT /SUPPRESSMSGBOXES /q /s' -PassThru
-  - cmd: ECHO %AppData%
-  - cmd: %AppData%\nvm\nvm.exe install $env:nodejs_version 64
-  - cmd: %AppData%\nvm\nvm.exe use $env:nodejs_version 64
+  - cmd: start wait/ "%AppData%\nvm\nvm.exe" /install /$env:nodejs_version /64
+  - cmd: start wait/ "%AppData%\nvm\nvm.exe" /use /$env:nodejs_version /64
   - node -p "[process.version,process.arch].join(' ')"
   - npm --version
   - dotnet --version  #- cmd: powershell Install-Product node $env:nodejs_version x64
