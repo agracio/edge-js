@@ -15,10 +15,8 @@ environment:
 init:
   - cmd: powershell >-
       $app = Get-WmiObject -Class Win32_Product -Filter """Vendor = 'Node.js Foundation'"""
-      $app2 = Get-WmiObject -Class Win32_Product -Filter """Name = 'Node.js'"""
 
       Write-Host $app
-      Write-Host $app2
 #
 #      $app.Uninstall()
 #
@@ -33,7 +31,6 @@ install:
   #- cmd: SET PATH=%AppData%\nvm;%PATH%
   #- cmd: nvm.exe install $env:nodejs_version 64
   #- cmd: nvm.exe use $env:nodejs_version 64
-  - cmd: choco list --local-only
   - cmd: powershell Install-Product node $env:nodejs_version x64
   - sh: sudo apt-get -qq update
   - sh: sudo apt-get -y -qq install build-essential libgconf-2-4 python libglib2.0-dev
