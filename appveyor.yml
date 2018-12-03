@@ -12,30 +12,31 @@ environment:
     - nodejs_version: "10.14.0"
     - nodejs_version: "11.3.0"
 
-init:
-  - cmd: powershell >-
-      $app = Get-WmiObject -Class Win32_Product -Filter """Vendor = 'Node.js Foundation'"""
-
-      if ($app) {
-        $app.Uninstall()
-      }
+#init:
+#  - cmd: powershell >-
+#      $app = Get-WmiObject -Class Win32_Product -Filter """Vendor = 'Node.js Foundation'"""
+#
+#      if ($app) {
+#        $app.Uninstall()
+#      }
 
 install:
-  - cmd: powershell wget -UseBasicParsing https://github.com/coreybutler/nvm-windows/releases/download/1.1.7/nvm-setup.zip -OutFile nvm-setup.zip
-  - cmd: powershell Expand-Archive -Path nvm-setup.zip -DestinationPath .
-  - cmd: powershell Start-Process -Wait -FilePath 'nvm-setup.exe' -ArgumentList '/SILENT /SUPPRESSMSGBOXES /q /s' -PassThru
-  - cmd: SET PATH=%AppData%\nvm;%PATH%
-  - cmd: nvm.exe install $env:nodejs_version 64
-  - cmd: nvm.exe use $env:nodejs_version 64
-  - node -p "[process.version,process.arch].join(' ')"
-  - npm --version
-  - dotnet --version  #- cmd: powershell Install-Product node $env:nodejs_version x64
+  #- cmd: powershell wget -UseBasicParsing https://github.com/coreybutler/nvm-windows/releases/download/1.1.7/nvm-setup.zip -OutFile nvm-setup.zip
+  #- cmd: powershell Expand-Archive -Path nvm-setup.zip -DestinationPath .
+  #- cmd: powershell Start-Process -Wait -FilePath 'nvm-setup.exe' -ArgumentList '/SILENT /SUPPRESSMSGBOXES /q /s' -PassThru
+  #- cmd: SET PATH=%AppData%\nvm;%PATH%
+  #- cmd: nvm.exe install $env:nodejs_version 64
+  #- cmd: nvm.exe use $env:nodejs_version 64
+  - cmd: powershell Install-Product node $env:nodejs_version x64
   - sh: sudo apt-get -qq update
   - sh: sudo apt-get -y -qq install build-essential libgconf-2-4 python libglib2.0-dev
   - sh: nvm install $nodejs_version
+  - node -p "[process.version,process.arch].join(' ')"
+  - npm --version
+  - dotnet --version
   - npm install -q
-  - sh: npm i xunit-viewer --silent &> /dev/null
   - cmd: npm i xunit-viewer >nul
+  - sh: npm i xunit-viewer --silent &> /dev/null
 
 test_script:
 
