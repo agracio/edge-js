@@ -13,11 +13,9 @@ environment:
     - nodejs_version: "11.3.0"
 
 init:
-  - ps: >-
+  - cmd: powershell >-
       $app = Get-WmiObject -Class Win32_Product -Filter "Vendor = 'Node.js Foundation'"
 
-      Write-Host $app
-      
       if ($app) {
         $app.Uninstall()
       }
