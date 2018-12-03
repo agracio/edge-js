@@ -14,6 +14,7 @@ environment:
 
 install:
   - cmd: powershell Update-NodeJsInstallation $env:nodejs_version x64
+  - cmd: SET PATH=%AppData%\npm;C:\Program Files\nodejs;%PATH%
   - sh: sudo apt-get -qq update
   - sh: sudo apt-get -y -qq install build-essential libgconf-2-4 python libglib2.0-dev
   - sh: nvm install $nodejs_version
