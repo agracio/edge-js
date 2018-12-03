@@ -17,8 +17,8 @@ install:
   - sh: sudo apt-get -qq update
   - sh: sudo apt-get -y -qq install build-essential libgconf-2-4 python libglib2.0-dev
   - sh: nvm install $nodejs_version
-  - node -p "[process.version,process.arch].join(' ')"
   - npm --version
+  - node -p "[process.version,process.arch].join(' ')"
   - dotnet --version
   - npm install -q
   - cmd: npm i xunit-viewer >nul
