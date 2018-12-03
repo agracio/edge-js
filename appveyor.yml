@@ -20,8 +20,8 @@ install:
   #- cmd: nvm.exe install $env:nodejs_version 64
   #- cmd: nvm.exe use $env:nodejs_version 64
   - cmd: powershell $nodeInstall = Get-InstalledNodeJsVersion
-  - cmd: powershell WriteHost $nodeInstall["version"] $nodeInstall["bitness"]
-  - cmd: powershell Remove-NodeJsInstallation $nodeInstall["version"] $nodeInstall["bitness"]
+  - cmd: powershell WriteHost $nodeInstall["""version"""] $nodeInstall["""bitness"""]
+  - cmd: powershell Remove-NodeJsInstallation $nodeInstall["""version"""] $nodeInstall["""bitness"""]
   - cmd: powershell Start-NodeJsInstallation $env:nodejs_version x64
   # - cmd: powershell Install-Product node $env:nodejs_version x64
   - sh: sudo apt-get -qq update
