@@ -5,16 +5,17 @@ image:
 environment:
   matrix:
     # node.js
-    - nodejs_version: "6.15.0"
-    - nodejs_version: "7.10.1"
-    - nodejs_version: "8.14.0"
-    - nodejs_version: "9.11.2"
-    - nodejs_version: "10.14.0"
-    - nodejs_version: "11.3.0"
+    - nodejs_version: "6"
+    - nodejs_version: "7"
+    - nodejs_version: "8"
+    - nodejs_version: "9"
+    - nodejs_version: "10"
+    - nodejs_version: "11"
 
 install:
-  - cmd: powershell Update-NodeJsInstallation $env:nodejs_version x64
-  - cmd: SET PATH=%AppData%\npm;C:\Program Files\nodejs;%PATH%
+  #- cmd: powershell Update-NodeJsInstallation $env:nodejs_version x64
+  - cmd: powershell Install-Product node $env:nodejs_version x64
+  #- cmd: SET PATH=%AppData%\npm;C:\Program Files\nodejs;%PATH%
   - sh: sudo apt-get -qq update
   - sh: sudo apt-get -y -qq install build-essential libgconf-2-4 python libglib2.0-dev
   - sh: nvm install $nodejs_version
