@@ -1,10 +1,7 @@
 language: node_js
 
 os:
-  - linux
   - osx
-
-dist: xenial
 
 node_js:
  - "6.15.0"
@@ -15,19 +12,11 @@ node_js:
  - "11.3.0"
 
 install:
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt -qq install apt-transport-https ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb https://download.mono-project.com/repo/ubuntu stable-xenial main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo dpkg -i packages-microsoft-prod.deb ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt -qq update ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt -qq install mono-devel ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt -qq install dotnet-sdk-2.1 ; fi
- - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update >/dev/null ; fi
- - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install glib mono openssl ; fi
- - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -sSL -k -o osx-net-core.pkg https://download.visualstudio.microsoft.com/download/pr/59a7b78f-4e86-473b-b230-c84d15505cec/766e3e5f35e7bb9677dd785071c5fbf7/dotnet-sdk-2.1.500-osx-x64.pkg ; fi
- - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo installer -verboseR -pkg osx-net-core.pkg -target / ; fi
- - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH=/usr/local/share/dotnet:$PATH ; fi
+ - brew update >/dev/null
+ - brew install glib mono openssl >/dev/null
+ - curl -sSL -k -o osx-net-core.pkg https://download.visualstudio.microsoft.com/download/pr/59a7b78f-4e86-473b-b230-c84d15505cec/766e3e5f35e7bb9677dd785071c5fbf7/dotnet-sdk-2.1.500-osx-x64.pkg
+ - sudo installer -pkg osx-net-core.pkg -target /
+ - export PATH=/usr/local/share/dotnet:$PATH
  - npm install -q
 
 script:
@@ -35,4 +24,3 @@ script:
  - dotnet --version
  - npm test
  - EDGE_USE_CORECLR=1 npm test
-
