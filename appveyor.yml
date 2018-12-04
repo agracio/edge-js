@@ -20,7 +20,7 @@ install:
   - node -p "[process.version,process.arch].join(' ')"
   - dotnet --version
   - npm install -q
-  - cmd: npm i-q  xunit-viewer >nul
+  - cmd: npm i -q  xunit-viewer >nul
   - sh: npm i xunit-viewer --silent &> /dev/null
 
 test_script:
