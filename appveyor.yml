@@ -5,25 +5,22 @@ image:
 environment:
   matrix:
     # node.js
-    - nodejs_version: "6"
-    - nodejs_version: "7"
-    - nodejs_version: "8"
-    - nodejs_version: "9"
-    - nodejs_version: "10"
-    - nodejs_version: "11"
+    - nodejs: "6"
+    - nodejs: "7"
+    - nodejs: "8"
+    - nodejs: "9"
+    - nodejs: "10"
+    - nodejs: "11"
 
 install:
-  #- cmd: powershell Update-NodeJsInstallation $env:nodejs_version x64
-  - cmd: powershell Install-Product node $env:nodejs_version x64
-  #- cmd: SET PATH=%AppData%\npm;C:\Program Files\nodejs;%PATH%
+  - cmd: powershell Install-Product node $env:nodejs x64
   - sh: sudo apt-get -qq update
   - sh: sudo apt-get -y -qq install build-essential libgconf-2-4 python libglib2.0-dev
-  - sh: nvm install $nodejs_version
-  - npm --version
+  - sh: nvm install $nodejs
   - node -p "[process.version,process.arch].join(' ')"
   - dotnet --version
   - npm install -q
-  - cmd: npm i xunit-viewer >nul
+  - cmd: npm i-q  xunit-viewer >nul
   - sh: npm i xunit-viewer --silent &> /dev/null
 
 test_script:
@@ -43,5 +40,16 @@ after_test:
       Push-AppveyorArtifact (Resolve-Path '.\test-results.xml')
       Push-AppveyorArtifact (Resolve-Path '.\test-results-xunit-viewer.xml')
       Push-AppveyorArtifact (Resolve-Path '.\test-results-xunit-viewer.html')
+
+skip_commits:
+  files:
+    - samples/*
+    - stress/*
+    - performance/*
+    - '**/*.md'
+    - '**/*.d.ts'
+    - '**/*.bat'
+    - '.travis.yml'
+    - 'Dockerfile'
 
 build: off
