@@ -20,7 +20,15 @@ namespace EdgeJs
         static Edge()
         {
             // needed because we *must* load the edgedll from the original location else we'll freeze up.
-            edgeDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetAssembly(typeof(Edge)).Location);
+            // 
+            // CodeBase is preferred over Location if available. When running inside an AppDomain that 
+            // is using shadow copying, Location points to the shadow-copied file, but CodeBase points 
+            // at the original location. Calling back into EdgeJs.dll from node hangs if the shadow 
+            // copy path is specified instead of the original path.
+            var asm = typeof(Edge).Assembly;
+            edgeDirectory = string.IsNullOrWhiteSpace(asm.CodeBase) || !Uri.TryCreate(asm.CodeBase, UriKind.Absolute, out var codeBase) || !codeBase.IsFile
+                ? Path.GetDirectoryName(asm.Location)
+                : Path.GetDirectoryName(codeBase.LocalPath);
         }
 
         static string assemblyDirectory;
