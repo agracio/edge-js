@@ -53,7 +53,7 @@ namespace Edge.Tests
                 double b = (double)data["b"];
                 if (b != 3.1415) throw new Exception("b is not 3.1415");
                 string c = (string)data["c"];
-                if (c != "foo") throw new Exception("c is not foo");
+                if (c != "fooåäö") throw new Exception("c is not fooåäö");
                 bool d = (bool)data["d"];
                 if (d != true) throw new Exception("d is not true");
                 bool e = (bool)data["e"];
@@ -63,9 +63,9 @@ namespace Edge.Tests
                 object[] g = (object[])data["g"];
                 if (g.Length != 2) throw new Exception("g.length is not 2");
                 if ((int)g[0] != 1) throw new Exception("g[0] is not 1");
-                if ((string)g[1] != "foo") throw new Exception("g[1] is not foo");
+                if ((string)g[1] != "fooåäö") throw new Exception("g[1] is not fooåäö");
                 IDictionary<string, object> h = (IDictionary<string,object>)data["h"];
-                if ((string)h["a"] != "foo") throw new Exception("h.a is not foo");
+                if ((string)h["a"] != "fooåäö") throw new Exception("h.a is not fooåäö");
                 if ((int)h["b"] != 12) throw new Exception("h.b is not 12");
                 if (expectFunction)
                 {
@@ -86,7 +86,7 @@ namespace Edge.Tests
                 double b = input.b;
                 if (b != 3.1415) throw new Exception("dynamic b is not 3.1415");
                 string c = input.c;
-                if (c != "foo") throw new Exception("dynamic c is not foo");
+                if (c != "fooåäö") throw new Exception("dynamic c is not fooåäö");
                 bool d = input.d;
                 if (d != true) throw new Exception("dynamic d is not true");
                 bool e = input.e;
@@ -96,9 +96,9 @@ namespace Edge.Tests
                 dynamic[] g = input.g;
                 if (g.Length != 2) throw new Exception("dynamic g.length is not 2");
                 if ((int)g[0] != 1) throw new Exception("dynamic g[0] is not 1");
-                if ((string)g[1] != "foo") throw new Exception("dynamic g[1] is not foo");
+                if ((string)g[1] != "fooåäö") throw new Exception("dynamic g[1] is not fooåäö");
                 dynamic h = input.h;
-                if ((string)h.a != "foo") throw new Exception("dynamic h.a is not foo");
+                if ((string)h.a != "fooåäö") throw new Exception("dynamic h.a is not fooåäö");
                 if ((int)h.b != 12) throw new Exception("dynamic h.b is not 12");
                 if (expectFunction)
                 {
@@ -131,12 +131,12 @@ namespace Edge.Tests
             dynamic result = new ExpandoObject();
             result.a = 1;
             result.b = 3.1415;
-            result.c = "foo";
+            result.c = "fooåäö";
             result.d = true;
             result.e = false;
             result.f = new byte[10];
-            result.g = new object[] { 1, "foo" };
-            result.h = new { a = "foo", b = 12 };
+            result.g = new object[] { 1, "fooåäö" };
+            result.h = new { a = "fooåäö", b = 12 };
             result.i = (Func<object,Task<object>>)(async (i) => { return i; });
             result.j = new DateTime(2013, 08, 30);
 
@@ -180,12 +180,12 @@ namespace Edge.Tests
             dynamic payload = new ExpandoObject();
             payload.a = 1;
             payload.b = 3.1415;
-            payload.c = "foo";
+            payload.c = "fooåäö";
             payload.d = true;
             payload.e = false;
             payload.f = new byte[10];
-            payload.g = new object[] { 1, "foo" };
-            payload.h = new { a = "foo", b = 12 };
+            payload.g = new object[] { 1, "fooåäö" };
+            payload.h = new { a = "fooåäö", b = 12 };
             payload.i = (Func<object,Task<object>>)(async (i) => { return i; });
             payload.j = new DateTime(2013, 08, 30);
 
