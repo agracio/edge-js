@@ -72,7 +72,7 @@ namespace double_test
 			        assert.equal(typeof data, 'object');
 			        assert.ok(data.a === 1);
 			        assert.ok(data.b === 3.1415);
-			        assert.ok(data.c === 'foo');
+			        assert.ok(data.c === 'fooåäö');
 			        assert.ok(data.d === true);
 			        assert.ok(data.e === false);
 			        assert.equal(typeof data.f, 'object');
@@ -81,9 +81,9 @@ namespace double_test
 			        assert.ok(Array.isArray(data.g));
 			        assert.equal(data.g.length, 2);
 			        assert.ok(data.g[0] === 1);
-			        assert.ok(data.g[1] === 'foo');
+			        assert.ok(data.g[1] === 'fooåäö');
 			        assert.equal(typeof data.h, 'object');
-			        assert.ok(data.h.a === 'foo');
+			        assert.ok(data.h.a === 'fooåäö');
 			        assert.ok(data.h.b === 12);
 			        assert.equal(typeof data.i, 'function');
 			        assert.equal(typeof data.j, 'object');
@@ -114,12 +114,12 @@ namespace double_test
                     cb(null, {
 			            a: 1,
 			            b: 3.1415,
-			            c: 'foo',
+			            c: 'fooåäö',
 			            d: true,
 			            e: false,
 			            f: new Buffer(10),
-			            g: [ 1, 'foo' ],
-			            h: { a: 'foo', b: 12 },
+			            g: [ 1, 'fooåäö' ],
+			            h: { a: 'fooåäö', b: 12 },
 			            i: function (payload, callback) { },
 			            j: new Date(Date.UTC(2013, 07, 30))
 		            });

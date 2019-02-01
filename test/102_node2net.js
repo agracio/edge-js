@@ -34,12 +34,12 @@ describe('async call from node.js to .net', function () {
         var payload = {
             a: 1,
             b: 3.1415,
-            c: 'foo',
+            c: 'fooåäö',
             d: true,
             e: false,
             f: new Buffer(10),
-            g: [ 1, 'foo' ],
-            h: { a: 'foo', b: 12 },
+            g: [ 1, 'fooåäö' ],
+            h: { a: 'fooåäö', b: 12 },
             i: function (payload, callback) { },
             j: new Date(Date.UTC(2013, 07, 30))
         };
@@ -61,7 +61,7 @@ describe('async call from node.js to .net', function () {
             assert.equal(typeof result, 'object');
             assert.ok(result.a === 1);
             assert.ok(result.b === 3.1415);
-            assert.ok(result.c === 'foo');
+            assert.ok(result.c === 'fooåäö');
             assert.ok(result.d === true);
             assert.ok(result.e === false);
             assert.equal(typeof result.f, 'object');
@@ -70,9 +70,9 @@ describe('async call from node.js to .net', function () {
             assert.ok(Array.isArray(result.g));
             assert.equal(result.g.length, 2);
             assert.ok(result.g[0] === 1);
-            assert.ok(result.g[1] === 'foo');
+            assert.ok(result.g[1] === 'fooåäö');
             assert.equal(typeof result.h, 'object');
-            assert.ok(result.h.a === 'foo');
+            assert.ok(result.h.a === 'fooåäö');
             assert.ok(result.h.b === 12);
             assert.equal(typeof result.i, 'function');
             assert.equal(typeof result.j, 'object');
