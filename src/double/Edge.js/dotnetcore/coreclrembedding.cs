@@ -875,7 +875,7 @@ public class CoreCLREmbedding
             case V8Type.Boolean:
             case V8Type.Number:
             case V8Type.Date:
-                Marshal.FreeHGlobal(marshalData);
+                Marshal.FreeCoTaskMem(marshalData);
                 break;
 
             case V8Type.Object:
@@ -889,13 +889,13 @@ public class CoreCLREmbedding
                     IntPtr propertyName = Marshal.ReadIntPtr(objectData.propertyNames, i * PointerSize);
 
                     FreeMarshalData(propertyValue, propertyType);
-                    Marshal.FreeHGlobal(propertyName);
+                    Marshal.FreeCoTaskMem(propertyName);
                 }
 
-                Marshal.FreeHGlobal(objectData.propertyTypes);
-                Marshal.FreeHGlobal(objectData.propertyValues);
-                Marshal.FreeHGlobal(objectData.propertyNames);
-                Marshal.FreeHGlobal(marshalData);
+                Marshal.FreeCoTaskMem(objectData.propertyTypes);
+                Marshal.FreeCoTaskMem(objectData.propertyValues);
+                Marshal.FreeCoTaskMem(objectData.propertyNames);
+                Marshal.FreeCoTaskMem(marshalData);
 
                 break;
 
@@ -910,17 +910,17 @@ public class CoreCLREmbedding
                     FreeMarshalData(itemValue, itemType);
                 }
 
-                Marshal.FreeHGlobal(arrayData.itemTypes);
-                Marshal.FreeHGlobal(arrayData.itemValues);
-                Marshal.FreeHGlobal(marshalData);
+                Marshal.FreeCoTaskMem(arrayData.itemTypes);
+                Marshal.FreeCoTaskMem(arrayData.itemValues);
+                Marshal.FreeCoTaskMem(marshalData);
 
                 break;
 
             case V8Type.Buffer:
                 V8BufferData bufferData = Marshal.PtrToStructure<V8BufferData>(marshalData);
 
-                Marshal.FreeHGlobal(bufferData.buffer);
-                Marshal.FreeHGlobal(marshalData);
+                Marshal.FreeCoTaskMem(bufferData.buffer);
+                Marshal.FreeCoTaskMem(marshalData);
 
                 break;
 
@@ -945,19 +945,19 @@ public class CoreCLREmbedding
         else if (clrObject is string)
         {
             v8Type = V8Type.String;
-            return Marshal.StringToHGlobalAnsi((string) clrObject);
+            return Marshal.StringToCoTaskMemUTF8((string) clrObject);
         }
 
         else if (clrObject is char)
         {
             v8Type = V8Type.String;
-            return Marshal.StringToHGlobalAnsi(clrObject.ToString());
+            return Marshal.StringToCoTaskMemUTF8(clrObject.ToString());
         }
 
         else if (clrObject is bool)
         {
             v8Type = V8Type.Boolean;
-            IntPtr memoryLocation = Marshal.AllocHGlobal(sizeof (int));
+            IntPtr memoryLocation = Marshal.AllocCoTaskMem(sizeof (int));
 
             Marshal.WriteInt32(memoryLocation, ((bool) clrObject)
                 ? 1
@@ -968,7 +968,7 @@ public class CoreCLREmbedding
         else if (clrObject is Guid)
         {
             v8Type = V8Type.String;
-            return Marshal.StringToHGlobalAnsi(clrObject.ToString());
+            return Marshal.StringToCoTaskMemUTF8(clrObject.ToString());
         }
 
         else if (clrObject is DateTime)
@@ -987,7 +987,7 @@ public class CoreCLREmbedding
             }
 
             long ticks = (dateTime.Ticks - MinDateTimeTicks)/10000;
-            IntPtr memoryLocation = Marshal.AllocHGlobal(sizeof (double));
+            IntPtr memoryLocation = Marshal.AllocCoTaskMem(sizeof (double));
 
             WriteDouble(memoryLocation, ticks);
             return memoryLocation;
@@ -996,19 +996,19 @@ public class CoreCLREmbedding
         else if (clrObject is DateTimeOffset)
         {
             v8Type = V8Type.String;
-            return Marshal.StringToHGlobalAnsi(clrObject.ToString());
+            return Marshal.StringToCoTaskMemUTF8(clrObject.ToString());
         }
 
         else if (clrObject is Uri)
         {
             v8Type = V8Type.String;
-            return Marshal.StringToHGlobalAnsi(clrObject.ToString());
+            return Marshal.StringToCoTaskMemUTF8(clrObject.ToString());
         }
 
         else if (clrObject is short)
         {
             v8Type = V8Type.Int32;
-            IntPtr memoryLocation = Marshal.AllocHGlobal(sizeof (int));
+            IntPtr memoryLocation = Marshal.AllocCoTaskMem(sizeof (int));
 
             Marshal.WriteInt32(memoryLocation, Convert.ToInt32(clrObject));
             return memoryLocation;
@@ -1017,7 +1017,7 @@ public class CoreCLREmbedding
         else if (clrObject is int)
         {
             v8Type = V8Type.Int32;
-            IntPtr memoryLocation = Marshal.AllocHGlobal(sizeof (int));
+            IntPtr memoryLocation = Marshal.AllocCoTaskMem(sizeof (int));
 
             Marshal.WriteInt32(memoryLocation, (int) clrObject);
             return memoryLocation;
@@ -1026,7 +1026,7 @@ public class CoreCLREmbedding
         else if (clrObject is long)
         {
             v8Type = V8Type.Number;
-            IntPtr memoryLocation = Marshal.AllocHGlobal(sizeof (double));
+            IntPtr memoryLocation = Marshal.AllocCoTaskMem(sizeof (double));
 
             WriteDouble(memoryLocation, Convert.ToDouble((long) clrObject));
             return memoryLocation;
@@ -1035,7 +1035,7 @@ public class CoreCLREmbedding
         else if (clrObject is double)
         {
             v8Type = V8Type.Number;
-            IntPtr memoryLocation = Marshal.AllocHGlobal(sizeof (double));
+            IntPtr memoryLocation = Marshal.AllocCoTaskMem(sizeof (double));
 
             WriteDouble(memoryLocation, (double) clrObject);
             return memoryLocation;
@@ -1044,7 +1044,7 @@ public class CoreCLREmbedding
         else if (clrObject is float)
         {
             v8Type = V8Type.Number;
-            IntPtr memoryLocation = Marshal.AllocHGlobal(sizeof (double));
+            IntPtr memoryLocation = Marshal.AllocCoTaskMem(sizeof (double));
 
             WriteDouble(memoryLocation, Convert.ToDouble((Single) clrObject));
             return memoryLocation;
@@ -1053,13 +1053,13 @@ public class CoreCLREmbedding
         else if (clrObject is decimal)
         {
             v8Type = V8Type.String;
-            return Marshal.StringToHGlobalAnsi(clrObject.ToString());
+            return Marshal.StringToCoTaskMemUTF8(clrObject.ToString());
         }
 
         else if (clrObject is Enum)
         {
             v8Type = V8Type.String;
-            return Marshal.StringToHGlobalAnsi(clrObject.ToString());
+            return Marshal.StringToCoTaskMemUTF8(clrObject.ToString());
         }
 
         else if (clrObject is byte[] || clrObject is IEnumerable<byte>)
@@ -1080,11 +1080,11 @@ public class CoreCLREmbedding
             }
 
             bufferData.bufferLength = buffer.Length;
-            bufferData.buffer = Marshal.AllocHGlobal(buffer.Length*sizeof (byte));
+            bufferData.buffer = Marshal.AllocCoTaskMem(buffer.Length*sizeof (byte));
 
             Marshal.Copy(buffer, 0, bufferData.buffer, bufferData.bufferLength);
 
-            IntPtr destinationPointer = Marshal.AllocHGlobal(V8BufferDataSize);
+            IntPtr destinationPointer = Marshal.AllocCoTaskMem(V8BufferDataSize);
             Marshal.StructureToPtr(bufferData, destinationPointer, false);
 
             return destinationPointer;
@@ -1120,13 +1120,13 @@ public class CoreCLREmbedding
             int counter = 0;
 
             objectData.propertiesCount = keyCount;
-            objectData.propertyNames = Marshal.AllocHGlobal(PointerSize*keyCount);
-            objectData.propertyTypes = Marshal.AllocHGlobal(sizeof (int)*keyCount);
-            objectData.propertyValues = Marshal.AllocHGlobal(PointerSize*keyCount);
+            objectData.propertyNames = Marshal.AllocCoTaskMem(PointerSize*keyCount);
+            objectData.propertyTypes = Marshal.AllocCoTaskMem(sizeof (int)*keyCount);
+            objectData.propertyValues = Marshal.AllocCoTaskMem(PointerSize*keyCount);
 
             foreach (object key in keys)
             {
-                Marshal.WriteIntPtr(objectData.propertyNames, counter*PointerSize, Marshal.StringToHGlobalAnsi(key.ToString()));
+                Marshal.WriteIntPtr(objectData.propertyNames, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(key.ToString()));
                 V8Type propertyType;
                 Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, MarshalCLRToV8(getValue(key), out propertyType));
                 Marshal.WriteInt32(objectData.propertyTypes, counter*sizeof (int), (int) propertyType);
@@ -1134,7 +1134,7 @@ public class CoreCLREmbedding
                 counter++;
             }
 
-            IntPtr destinationPointer = Marshal.AllocHGlobal(V8ObjectDataSize);
+            IntPtr destinationPointer = Marshal.AllocCoTaskMem(V8ObjectDataSize);
             Marshal.StructureToPtr(objectData, destinationPointer, false);
 
             return destinationPointer;
@@ -1157,13 +1157,13 @@ public class CoreCLREmbedding
             }
 
             arrayData.arrayLength = itemValues.Count;
-            arrayData.itemTypes = Marshal.AllocHGlobal(sizeof (int)*arrayData.arrayLength);
-            arrayData.itemValues = Marshal.AllocHGlobal(PointerSize*arrayData.arrayLength);
+            arrayData.itemTypes = Marshal.AllocCoTaskMem(sizeof (int)*arrayData.arrayLength);
+            arrayData.itemValues = Marshal.AllocCoTaskMem(PointerSize*arrayData.arrayLength);
 
             Marshal.Copy(itemTypes.ToArray(), 0, arrayData.itemTypes, arrayData.arrayLength);
             Marshal.Copy(itemValues.ToArray(), 0, arrayData.itemValues, arrayData.arrayLength);
 
-            IntPtr destinationPointer = Marshal.AllocHGlobal(V8ArrayDataSize);
+            IntPtr destinationPointer = Marshal.AllocCoTaskMem(V8ArrayDataSize);
             Marshal.StructureToPtr(arrayData, destinationPointer, false);
 
             return destinationPointer;
@@ -1213,19 +1213,19 @@ public class CoreCLREmbedding
             int counter = 0;
 
             objectData.propertiesCount = propertyAccessors.Count;
-            objectData.propertyNames = Marshal.AllocHGlobal(PointerSize*propertyAccessors.Count);
-            objectData.propertyTypes = Marshal.AllocHGlobal(sizeof (int)*propertyAccessors.Count);
-            objectData.propertyValues = Marshal.AllocHGlobal(PointerSize*propertyAccessors.Count);
+            objectData.propertyNames = Marshal.AllocCoTaskMem(PointerSize*propertyAccessors.Count);
+            objectData.propertyTypes = Marshal.AllocCoTaskMem(sizeof (int)*propertyAccessors.Count);
+            objectData.propertyValues = Marshal.AllocCoTaskMem(PointerSize*propertyAccessors.Count);
 
             foreach (Tuple<string, Func<object, object>> propertyAccessor in propertyAccessors)
             {
-                Marshal.WriteIntPtr(objectData.propertyNames, counter*PointerSize, Marshal.StringToHGlobalAnsi(propertyAccessor.Item1));
+                Marshal.WriteIntPtr(objectData.propertyNames, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(propertyAccessor.Item1));
 
                 V8Type propertyType;
                 if(clrObject.GetType().FullName.StartsWith("System.Reflection"))
                 {
                     propertyType = V8Type.String;
-                    Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, Marshal.StringToHGlobalAnsi(string.Empty));
+                    Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(string.Empty));
                 }else
                 {
                     Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, MarshalCLRToV8(propertyAccessor.Item2(clrObject), out propertyType));
@@ -1234,7 +1234,7 @@ public class CoreCLREmbedding
                 counter++;
             }
 
-            IntPtr destinationPointer = Marshal.AllocHGlobal(V8ObjectDataSize);
+            IntPtr destinationPointer = Marshal.AllocCoTaskMem(V8ObjectDataSize);
             Marshal.StructureToPtr(objectData, destinationPointer, false);
 
             return destinationPointer;
@@ -1246,7 +1246,7 @@ public class CoreCLREmbedding
         switch (objectType)
         {
             case V8Type.String:
-                return Marshal.PtrToStringAnsi(v8Object);
+                return Marshal.PtrToStringUTF8(v8Object);
 
             case V8Type.Object:
                 return V8ObjectToExpando(Marshal.PtrToStructure<V8ObjectData>(v8Object));
@@ -1297,7 +1297,7 @@ public class CoreCLREmbedding
                 return buffer;
 
             case V8Type.Exception:
-                string message = Marshal.PtrToStringAnsi(v8Object);
+                string message = Marshal.PtrToStringUTF8(v8Object);
                 return new Exception(message);
 
             default:
@@ -1381,7 +1381,7 @@ public class CoreCLREmbedding
         {
             int propertyType = Marshal.ReadInt32(v8Object.propertyTypes, i * sizeof(int));
             IntPtr propertyNamePointer = Marshal.ReadIntPtr(v8Object.propertyNames, i * PointerSize);
-            string propertyName = Marshal.PtrToStringAnsi(propertyNamePointer);
+            string propertyName = Marshal.PtrToStringUTF8(propertyNamePointer);
             IntPtr propertyValuePointer = Marshal.ReadIntPtr(v8Object.propertyValues, i * PointerSize);
 
             expandoDictionary.Add(propertyName, MarshalV8ToCLR(propertyValuePointer, (V8Type)propertyType));
