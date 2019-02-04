@@ -60,13 +60,13 @@ public enum V8Type
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 public struct EdgeBootstrapperContext
 {
-    [MarshalAs(UnmanagedType.LPStr)]
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
     public string RuntimeDirectory;
 
-    [MarshalAs(UnmanagedType.LPStr)]
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
     public string ApplicationDirectory;
 
-    [MarshalAs(UnmanagedType.LPStr)]
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
     public string DependencyManifestFile;
 }
 
@@ -505,7 +505,16 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::Initialize (CLR) - Starting");
 
-            EdgeBootstrapperContext bootstrapperContext = Marshal.PtrToStructure<EdgeBootstrapperContext>(context);
+            // The call to Marshal.PtrToStructure should be working
+            // This appears to be a .Net Core issue - https://github.com/dotnet/coreclr/issues/22394
+            // Manually marshaling as a work around
+            //EdgeBootstrapperContext bootstrapperContext = Marshal.PtrToStructure<EdgeBootstrapperContext>(context);
+            EdgeBootstrapperContext bootstrapperContext = new EdgeBootstrapperContext
+            {
+                RuntimeDirectory = Marshal.PtrToStringUTF8(Marshal.ReadIntPtr(context)),
+                ApplicationDirectory = Marshal.PtrToStringUTF8(Marshal.ReadIntPtr(context + IntPtr.Size)),
+                DependencyManifestFile = Marshal.PtrToStringUTF8(Marshal.ReadIntPtr(context + 2 * IntPtr.Size)),
+            };
 
             RuntimeEnvironment = new EdgeRuntimeEnvironment(bootstrapperContext);
             Resolver = new EdgeAssemblyResolver();
