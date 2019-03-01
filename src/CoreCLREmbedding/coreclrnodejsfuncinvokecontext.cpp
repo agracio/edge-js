@@ -102,6 +102,8 @@ void CoreClrNodejsFuncInvokeContext::InvokeCallback(void* data)
 
 	DBG("CoreClrNodejsFuncInvokeContext::InvokeCallback - Calling JavaScript function");
 	Nan::Call(Nan::New(*(context->FunctionContext->Func)), Nan::GetCurrentContext()->Global(), 2, argv);
+	// Free allocated memory
+	CoreClrFunc::FreeMarshalData(context->Payload, context->PayloadType);
 	DBG("CoreClrNodejsFuncInvokeContext::InvokeCallback - Called JavaScript function");
 
 	if (tryCatch.HasCaught())

@@ -76,6 +76,8 @@ void NodejsFuncInvokeContext::CallFuncOnV8Thread(MonoObject* _this, NodejsFunc* 
         Nan::TryCatch tryCatch;
         DBG("NodejsFuncInvokeContext::CallFuncOnV8Thread calling JavaScript function");
         Nan::Call(Nan::New(*(nativeNodejsFunc->Func)), Nan::GetCurrentContext()->Global(), 2, argv);
+       	// Free allocated memory
+    	ClrFunc::FreeMarshalData(context->Payload, context->PayloadType);
         DBG("NodejsFuncInvokeContext::CallFuncOnV8Thread called JavaScript function");
         if (tryCatch.HasCaught()) 
         {
