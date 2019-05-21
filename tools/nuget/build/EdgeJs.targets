@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ContentFolder>$(MSBuildThisFileDirectory)..\content</ContentFolder>
+  </PropertyGroup>
+  <ItemGroup>
+
+    <!-- For all scripts and binaries -->
+    <Content Include="$(ContentFolder)\edge\**\*.*">
+      <!-- Copy to output directory on build -->
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <!-- Make link into the project root for debugging -->
+      <Link>$(ContentFolder)\edge\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <Visible>true</Visible>
+    </Content>
+
+  </ItemGroup>
+</Project>
