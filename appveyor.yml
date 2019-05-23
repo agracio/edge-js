@@ -6,9 +6,7 @@ environment:
   matrix:
     # node.js
     - nodejs: "6"
-    - nodejs: "7"
     - nodejs: "8"
-    - nodejs: "9"
     - nodejs: "10"
     - nodejs: "11"
 
