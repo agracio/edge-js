@@ -20,5 +20,6 @@ void CallbackHelper::Initialize()
 void CallbackHelper::KickNextTick()
 {
 	Nan::HandleScope scope;
-	tickCallback->Call(0, 0);
+	Nan::AsyncResource resource("CallbackHelper::KickNextTick");
+	tickCallback->Call(0, 0, &resource);
 }

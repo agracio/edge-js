@@ -87,7 +87,9 @@ void CoreClrFuncInvokeContext::InvokeCallback(void* data)
 	Nan::TryCatch tryCatch;
 
     DBG("CoreClrFuncInvokeContext::InvokeCallback - calling JS callback");
-    context->callback->Call(argc, argv);
+
+	Nan::AsyncResource resource("CoreClrFuncInvokeContext::InvokeCallback");
+    context->callback->Call(argc, argv, &resource);
     delete context;
     if (tryCatch.HasCaught())
     {

@@ -65,7 +65,7 @@ v8::Local<v8::Function> ClrFunc::Initialize(System::Func<System::Object^,System:
 
     v8::Local<v8::Value> factoryArgv[] = { Nan::New(proxyFunction), Nan::New<v8::External>((void*)wrap) };
     v8::Local<v8::Function> funcProxy =
-        (Nan::Call(Nan::New(proxyFactory), Nan::GetCurrentContext()->Global(), 2, factoryArgv)).ToLocalChecked().As<v8::Function>();
+        (Nan::Call( Nan::New(proxyFactory), Nan::GetCurrentContext()->Global(), 2, factoryArgv)).ToLocalChecked().As<v8::Function>();
     Nan::Persistent<v8::Function> funcProxyPersistent(funcProxy);
     funcProxyPersistent.SetWeak((void*)wrap, &clrFuncProxyNearDeath, Nan::WeakCallbackType::kParameter);
 
@@ -92,9 +92,9 @@ NAN_METHOD(ClrFunc::Initialize)
         v8::Local<v8::Value> jsassemblyFile = options->Get(Nan::New<v8::String>("assemblyFile").ToLocalChecked());
         if (jsassemblyFile->IsString()) {
             // reference .NET code through pre-compiled CLR assembly
-            v8::String::Utf8Value assemblyFile(jsassemblyFile);
-            v8::String::Utf8Value nativeTypeName(options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
-            v8::String::Utf8Value nativeMethodName(options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
+            v8::String::Utf8Value assemblyFile(isolate, jsassemblyFile);
+            v8::String::Utf8Value nativeTypeName(isolate, options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
+            v8::String::Utf8Value nativeMethodName(isolate, options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
 
             typeName = stringV82CLR(nativeTypeName);
             methodName = stringV82CLR(nativeMethodName);
@@ -107,7 +107,7 @@ NAN_METHOD(ClrFunc::Initialize)
         }
         else {
             // reference .NET code throgh embedded source code that needs to be compiled
-            v8::String::Value compilerFile(options->Get(Nan::New<v8::String>("compiler").ToLocalChecked()));
+            v8::String::Value compilerFile(isolate, options->Get(Nan::New<v8::String>("compiler").ToLocalChecked()));
             cli::array<unsigned char>^ buffer = gcnew cli::array<unsigned char>(compilerFile.length() * 2);
             for (int k = 0; k < compilerFile.length(); k++)
             {
@@ -426,6 +426,7 @@ v8::Local<v8::Object> ClrFunc::MarshalCLRObjectToV8(System::Object^ netdata)
 
 System::Object^ ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
 {
+    DBG("ClrFunc::MarshalV8ToCLR");
     v8::Isolate *isolate = v8::Isolate::GetCurrent();
     v8::Local<v8::Context> context = isolate->GetCurrentContext();
 
@@ -479,7 +480,7 @@ System::Object^ ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
         for (unsigned int i = 0; i < propertyNames->Length(); i++)
         {
             v8::Local<v8::String> name = v8::Local<v8::String>::Cast(propertyNames->Get(i));
-            v8::String::Utf8Value utf8name(name);
+            v8::String::Utf8Value utf8name(isolate, name);
             System::String^ netname = gcnew System::String(*utf8name);
             System::Object^ netvalue = ClrFunc::MarshalV8ToCLR(jsobject->Get(name));
             netobject->Add(netname, netvalue);

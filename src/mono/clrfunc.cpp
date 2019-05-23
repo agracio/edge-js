@@ -82,16 +82,16 @@ NAN_METHOD(ClrFunc::Initialize)
     DBG("ClrFunc::Initialize MethodInfo wrapper");
 
     Nan::EscapableHandleScope scope;
-    v8::Local<v8::Object> options = info[0]->ToObject();
+    v8::Local<v8::Object> options = info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked();
     v8::Local<v8::Function> result;
 
     v8::Local<v8::Value> jsassemblyFile = options->Get(Nan::New<v8::String>("assemblyFile").ToLocalChecked());
     if (jsassemblyFile->IsString())
     {
         // reference .NET code through pre-compiled CLR assembly 
-        String::Utf8Value assemblyFile(jsassemblyFile);
-        String::Utf8Value nativeTypeName(options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
-        String::Utf8Value nativeMethodName(options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
+        String::Utf8Value assemblyFile(v8::Isolate::GetCurrent(), jsassemblyFile);
+        String::Utf8Value nativeTypeName(v8::Isolate::GetCurrent(), options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
+        String::Utf8Value nativeMethodName(v8::Isolate::GetCurrent(), options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
         MonoException* exc = NULL;
         MonoObject* func = MonoEmbedding::GetClrFuncReflectionWrapFunc(*assemblyFile, *nativeTypeName, *nativeMethodName, &exc);
         if (exc) {
@@ -104,7 +104,7 @@ NAN_METHOD(ClrFunc::Initialize)
         //// reference .NET code throgh embedded source code that needs to be compiled
         MonoException* exc = NULL;
 
-        String::Utf8Value compilerFile(options->Get(Nan::New<v8::String>("compiler").ToLocalChecked()));
+        String::Utf8Value compilerFile(v8::Isolate::GetCurrent(), options->Get(Nan::New<v8::String>("compiler").ToLocalChecked()));
         MonoAssembly *assembly = mono_domain_assembly_open (mono_domain_get(), *compilerFile);
         MonoClass* compilerClass = mono_class_from_name(mono_assembly_get_image(assembly), "", "EdgeCompiler");
         MonoObject* compilerInstance = mono_object_new(mono_domain_get(), compilerClass);
@@ -457,6 +457,8 @@ v8::Local<v8::Object> ClrFunc::MarshalCLRObjectToV8(MonoObject* netdata, MonoExc
 MonoObject* ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
 {
     DBG("ClrFunc::MarshalV8ToCLR");
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
     Nan::HandleScope scope;
 
     if (jsdata->IsFunction())
@@ -468,7 +470,7 @@ MonoObject* ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
     }
     else if (node::Buffer::HasInstance(jsdata))
     {
-        v8::Local<v8::Object> jsbuffer = jsdata->ToObject();
+        v8::Local<v8::Object> jsbuffer = jsdata->ToObject(context).ToLocalChecked();
         MonoArray* netbuffer = mono_array_new(mono_domain_get(), mono_get_byte_class(), (int)node::Buffer::Length(jsbuffer));
         memcpy(mono_array_addr_with_size(netbuffer, sizeof(char), 0), node::Buffer::Data(jsbuffer), mono_array_length(netbuffer));
 
@@ -488,7 +490,7 @@ MonoObject* ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
     else if (jsdata->IsDate())
     {
         v8::Local<v8::Date> jsdate = v8::Local<v8::Date>::Cast(jsdata);
-        double ticks = jsdate->NumberValue();
+        double ticks = jsdate->NumberValue(context).FromJust();
         return MonoEmbedding::CreateDateTime(ticks);
     }    
     else if (jsdata->IsObject()) 
@@ -499,7 +501,7 @@ MonoObject* ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
         for (unsigned int i = 0; i < propertyNames->Length(); i++)
         {
             v8::Local<v8::String> name = v8::Local<v8::String>::Cast(propertyNames->Get(i));
-            v8::String::Utf8Value utf8name(name);
+            v8::String::Utf8Value utf8name(isolate, name);
             Dictionary::Add(netobject, *utf8name, ClrFunc::MarshalV8ToCLR(jsobject->Get(name)));
         }
 
@@ -511,22 +513,22 @@ MonoObject* ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
     }
     else if (jsdata->IsBoolean())
     {
-        bool value = jsdata->BooleanValue();
+        bool value = jsdata->BooleanValue(context).FromJust();
         return mono_value_box(mono_domain_get(), mono_get_boolean_class(), &value);
     }
     else if (jsdata->IsInt32())
     {
-        int32_t value = jsdata->Int32Value();
+        int32_t value = jsdata->Int32Value(context).FromJust();
         return mono_value_box(mono_domain_get(), mono_get_int32_class(), &value);
     }
     else if (jsdata->IsUint32()) 
     {
-        uint32_t value = jsdata->Uint32Value();
+        uint32_t value = jsdata->Uint32Value(context).FromJust();
         return mono_value_box(mono_domain_get(), mono_get_uint32_class(), &value);
     }
     else if (jsdata->IsNumber()) 
     {
-        double value = jsdata->NumberValue();
+        double value = jsdata->NumberValue(context).FromJust();
         return mono_value_box(mono_domain_get(), mono_get_double_class(), &value);
     }
     else if (jsdata->IsUndefined() || jsdata->IsNull())
