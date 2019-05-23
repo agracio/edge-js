@@ -172,9 +172,9 @@ NAN_METHOD(CoreClrFunc::Initialize)
 
 	if (assemblyFileArgument->IsString())
 	{
-		v8::String::Utf8Value assemblyFile(v8::Isolate::GetCurrent(), assemblyFileArgument);
-		v8::String::Utf8Value typeName(v8::Isolate::GetCurrent(), options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
-		v8::String::Utf8Value methodName(v8::Isolate::GetCurrent(), options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
+		v8::String::Utf8Value assemblyFile(assemblyFileArgument);
+		v8::String::Utf8Value typeName(options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
+		v8::String::Utf8Value methodName(options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
 		v8::Local<v8::Value> exception;
 
 		DBG("CoreClrFunc::Initialize - Loading %s.%s() from %s", *typeName, *methodName, *assemblyFile);
@@ -270,7 +270,7 @@ void CoreClrFunc::FreeMarshalData(void* marshalData, int payloadType)
 
 char* CoreClrFunc::CopyV8StringBytes(v8::Local<v8::String> v8String)
 {
-	String::Utf8Value utf8String(v8::Isolate::GetCurrent(), v8String);
+	String::Utf8Value utf8String(v8String);
 	char* sourceBytes = *utf8String;
 #ifdef EDGE_PLATFORM_WINDOWS
 	size_t sourceLength = strlen(sourceBytes);

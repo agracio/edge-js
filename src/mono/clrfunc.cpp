@@ -89,9 +89,9 @@ NAN_METHOD(ClrFunc::Initialize)
     if (jsassemblyFile->IsString())
     {
         // reference .NET code through pre-compiled CLR assembly 
-        String::Utf8Value assemblyFile(v8::Isolate::GetCurrent(), jsassemblyFile);
-        String::Utf8Value nativeTypeName(v8::Isolate::GetCurrent(), options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
-        String::Utf8Value nativeMethodName(v8::Isolate::GetCurrent(), options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
+        String::Utf8Value assemblyFile(jsassemblyFile);
+        String::Utf8Value nativeTypeName(options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
+        String::Utf8Value nativeMethodName(options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
         MonoException* exc = NULL;
         MonoObject* func = MonoEmbedding::GetClrFuncReflectionWrapFunc(*assemblyFile, *nativeTypeName, *nativeMethodName, &exc);
         if (exc) {
@@ -104,7 +104,7 @@ NAN_METHOD(ClrFunc::Initialize)
         //// reference .NET code throgh embedded source code that needs to be compiled
         MonoException* exc = NULL;
 
-        String::Utf8Value compilerFile(v8::Isolate::GetCurrent(), options->Get(Nan::New<v8::String>("compiler").ToLocalChecked()));
+        String::Utf8Value compilerFile(options->Get(Nan::New<v8::String>("compiler").ToLocalChecked()));
         MonoAssembly *assembly = mono_domain_assembly_open (mono_domain_get(), *compilerFile);
         MonoClass* compilerClass = mono_class_from_name(mono_assembly_get_image(assembly), "", "EdgeCompiler");
         MonoObject* compilerInstance = mono_object_new(mono_domain_get(), compilerClass);
@@ -501,7 +501,7 @@ MonoObject* ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
         for (unsigned int i = 0; i < propertyNames->Length(); i++)
         {
             v8::Local<v8::String> name = v8::Local<v8::String>::Cast(propertyNames->Get(i));
-            v8::String::Utf8Value utf8name(isolate, name);
+            v8::String::Utf8Value utf8name(name);
             Dictionary::Add(netobject, *utf8name, ClrFunc::MarshalV8ToCLR(jsobject->Get(name)));
         }
 
