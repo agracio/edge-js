@@ -11,7 +11,7 @@ v8::Local<v8::String> stringCLR2V8(MonoString* text)
 MonoString* stringV82CLR(v8::Handle<v8::String> text)
 {
     Nan::HandleScope scope;
-    v8::String::Utf8Value utf8text(v8::Isolate::GetCurrent(), text);
+    v8::String::Utf8Value utf8text(text);
     return mono_string_new(mono_domain_get(), *utf8text);    
 }
 
