@@ -87,7 +87,7 @@ void NodejsFuncInvokeContext::CallFuncOnV8Thread()
 
         if (callbackFactory.IsEmpty())
         {
-            v8::Local<v8::Function> v8FuncCallbackFunction = Nan::New<v8::FunctionTemplate>(v8FuncCallback)->GetFunction();
+            v8::Local<v8::Function> v8FuncCallbackFunction = Nan::GetFunction(Nan::New<v8::FunctionTemplate>(v8FuncCallback)).ToLocalChecked();
             callbackFunction.Reset(v8FuncCallbackFunction);
             v8::Local<v8::String> code = Nan::New<v8::String>("(function (cb, ctx) { return function (e, d) { return cb(e, d, ctx); }; })").ToLocalChecked();
             

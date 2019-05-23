@@ -62,7 +62,7 @@ NAN_MODULE_INIT(init)
     enableMarshalEnumAsInt = HasEnvironmentVariable("EDGE_MARSHAL_ENUM_AS_INT");
     Nan::Set(target,
         Nan::New<v8::String>("initializeClrFunc").ToLocalChecked(),
-        Nan::New<v8::FunctionTemplate>(initializeClrFunc)->GetFunction());
+        Nan::GetFunction(Nan::New<v8::FunctionTemplate>(initializeClrFunc)).ToLocalChecked());
 }
 
 #ifdef EDGE_PLATFORM_WINDOWS

@@ -82,7 +82,7 @@ void CoreClrNodejsFuncInvokeContext::InvokeCallback(void* data)
 	// See https://github.com/tjanczuk/edge/issues/125 for context
 	if (callbackFactory.IsEmpty())
 	{
-		v8::Local<v8::Function> v8FuncCallbackFunction = Nan::New<v8::FunctionTemplate>(coreClrV8FuncCallback)->GetFunction();
+		v8::Local<v8::Function> v8FuncCallbackFunction = Nan::GetFunction(Nan::New<v8::FunctionTemplate>(coreClrV8FuncCallback)).ToLocalChecked();
 		callbackFunction.Reset(v8FuncCallbackFunction);
 		v8::Local<v8::String> code = Nan::New<v8::String>(
 			"(function (cb, ctx) { return function (e, d) { return cb(e, d, ctx); }; })").ToLocalChecked();
@@ -95,7 +95,7 @@ void CoreClrNodejsFuncInvokeContext::InvokeCallback(void* data)
 
 	v8::Local<v8::Value> factoryArgv[] = { Nan::New(callbackFunction), Nan::New<v8::External>((void*)context) };
 	v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(
-		Nan::New(callbackFactory)->Call(Nan::GetCurrentContext()->Global(), 2, factoryArgv));
+		Nan::Call(Nan::New(callbackFactory), Nan::GetCurrentContext()->Global(), 2, factoryArgv).ToLocalChecked());
 
 	v8::Local<v8::Value> argv[] = { v8Payload, callback };
 	Nan::TryCatch tryCatch;

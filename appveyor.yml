@@ -9,6 +9,7 @@ environment:
     - nodejs: "8"
     - nodejs: "10"
     - nodejs: "11"
+    - nodejs: "12"
 
 install:
   - cmd: powershell Install-Product node $env:nodejs x64

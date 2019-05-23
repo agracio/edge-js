@@ -15,6 +15,9 @@ ClrFuncInvokeContext::ClrFuncInvokeContext(v8::Local<v8::Value> callbackOrSync) 
     static MonoClassField* field;
     static MonoClassField* syncField;
 
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
     if (!field)
         field = mono_class_get_field_from_name(GetClrFuncInvokeContextClass(), "native");
     if (!syncField)
@@ -35,7 +38,7 @@ ClrFuncInvokeContext::ClrFuncInvokeContext(v8::Local<v8::Value> callbackOrSync) 
     }
     else 
     {
-        this->Sync(callbackOrSync->BooleanValue());
+        this->Sync(callbackOrSync->BooleanValue(context).FromJust());
     }
 }
 

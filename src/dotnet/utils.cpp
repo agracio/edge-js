@@ -18,7 +18,7 @@ v8::Local<v8::String> stringCLR2V8(System::String^ text)
 System::String^ stringV82CLR(v8::Local<v8::String> text)
 {
     Nan::HandleScope scope;
-    v8::String::Utf8Value utf8text(text);
+    Nan::Utf8String utf8text(text);
     if (*utf8text)
     {
         return gcnew System::String(
@@ -30,7 +30,7 @@ System::String^ stringV82CLR(v8::Local<v8::String> text)
     }
 }
 
-System::String^ stringV82CLR(v8::String::Utf8Value& utf8text)
+System::String^ stringV82CLR(Nan::Utf8String& utf8text)
 {
     Nan::HandleScope scope;
     if (*utf8text)
