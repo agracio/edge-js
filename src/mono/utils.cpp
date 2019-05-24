@@ -17,15 +17,17 @@ MonoString* stringV82CLR(v8::Local<v8::String> text)
 
 MonoString* exceptionV82stringCLR(v8::Local<v8::Value> exception)
 {
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
     Nan::HandleScope scope;
     if (exception->IsObject())
     {
-        v8::Local<v8::String> stack = exception->ToObject(Nan::GetCurrentContext()).ToLocalChecked()->Get(Nan::New<v8::String>("stack").ToLocalChecked());
+        v8::Local<v8::Value> stack = exception->ToObject(Nan::GetCurrentContext()).ToLocalChecked()->Get(Nan::New<v8::String>("stack").ToLocalChecked());
         if (stack->IsString())
         {
-            return stringV82CLR(stack->ToString());
+            return stringV82CLR(stack->ToString(context).ToLocalChecked());
         }
     }
 
-    return stringV82CLR(v8::Handle<v8::String>::Cast(exception));
+    return stringV82CLR(v8::Local<v8::String>::Cast(exception));
 }
