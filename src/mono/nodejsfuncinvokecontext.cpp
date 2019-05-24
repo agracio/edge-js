@@ -70,7 +70,7 @@ void NodejsFuncInvokeContext::CallFuncOnV8Thread(MonoObject* _this, NodejsFunc* 
 
         v8::Local<v8::Value> factoryArgv[] = { Nan::New(callbackFunction), Nan::New<v8::External>((void*)ctx) };
         v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(
-            Nan::New(callbackFactory)->Call(Nan::GetCurrentContext()->Global(), 2, factoryArgv));
+            Nan::Call(Nan::New(callbackFactory), Nan::GetCurrentContext()->Global(), 2, factoryArgv).ToLocalChecked());
 
         v8::Local<v8::Value> argv[] = { jspayload, callback };
         Nan::TryCatch tryCatch;

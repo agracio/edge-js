@@ -15,7 +15,7 @@ MonoString* stringV82CLR(v8::Local<v8::String> text)
     return mono_string_new(mono_domain_get(), *utf8text);    
 }
 
-MonoString* exceptionV82stringCLR(v8::Local<v8::String> exception)
+MonoString* exceptionV82stringCLR(v8::Local<v8::Value> exception)
 {
     Nan::HandleScope scope;
     if (exception->IsObject())
