@@ -12,7 +12,7 @@ environment:
     - nodejs: "6"
 
 install:
-  - cmd: powershell Install-Product node $env:nodejs x64
+  - cmd: powershell Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs) x64
   - sh: sudo apt-get -qq update
   - sh: sudo apt-get -y -qq install build-essential libgconf-2-4 python libglib2.0-dev
   - sh: nvm install $nodejs
