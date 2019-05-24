@@ -11,8 +11,8 @@
 typedef int GCHandle;
 
 v8::Local<v8::String> stringCLR2V8(MonoString* text);
-MonoString* stringV82CLR(v8::Handle<v8::String> text);
-MonoString* exceptionV82stringCLR(v8::Handle<v8::Value> exception);
+MonoString* stringV82CLR(v8::Local<v8::String> text);
+MonoString* exceptionV82stringCLR(v8::Local<v8::String> exception);
 
 class MonoEmbedding
 {
