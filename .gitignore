@@ -70,6 +70,7 @@ tools/nuget/content
 tools/nuget/lib
 tools/nuget/*.nupkg
 tools/nuget/*.zip
-
+tools/*.nupkg
+tools/*.zip
 
 test-results*.*
