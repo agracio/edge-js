@@ -10,7 +10,7 @@
       <!-- Copy to output directory on build -->
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <!-- Make link into the project root for debugging -->
-      <Link>$(ContentFolder)\edge\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <Link>edge\%(RecursiveDir)%(Filename)%(Extension)</Link>
       <Visible>true</Visible>
     </Content>
 
