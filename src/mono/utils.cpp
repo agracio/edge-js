@@ -22,7 +22,7 @@ MonoString* exceptionV82stringCLR(v8::Local<v8::Value> exception)
     Nan::HandleScope scope;
     if (exception->IsObject())
     {
-        v8::Local<v8::Value> stack = exception->ToObject(Nan::GetCurrentContext()).ToLocalChecked()->Get(Nan::New<v8::String>("stack").ToLocalChecked());
+        v8::Local<v8::Value> stack = exception->ToObject(Nan::GetCurrentContext()).ToLocalChecked()->Get(Nan::GetCurrentContext(), Nan::New<v8::String>("stack").ToLocalChecked()).ToLocalChecked();
         if (stack->IsString())
         {
             return stringV82CLR(stack->ToString(context).ToLocalChecked());

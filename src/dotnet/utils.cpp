@@ -50,7 +50,7 @@ System::String^ exceptionV82stringCLR(v8::Local<v8::Value> exception)
     Nan::HandleScope scope;
     if (exception->IsObject())
     {
-        v8::Local<v8::Value> stack = exception->ToObject(context).ToLocalChecked()->Get(Nan::New<v8::String>("stack").ToLocalChecked());
+        v8::Local<v8::Value> stack = exception->ToObject(context).ToLocalChecked()->Get(Nan::GetCurrentContext(), Nan::New<v8::String>("stack").ToLocalChecked()).ToLocalChecked();
         if (stack->IsString())
         {
             return gcnew System::String(stringV82CLR(stack->ToString(context).ToLocalChecked()));

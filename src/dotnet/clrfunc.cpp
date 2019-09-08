@@ -89,12 +89,12 @@ NAN_METHOD(ClrFunc::Initialize)
     {
         v8::Local<v8::Function> result;
 
-        v8::Local<v8::Value> jsassemblyFile = options->Get(Nan::New<v8::String>("assemblyFile").ToLocalChecked());
+        v8::Local<v8::Value> jsassemblyFile = options->Get(Nan::GetCurrentContext(), Nan::New<v8::String>("assemblyFile").ToLocalChecked()).ToLocalChecked();
         if (jsassemblyFile->IsString()) {
             // reference .NET code through pre-compiled CLR assembly
             Nan::Utf8String assemblyFile(jsassemblyFile);
-            Nan::Utf8String nativeTypeName(options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
-            Nan::Utf8String nativeMethodName(options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
+            Nan::Utf8String nativeTypeName(options->Get(Nan::GetCurrentContext(), Nan::New<v8::String>("typeName").ToLocalChecked()).ToLocalChecked());
+            Nan::Utf8String nativeMethodName(options->Get(Nan::GetCurrentContext(), Nan::New<v8::String>("methodName").ToLocalChecked()).ToLocalChecked());
 
             typeName = stringV82CLR(nativeTypeName);
             methodName = stringV82CLR(nativeMethodName);
@@ -107,7 +107,7 @@ NAN_METHOD(ClrFunc::Initialize)
         }
         else {
             // reference .NET code throgh embedded source code that needs to be compiled
-            Nan::Utf8String compilerFile(options->Get(Nan::New<v8::String>("compiler").ToLocalChecked()));
+            Nan::Utf8String compilerFile(options->Get(Nan::GetCurrentContext(), Nan::New<v8::String>("compiler").ToLocalChecked()).ToLocalChecked());
             cli::array<unsigned char>^ buffer = gcnew cli::array<unsigned char>(compilerFile.length() * 2);
             for (int k = 0; k < compilerFile.length(); k++)
             {
@@ -262,7 +262,7 @@ v8::Local<v8::Value> ClrFunc::MarshalCLRToV8(System::Object^ netdata)
         for each (System::Collections::Generic::KeyValuePair<System::String^,System::Object^>^ pair
             in (System::Collections::Generic::IDictionary<System::String^,System::Object^>^)netdata)
         {
-            result->Set(stringCLR2V8(pair->Key), ClrFunc::MarshalCLRToV8(pair->Value));
+            result->Set(Nan::GetCurrentContext(), stringCLR2V8(pair->Key), ClrFunc::MarshalCLRToV8(pair->Value));
         }
 
         jsdata = result;
@@ -273,7 +273,7 @@ v8::Local<v8::Value> ClrFunc::MarshalCLRToV8(System::Object^ netdata)
 		for each (System::Collections::Generic::KeyValuePair<System::Int32, System::String^>^ pair
 			in (System::Collections::Generic::IDictionary<System::Int32, System::String^>^)netdata)
 		{
-			result->Set(pair->Key, stringCLR2V8(pair->Value));
+			result->Set(Nan::GetCurrentContext(), pair->Key, stringCLR2V8(pair->Value));
 		}
 
 		jsdata = result;
@@ -284,7 +284,7 @@ v8::Local<v8::Value> ClrFunc::MarshalCLRToV8(System::Object^ netdata)
 		for each (System::Collections::Generic::KeyValuePair<System::Int32, System::Object^>^ pair
 			in (System::Collections::Generic::IDictionary<System::Int32, System::Object^>^)netdata)
 		{
-			result->Set(pair->Key, ClrFunc::MarshalCLRToV8(pair->Value));
+			result->Set(Nan::GetCurrentContext(), pair->Key, ClrFunc::MarshalCLRToV8(pair->Value));
 		}
 
 		jsdata = result;
@@ -295,7 +295,7 @@ v8::Local<v8::Value> ClrFunc::MarshalCLRToV8(System::Object^ netdata)
         for each (System::Collections::DictionaryEntry^ entry in (System::Collections::IDictionary^)netdata)
         {
             if (dynamic_cast<System::String^>(entry->Key) != nullptr)
-            result->Set(stringCLR2V8((System::String^)entry->Key), ClrFunc::MarshalCLRToV8(entry->Value));
+            result->Set(Nan::GetCurrentContext(), stringCLR2V8((System::String^)entry->Key), ClrFunc::MarshalCLRToV8(entry->Value));
         }
 
         jsdata = result;
@@ -306,7 +306,7 @@ v8::Local<v8::Value> ClrFunc::MarshalCLRToV8(System::Object^ netdata)
         unsigned int i = 0;
         for each (System::Object^ entry in (System::Collections::IEnumerable^)netdata)
         {
-            result->Set(i++, ClrFunc::MarshalCLRToV8(entry));
+            result->Set(Nan::GetCurrentContext(), i++, ClrFunc::MarshalCLRToV8(entry));
         }
 
         jsdata = result;
@@ -364,10 +364,10 @@ v8::Local<v8::Value> ClrFunc::MarshalCLRExceptionToV8(System::Exception^ excepti
     // Construct an error that is just used for the prototype - not verify efficient
     // but 'typeof Error' should work in JavaScript
     result->SetPrototype(Nan::GetCurrentContext(), v8::Exception::Error(message));
-    result->Set(Nan::New<v8::String>("message").ToLocalChecked(), message);
+    result->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("message").ToLocalChecked(), message);
 
     // Recording the actual type - 'name' seems to be the common used property
-    result->Set(Nan::New<v8::String>("name").ToLocalChecked(), name);
+    result->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("name").ToLocalChecked(), name);
 
     return scope.Escape(result);
 }
@@ -387,6 +387,7 @@ v8::Local<v8::Object> ClrFunc::MarshalCLRObjectToV8(System::Object^ netdata)
     for each (FieldInfo^ field in type->GetFields(BindingFlags::Public | BindingFlags::Instance))
     {
         result->Set(
+            Nan::GetCurrentContext(),
             stringCLR2V8(field->Name),
             ClrFunc::MarshalCLRToV8(field->GetValue(netdata)));
     }
@@ -416,6 +417,7 @@ v8::Local<v8::Object> ClrFunc::MarshalCLRObjectToV8(System::Object^ netdata)
         if (getMethod != nullptr && getMethod->GetParameters()->Length <= 0)
         {
             result->Set(
+                Nan::GetCurrentContext(),
                 stringCLR2V8(property->Name),
                 ClrFunc::MarshalCLRToV8(getMethod->Invoke(netdata, nullptr)));
         }
@@ -459,7 +461,7 @@ System::Object^ ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
         cli::array<System::Object^>^ netarray = gcnew cli::array<System::Object^>(jsarray->Length());
         for (unsigned int i = 0; i < jsarray->Length(); i++)
         {
-            netarray[i] = ClrFunc::MarshalV8ToCLR(jsarray->Get(i));
+            netarray[i] = ClrFunc::MarshalV8ToCLR(jsarray->Get(Nan::GetCurrentContext(), i).ToLocalChecked());
         }
 
         return netarray;
@@ -479,10 +481,10 @@ System::Object^ ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
         v8::Local<v8::Array> propertyNames = Nan::GetPropertyNames(jsobject).ToLocalChecked();
         for (unsigned int i = 0; i < propertyNames->Length(); i++)
         {
-            v8::Local<v8::String> name = v8::Local<v8::String>::Cast(propertyNames->Get(i));
+            v8::Local<v8::String> name = v8::Local<v8::String>::Cast(propertyNames->Get(Nan::GetCurrentContext(), i).ToLocalChecked());
             Nan::Utf8String utf8name(name);
             System::String^ netname = gcnew System::String(*utf8name);
-            System::Object^ netvalue = ClrFunc::MarshalV8ToCLR(jsobject->Get(name));
+            System::Object^ netvalue = ClrFunc::MarshalV8ToCLR(jsobject->Get(Nan::GetCurrentContext(), name).ToLocalChecked());
             netobject->Add(netname, netvalue);
         }
 
@@ -494,7 +496,7 @@ System::Object^ ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
     }
     else if (jsdata->IsBoolean())
     {
-        return jsdata->BooleanValue(context).FromJust();
+        return jsdata->BooleanValue(isolate);
     }
     else if (jsdata->IsInt32())
     {

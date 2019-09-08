@@ -85,13 +85,13 @@ NAN_METHOD(ClrFunc::Initialize)
     v8::Local<v8::Object> options = info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked();
     v8::Local<v8::Function> result;
 
-    v8::Local<v8::Value> jsassemblyFile = options->Get(Nan::New<v8::String>("assemblyFile").ToLocalChecked());
+    v8::Local<v8::Value> jsassemblyFile = options->Get(Nan::GetCurrentContext(), Nan::New<v8::String>("assemblyFile").ToLocalChecked()).ToLocalChecked();
     if (jsassemblyFile->IsString())
     {
         // reference .NET code through pre-compiled CLR assembly 
         Nan::Utf8String assemblyFile(jsassemblyFile);
-        Nan::Utf8String nativeTypeName(options->Get(Nan::New<v8::String>("typeName").ToLocalChecked()));
-        Nan::Utf8String nativeMethodName(options->Get(Nan::New<v8::String>("methodName").ToLocalChecked()));
+        Nan::Utf8String nativeTypeName(options->Get(Nan::GetCurrentContext(), Nan::New<v8::String>("typeName").ToLocalChecked()).ToLocalChecked());
+        Nan::Utf8String nativeMethodName(options->Get(Nan::GetCurrentContext(), Nan::New<v8::String>("methodName").ToLocalChecked()).ToLocalChecked());
         MonoException* exc = NULL;
         MonoObject* func = MonoEmbedding::GetClrFuncReflectionWrapFunc(*assemblyFile, *nativeTypeName, *nativeMethodName, &exc);
         if (exc) {
@@ -104,7 +104,7 @@ NAN_METHOD(ClrFunc::Initialize)
         //// reference .NET code throgh embedded source code that needs to be compiled
         MonoException* exc = NULL;
 
-        Nan::Utf8String compilerFile(options->Get(Nan::New<v8::String>("compiler").ToLocalChecked()));
+        Nan::Utf8String compilerFile(options->Get(Nan::GetCurrentContext(), Nan::New<v8::String>("compiler").ToLocalChecked()).ToLocalChecked());
         MonoAssembly *assembly = mono_domain_assembly_open (mono_domain_get(), *compilerFile);
         MonoClass* compilerClass = mono_class_from_name(mono_assembly_get_image(assembly), "", "EdgeCompiler");
         MonoObject* compilerInstance = mono_object_new(mono_domain_get(), compilerClass);
@@ -291,6 +291,7 @@ v8::Local<v8::Value> ClrFunc::MarshalCLRToV8(MonoObject* netdata, MonoException*
                 MonoString* k = (MonoString*)mono_array_get(kvs, MonoObject*, i);
                 MonoObject* v = mono_array_get(kvs, MonoObject*, i + 1);
                 result->Set(
+                    Nan::GetCurrentContext(),
                     stringCLR2V8(k),
                     ClrFunc::MarshalCLRToV8(v, exc));
             }
@@ -310,7 +311,7 @@ v8::Local<v8::Value> ClrFunc::MarshalCLRToV8(MonoObject* netdata, MonoException*
             for (i = 0; i < length && !*exc; i++)
             {
                 MonoObject* value = mono_array_get(values, MonoObject*, i);
-                result->Set(i, ClrFunc::MarshalCLRToV8(value, exc));
+                result->Set(Nan::GetCurrentContext(), i, ClrFunc::MarshalCLRToV8(value, exc));
             }
 
             if (!*exc)
@@ -375,10 +376,10 @@ v8::Local<v8::Value> ClrFunc::MarshalCLRExceptionToV8(MonoException* exception)
     // Construct an error that is just used for the prototype - not verify efficient
     // but 'typeof Error' should work in JavaScript
     result->SetPrototype(Nan::GetCurrentContext(), v8::Exception::Error(message));
-    result->Set(Nan::New<v8::String>("message").ToLocalChecked(), message);
+    result->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("message").ToLocalChecked(), message);
     
     // Recording the actual type - 'name' seems to be the common used property
-    result->Set(Nan::New<v8::String>("name").ToLocalChecked(), name);
+    result->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("name").ToLocalChecked(), name);
 
     return scope.Escape(result);
 }
@@ -418,6 +419,7 @@ v8::Local<v8::Object> ClrFunc::MarshalCLRObjectToV8(MonoObject* netdata, MonoExc
             const char* name = mono_field_get_name(field);
             MonoObject* value = mono_field_get_value_object(mono_domain_get(), field, netdata);
             result->Set(
+                Nan::GetCurrentContext(),
                 Nan::New<v8::String>(name).ToLocalChecked(), 
                 ClrFunc::MarshalCLRToV8(value, exc));
         }
@@ -444,6 +446,7 @@ v8::Local<v8::Object> ClrFunc::MarshalCLRObjectToV8(MonoObject* netdata, MonoExc
             if (!*exc)
             {
                 result->Set(
+                    Nan::GetCurrentContext(),
                     Nan::New<v8::String>(name).ToLocalChecked(),
                     ClrFunc::MarshalCLRToV8(value, exc));
             }
@@ -482,7 +485,7 @@ MonoObject* ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
         MonoArray* netarray = mono_array_new(mono_domain_get(), mono_get_object_class(), jsarray->Length());
         for (unsigned int i = 0; i < jsarray->Length(); i++)
         {
-            mono_array_setref(netarray, i, ClrFunc::MarshalV8ToCLR(jsarray->Get(i)));
+            mono_array_setref(netarray, i, ClrFunc::MarshalV8ToCLR(jsarray->Get(Nan::GetCurrentContext(), i).ToLocalChecked()));
         }
 
         return (MonoObject*)netarray;
@@ -500,9 +503,9 @@ MonoObject* ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
         v8::Local<v8::Array> propertyNames = Nan::GetPropertyNames(jsobject).ToLocalChecked();
         for (unsigned int i = 0; i < propertyNames->Length(); i++)
         {
-            v8::Local<v8::String> name = v8::Local<v8::String>::Cast(propertyNames->Get(i));
+            v8::Local<v8::String> name = v8::Local<v8::String>::Cast(propertyNames->Get(Nan::GetCurrentContext(), i).ToLocalChecked());
             Nan::Utf8String utf8name(name);
-            Dictionary::Add(netobject, *utf8name, ClrFunc::MarshalV8ToCLR(jsobject->Get(name)));
+            Dictionary::Add(netobject, *utf8name, ClrFunc::MarshalV8ToCLR(jsobject->Get(Nan::GetCurrentContext(), name).ToLocalChecked()));
         }
 
         return netobject;
@@ -513,7 +516,7 @@ MonoObject* ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
     }
     else if (jsdata->IsBoolean())
     {
-        bool value = jsdata->BooleanValue(context).FromJust();
+        bool value = jsdata->BooleanValue(isolate);
         return mono_value_box(mono_domain_get(), mono_get_boolean_class(), &value);
     }
     else if (jsdata->IsInt32())
