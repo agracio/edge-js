@@ -496,7 +496,7 @@ System::Object^ ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
     }
     else if (jsdata->IsBoolean())
     {
-        return jsdata->BooleanValue(isolate);
+        return jsdata->BooleanValue(context).FromJust();
     }
     else if (jsdata->IsInt32())
     {

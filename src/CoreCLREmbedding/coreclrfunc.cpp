@@ -367,7 +367,7 @@ void CoreClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata, void** marshalData
 	else if (jsdata->IsBoolean())
 	{
 		bool* value = new bool();
-		*value = jsdata->BooleanValue(isolate);
+		*value = jsdata->BooleanValue(context).FromJust();;
 
 		*marshalData = value;
 		*payloadType = V8TypeBoolean;
