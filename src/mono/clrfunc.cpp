@@ -516,7 +516,11 @@ MonoObject* ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
     }
     else if (jsdata->IsBoolean())
     {
+        #if NODE_MODULE_VERSION < 72
         bool value = jsdata->BooleanValue(context).FromJust();;
+        #else
+        bool value = jsdata->BooleanValue(isolate);
+        #endif
         return mono_value_box(mono_domain_get(), mono_get_boolean_class(), &value);
     }
     else if (jsdata->IsInt32())

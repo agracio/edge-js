@@ -28,7 +28,11 @@ ClrFuncInvokeContext::ClrFuncInvokeContext(v8::Local<v8::Value> callbackOrSync)
     }
     else
     {
+        #if NODE_MODULE_VERSION < 72
         this->Sync = callbackOrSync->BooleanValue(context).FromJust();
+        #else
+        this->Sync = callbackOrSync->BooleanValue(isolate);
+        #endif
     }
 
     this->uv_edge_async = NULL;

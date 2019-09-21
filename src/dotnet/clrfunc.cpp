@@ -496,7 +496,11 @@ System::Object^ ClrFunc::MarshalV8ToCLR(v8::Local<v8::Value> jsdata)
     }
     else if (jsdata->IsBoolean())
     {
-        return jsdata->BooleanValue(context).FromJust();
+        #if NODE_MODULE_VERSION < 72
+        return jsdata->BooleanValue(context).FromJust();;
+        #else
+        return jsdata->BooleanValue(isolate);
+        #endif
     }
     else if (jsdata->IsInt32())
     {
