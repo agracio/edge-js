@@ -118,11 +118,7 @@ bool deps_entry_t::to_full_path(const pal::string_t& base, pal::string_t* str) c
     }
 
     pal::string_t new_base = base;
-#if EDGE_PLATFORM_NIX
     append_path(&new_base, pal::to_lower(library_name).c_str());
-#else
-    append_path(&new_base, library_name.c_str());
-#endif
 
     append_path(&new_base, library_version.c_str());
 
@@ -183,15 +179,9 @@ bool deps_entry_t::to_hash_matched_path(const pal::string_t& base, pal::string_t
     pal::string_t hash_file;
     hash_file.reserve(base.length() + library_name.length() + library_version.length() + nupkg_filename.length() + 3);
     hash_file.assign(base);
-#if EDGE_PLATFORM_NIX
     append_path(&hash_file, pal::to_lower(library_name).c_str());
     append_path(&hash_file, library_version.c_str());
     append_path(&hash_file, pal::to_lower(nupkg_filename).c_str());
-#else
-    append_path(&hash_file, library_name.c_str());
-    append_path(&hash_file, library_version.c_str());
-    append_path(&hash_file, nupkg_filename.c_str());
-#endif
 
     // Read the contents of the hash file.
     pal::ifstream_t fstream(hash_file);
