@@ -264,10 +264,15 @@ public class CoreCLREmbedding
 
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing compile dependency {0}", compileLibrary.Name);
 
-                string assemblyPath = standalone && File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar))))
-                    ? Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)))
-                    : Path.Combine(_packagesPath, compileLibrary.Name, compileLibrary.Version, compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar));
-
+                string assemblyPath;
+                if (standalone && File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)))))
+                    assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)));
+                else 
+                {
+                    assemblyPath = Path.Combine(_packagesPath, compileLibrary.Name.ToLower(), compileLibrary.Version, compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar).ToLower());
+                    if(!File.Exists(assemblyPath))                                 
+                        assemblyPath = Path.Combine(_packagesPath, compileLibrary.Name.ToLower(), compileLibrary.Version, compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar));
+                }
                 if (!CompileAssemblies.ContainsKey(compileLibrary.Name))
                 {
                     if (File.Exists(assemblyPath))
@@ -300,11 +305,18 @@ public class CoreCLREmbedding
                 if (assets.Any())
                 {
                     string assetPath = assets[0];
-                    string assemblyPath = runtimeLibrary.Type == "project"
-                        ? Path.Combine(RuntimeEnvironment.ApplicationDirectory, assetPath)
-                        : standalone
-                            ? Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(assetPath))
-                            : Path.Combine(_packagesPath, runtimeLibrary.Name, runtimeLibrary.Version, assetPath.Replace('/', Path.DirectorySeparatorChar));
+
+                    string assemblyPath;
+                    if(runtimeLibrary.Type == "project")                    
+                        assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, assetPath);                    
+                    else if (standalone)
+                        assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(assetPath));
+                    else 
+                    {
+                        assemblyPath = Path.Combine(_packagesPath, runtimeLibrary.Name.ToLower(), runtimeLibrary.Version, assetPath.Replace('/', Path.DirectorySeparatorChar).ToLower());
+                        if(!File.Exists(assemblyPath))                                 
+                            assemblyPath = Path.Combine(_packagesPath, runtimeLibrary.Name.ToLower(), runtimeLibrary.Version, assetPath.Replace('/', Path.DirectorySeparatorChar));
+                    }
                     string libraryNameFromPath = Path.GetFileNameWithoutExtension(assemblyPath);
 
                     if (!File.Exists(assemblyPath))

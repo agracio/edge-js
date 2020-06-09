@@ -200,14 +200,20 @@ bool deps_entry_t::to_hash_matched_path(const pal::string_t& base, pal::string_t
     {
         return false;
     }
-
-    // Check if contents match deps entry.
+    
+    // Check if contents match deps entry. 
+    // (Update they won't on Linux, just check if they exist)
     pal::string_t entry_hash = library_hash.substr(pos + 1);
-    if (entry_hash != pal_hash)
+    if (entry_hash.length() != 88 || pal_hash.length() != 88)
     {
-        trace::verbose(_X("The file hash [%s][%d] did not match entry hash [%s][%d]"),
+        trace::verbose(_X("The file hash [%s][%d] did not match entry hash [%s][%d] and/or didn't have the required length"),
             pal_hash.c_str(), pal_hash.length(), entry_hash.c_str(), entry_hash.length());
         return false;
+    }
+    else if (entry_hash != pal_hash)
+    {
+        trace::verbose(_X("[IGNORING] The file hash [%s][%d] did not match entry hash [%s][%d]"),
+            pal_hash.c_str(), pal_hash.length(), entry_hash.c_str(), entry_hash.length());
     }
 
     // All good, just append the relative dir to base.
