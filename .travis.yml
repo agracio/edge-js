@@ -12,7 +12,7 @@ node_js:
 
 install:
  - brew update >/dev/null
- - brew install glib mono openssl >/dev/null
+ - brew install mono >/dev/null
  - curl -sSL -k -o osx-net-core.pkg https://download.visualstudio.microsoft.com/download/pr/59a7b78f-4e86-473b-b230-c84d15505cec/766e3e5f35e7bb9677dd785071c5fbf7/dotnet-sdk-2.1.500-osx-x64.pkg
  - sudo installer -pkg osx-net-core.pkg -target /
  - export PATH=/usr/local/share/dotnet:$PATH
