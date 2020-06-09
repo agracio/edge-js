@@ -19,7 +19,8 @@ else {
 
     run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], function(code, signal) {
         if (code === 0) {
-        	run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], runOnSuccess);
+            run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], runOnSuccess);
+            run('cp', ['../test/bin/Debug/netcoreapp1.1/test.dll', '../test/Edge.Tests.CoreClr.dll'], runOnSuccess);
         }
     });
 
