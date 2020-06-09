@@ -5,12 +5,11 @@ image:
 environment:
   matrix:
     # node.js
+    - nodejs: "14"
     - nodejs: "13"
     - nodejs: "12"
     - nodejs: "11"
     - nodejs: "10"
-    - nodejs: "8"
-    - nodejs: "6"
 
 install:
   - cmd: powershell Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs) x64
