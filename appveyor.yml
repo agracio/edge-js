@@ -24,8 +24,8 @@ install:
 
 test_script:
 
-  - npm test
-  - node tools/coverage.js
+  - cmd: npm test
+  - cmd: node tools/coverage.js
   - cmd: SET EDGE_USE_CORECLR=1 & npm test
   - cmd: SET EDGE_USE_CORECLR=1 & node tools/coverage.js
   - sh: EDGE_USE_CORECLR=1 npm test
