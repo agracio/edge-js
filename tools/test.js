@@ -16,13 +16,15 @@ if (!process.env.EDGE_USE_CORECLR) {
 }
 
 else {
-
     run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], function(code, signal) {
         if (code === 0) {
-        	run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], runOnSuccess);
+            run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], function(code, signal) {
+                if (code === 0) {
+                    run('cp', ['../test/bin/Debug/netcoreapp1.1/test.dll', '../test/Edge.Tests.CoreClr.dll'], runOnSuccess);
+                }
+            });
         }
     });
-
 }
 
 function run(cmd, args, onClose){
@@ -52,7 +54,6 @@ function run(cmd, args, onClose){
 function runOnSuccess(code, signal) {
 	if (code === 0) {
 		process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'netcoreapp1.1');
-
 		spawn('node', [mocha, testDir, '-R', 'spec', '-t', '10000', '-gc'], { 
 			stdio: 'inherit' 
 		}).on('error', function(err) {
