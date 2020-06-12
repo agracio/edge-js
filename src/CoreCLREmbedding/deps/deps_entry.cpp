@@ -251,8 +251,8 @@ bool deps_entry_t::to_hash_matched_path(const pal::string_t& base, pal::string_t
     // Check if contents match deps entry. 
     if (entry_hash != pal_hash)
     {
-        //trace::verbose(_X("The file hash [%s][%d] did not match entry hash [%s][%d]"),
-        //    pal_hash.c_str(), pal_hash.length(), entry_hash.c_str(), entry_hash.length());
+        trace::verbose(_X("The file hash [%s][%d] did not match entry hash [%s][%d]"),
+            pal_hash.c_str(), pal_hash.length(), entry_hash.c_str(), entry_hash.length());
         return false;
     }
 
