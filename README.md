@@ -38,6 +38,11 @@ var helloWorld = edge.func(function () {/*
 
 For use with Electron refer to `electron-edge-js` instead. https://github.com/agracio/electron-edge-js
 
+## Mono
+
+Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but the focus will be on .NET Framework and .NET Core.
+Mono tests are now excluded from CI on Travis and AppVeyor.
+
 Edge.js readme
 ==============================
 
