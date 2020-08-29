@@ -111,6 +111,7 @@
               'RuntimeTypeInfo': -1,
               'BasicRuntimeChecks': -1,
               'ExceptionHandling': '0',
+			  'WholeProgramOptimization': 'false',
               'AdditionalOptions': [
                 '/wd4506',
                 '/DHAVE_CORECLR',
@@ -234,6 +235,7 @@
               'RuntimeTypeInfo': -1,
               'BasicRuntimeChecks': -1,
               'ExceptionHandling': '0',
+			  'WholeProgramOptimization': 'false',
               'AdditionalOptions': [
                 '/clr',
                 '/wd4506',
