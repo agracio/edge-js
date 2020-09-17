@@ -118,7 +118,7 @@ namespace EdgeJs
                             argv.Add($"-EdgeJs:{Path.Combine(edgeDirectory, "EdgeJs.dll")}");
                             nodeStart(argv.Count, argv.ToArray());
                             waitHandle.Set();
-                        });
+                        }, 1048576); // Force typical Windows stack size because less is liable to break
 
                         v8Thread.IsBackground = true;
                         v8Thread.Start();
