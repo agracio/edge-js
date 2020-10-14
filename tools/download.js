@@ -1,4 +1,4 @@
-var http = require('http');
+var {http} = require('follow-redirects');
 
 var urls;
 if (process.argv[2] === 'x86') {
