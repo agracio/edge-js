@@ -50,6 +50,7 @@ echo Building edge.node %FLAVOR% for node.js %2 v%3
 set NODEEXE=%DESTDIR%\node.exe
 FOR /F "tokens=* USEBACKQ" %%F IN (`npm config get prefix`) DO (SET NODEBASE=%%F)
 set GYP=%NODEBASE%\node_modules\node-gyp\bin\node-gyp.js
+echo %GYP%
 if not exist "%GYP%" (
     echo Cannot find node-gyp at %GYP%. Make sure to install with npm install node-gyp -g
     exit /b -1

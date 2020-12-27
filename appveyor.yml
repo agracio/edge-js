@@ -5,8 +5,8 @@ image:
 environment:
   matrix:
     # node.js
+    - nodejs: "15"
     - nodejs: "14"
-    - nodejs: "13"
     - nodejs: "12"
     - nodejs: "10"
 
