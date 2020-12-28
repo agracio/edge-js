@@ -1248,7 +1248,7 @@ Read more about [performance of Edge.js on the wiki](https://github.com/tjanczuk
 
 ### Building on Windows
 
-You must have Visual Studio 2015 toolset, Python 2.7.x, and node-gyp installed for building.
+You must have Visual Studio 2017 toolset, Python 2.7.x, and node-gyp installed for building.
 
 To build and test the project against all supported versions of Node.js in x86 and x64 flavors, run the following:
 

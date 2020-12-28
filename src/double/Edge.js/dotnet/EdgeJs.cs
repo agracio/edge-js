@@ -26,7 +26,9 @@ namespace EdgeJs
             // at the original location. Calling back into EdgeJs.dll from node hangs if the shadow 
             // copy path is specified instead of the original path.
             var asm = typeof(Edge).Assembly;
-            edgeDirectory = string.IsNullOrWhiteSpace(asm.CodeBase) || !Uri.TryCreate(asm.CodeBase, UriKind.Absolute, out var codeBase) || !codeBase.IsFile
+
+            Uri codeBase;
+            edgeDirectory = string.IsNullOrWhiteSpace(asm.CodeBase) || !Uri.TryCreate(asm.CodeBase, UriKind.Absolute, out codeBase) || !codeBase.IsFile
                 ? Path.GetDirectoryName(asm.Location)
                 : Path.GetDirectoryName(codeBase.LocalPath);
         }
@@ -115,7 +117,7 @@ namespace EdgeJs
                                 }
                             }
                             argv.Add(Path.Combine(AssemblyDirectory, "edge", "double_edge.js"));
-                            argv.Add($"-EdgeJs:{Path.Combine(edgeDirectory, "EdgeJs.dll")}");
+                            argv.Add(string.Format("-EdgeJs:{0}", Path.Combine(edgeDirectory, "EdgeJs.dll")));
                             nodeStart(argv.Count, argv.ToArray());
                             waitHandle.Set();
                         });

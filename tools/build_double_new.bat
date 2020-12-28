@@ -118,7 +118,7 @@ if exist "%SELF%\build\node-%1-%2\node.lib" (
 
 pushd "%SELF%\build\node-%1"
 rmdir /s /q Release
-rmdir /s /q build
+rem rmdir /s /q build
 rmdir /s /q tools\icu\Release
 
 call vcbuild.bat release %2 dll
@@ -141,14 +141,14 @@ echo :download_node_exe
 
 if not exist "%SELF%\build\node-%1-x86\node.exe" (
     echo Downloading Node.js binary to  "%SELF%\build\node-%1-x86\node.exe"
-	"%SELF%\build\download.exe" http://nodejs.org/dist/v%1/win-x86/node.exe "%SELF%\build\node-%1-x86\node.exe"
+	"%SELF%\build\download.exe" https://nodejs.org/dist/v%1/win-x86/node.exe "%SELF%\build\node-%1-x86\node.exe"
 ) else (
     echo "%SELF%\build\node-%1-x86\node.exe" already exists.
 )
 
 if not exist "%SELF%\build\node-%1-x64\node.exe" (
     echo Downloading Node.js binary to "%SELF%\build\node-%1-x64\node.exe"
-	"%SELF%\build\download.exe" http://nodejs.org/dist/v%1/win-x64/node.exe "%SELF%\build\node-%1-x64\node.exe"
+	"%SELF%\build\download.exe" https://nodejs.org/dist/v%1/win-x64/node.exe "%SELF%\build\node-%1-x64\node.exe"
 ) else (
     echo "%SELF%\build\node-%1-x64\node.exe" already exists.
 )
@@ -200,7 +200,7 @@ ROBOCOPY build/nuget/content/edge/x86 nuget/content/edge/x86 *.* /NFL /NDL /NJH 
 ROBOCOPY build/nuget/content/edge/x64 nuget/content/edge/x64 *.* /NFL /NDL /NJH /NJS /nc /ns /np
 
 ROBOCOPY build/nuget/lib/net40 nuget/lib/net40 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
-ROBOCOPY build/nuget/lib/net45 nuget/lib/net45 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
+ROBOCOPY build/nuget/lib/net461 nuget/lib/net461 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
 ROBOCOPY build/nuget/lib/netcoreapp1.1 nuget/lib/netcoreapp1.1 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
 ROBOCOPY build/nuget/lib/netcoreapp2.0 nuget/lib/netcoreapp2.0 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
 
