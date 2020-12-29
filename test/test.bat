@@ -1,6 +1,6 @@
 rem usage: test.bat [ia32|x64 {version}], e.g. test.bat x64 0.10.0
 @echo off
-set EDGE_APP_ROOT=%~dp0\bin\Debug\netcoreapp1.1
+set EDGE_APP_ROOT=%~dp0\bin\Debug\netcoreapp2.0
 set NODEEXE=node.exe
 set EDGE_USE_CORECLR=
 if "%1" neq "" if "%2" neq "" set NODEEXE=%~dp0\..\lib\native\win32\%1\%2\node.exe
