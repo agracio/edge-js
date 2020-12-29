@@ -231,21 +231,29 @@ public class CoreCLREmbedding
                         dependencyContext = dependencyContext.Merge(dependencyContextReader.Read(runtimeDependencyManifestStream));
                     }
                 }
+                
+                // string entryAssemblyPath = dependencyManifestFile.Replace(".deps.json", ".dll");
+                //
+                // if (File.Exists(entryAssemblyPath))
+                // {
+                //     Assembly entryAssembly = Assembly.Load(new AssemblyName(Path.GetFileNameWithoutExtension(entryAssemblyPath)));
+                //     dependencyContext = dependencyContext.Merge(DependencyContext.Load(entryAssembly));
+                // }
 
                 AddDependencies(dependencyContext, RuntimeEnvironment.StandaloneApplication);
             }
 
-            string entryAssemblyPath = dependencyManifestFile.Replace(".deps.json", ".dll");
+            //string entryAssemblyPath = dependencyManifestFile.Replace(".deps.json", ".dll");
 
-            if (File.Exists(entryAssemblyPath))
-            {
-                Assembly entryAssembly = Assembly.Load(new AssemblyName(Path.GetFileNameWithoutExtension(entryAssemblyPath)));
-                Lazy<DependencyContext> defaultDependencyContext = new Lazy<DependencyContext>(() => DependencyContext.Load(entryAssembly));
+            //if (File.Exists(entryAssemblyPath))
+            //{
+            //    Assembly entryAssembly = Assembly.Load(new AssemblyName(Path.GetFileNameWithoutExtension(entryAssemblyPath)));
+           //     Lazy<DependencyContext> defaultDependencyContext = new Lazy<DependencyContext>(() => DependencyContext.Load(entryAssembly));
+           //     dependencyContext = dependencyContext.Merge(defaultDependencyContext);
 
-                // I really don't like doing it this way, but it's the easiest way to give the running code access to the default 
-                // dependency context data
+                // I really don't like doing it this way, but it's the easiest way to give the running code access to the default dependency context data
                 //typeof(DependencyContext).GetField("_defaultContext", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, defaultDependencyContext);
-            }
+            //}
 
             DebugMessage("EdgeAssemblyResolver::LoadDependencyManifest (CLR) - Finished");
         }
@@ -459,12 +467,20 @@ public class CoreCLREmbedding
             DebugMessage("EdgeAssemblyResolver::AddCompiler (CLR) - Adding the compiler from dependency manifest file {0}", bootstrapDependencyManifest);
 
             DependencyContextJsonReader dependencyContextReader = new DependencyContextJsonReader();
-
+            
             using (FileStream bootstrapDependencyManifestStream = new FileStream(bootstrapDependencyManifest, FileMode.Open, FileAccess.Read))
             {
                 DependencyContext compilerDependencyContext = dependencyContextReader.Read(bootstrapDependencyManifestStream);
 
                 DebugMessage("EdgeAssemblyResolver::AddCompiler (CLR) - Adding dependencies for the compiler");
+                // string entryAssemblyPath = bootstrapDependencyManifest.Replace(".deps.json", ".dll");
+                //
+                // if (File.Exists(entryAssemblyPath))
+                // {
+                //     Assembly entryAssembly = Assembly.Load(new AssemblyName(Path.GetFileNameWithoutExtension(entryAssemblyPath)));
+                //     compilerDependencyContext = compilerDependencyContext.Merge(DependencyContext.Load(entryAssembly));
+                // }
+
                 AddDependencies(compilerDependencyContext, false);
 
                 DebugMessage("EdgeAssemblyResolver::AddCompiler (CLR) - Finished");
@@ -635,7 +651,7 @@ public class CoreCLREmbedding
 
             if (!Compilers.ContainsKey(compiler))
             {
-                if (!DependencyContext.Default.RuntimeLibraries.Any(l => l.Name == compiler))
+                if (DependencyContext.Default ==null || !DependencyContext.Default.RuntimeLibraries.Any(l => l.Name == compiler))
                 {
                     if (!File.Exists(options["bootstrapDependencyManifest"].ToString()))
                     {
