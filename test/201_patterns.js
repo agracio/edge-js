@@ -229,7 +229,7 @@ describe('call patterns', function () {
             });
         });
 
-        it(prefix + ' can use DependencyContext.Default', function (done) {
+        it.skip(prefix + ' can use DependencyContext.Default', function (done) {
             var func = edge.func({
                 assemblyFile: edgeTestDll,
                 typeName: 'Edge.Tests.Startup',

@@ -48,7 +48,7 @@ describe('sync call from node.js to .net', function () {
             c: 'fooåäö',
             d: true,
             e: false,
-            f: new Buffer(10),
+            f: Buffer.alloc(10),
             g: [ 1, 'fooåäö' ],
             h: { a: 'fooåäö', b: 12 },
             i: function (payload, callback) { },

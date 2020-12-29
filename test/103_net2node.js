@@ -108,7 +108,7 @@ describe('async call from .net to node.js', function () {
 					c: 'fooåäö',
 					d: true,
 					e: false,
-					f: new Buffer(10),
+					f: Buffer.alloc(10),
 					g: [ 1, 'fooåäö' ],
 					h: { a: 'fooåäö', b: 12 },
 					j: new Date(Date.UTC(2013, 07, 30))
