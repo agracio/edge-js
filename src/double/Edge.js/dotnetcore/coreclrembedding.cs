@@ -244,7 +244,7 @@ public class CoreCLREmbedding
 
                 // I really don't like doing it this way, but it's the easiest way to give the running code access to the default 
                 // dependency context data
-                typeof(DependencyContext).GetField("_defaultContext", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, defaultDependencyContext);
+                //typeof(DependencyContext).GetField("_defaultContext", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, defaultDependencyContext);
             }
 
             DebugMessage("EdgeAssemblyResolver::LoadDependencyManifest (CLR) - Finished");
