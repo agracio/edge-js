@@ -37,7 +37,7 @@ describe('async call from node.js to .net', function () {
             c: 'fooåäö',
             d: true,
             e: false,
-            f: new Buffer(10),
+            f: Buffer.alloc(10),
             g: [ 1, 'fooåäö' ],
             h: { a: 'fooåäö', b: 12 },
             i: function (payload, callback) { },
@@ -141,7 +141,7 @@ describe('async call from node.js to .net', function () {
         	methodName: 'MarshalEmptyBuffer'
         });
 
-        func(new Buffer(0), function (error, result) {
+        func(Buffer.alloc(0), function (error, result) {
             assert.ifError(error);
             assert.ok(result === true);
             done();

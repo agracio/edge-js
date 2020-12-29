@@ -232,14 +232,6 @@ public class CoreCLREmbedding
                     }
                 }
                 
-                // string entryAssemblyPath = dependencyManifestFile.Replace(".deps.json", ".dll");
-                //
-                // if (File.Exists(entryAssemblyPath))
-                // {
-                //     Assembly entryAssembly = Assembly.Load(new AssemblyName(Path.GetFileNameWithoutExtension(entryAssemblyPath)));
-                //     dependencyContext = dependencyContext.Merge(DependencyContext.Load(entryAssembly));
-                // }
-
                 AddDependencies(dependencyContext, RuntimeEnvironment.StandaloneApplication);
             }
 
@@ -473,13 +465,6 @@ public class CoreCLREmbedding
                 DependencyContext compilerDependencyContext = dependencyContextReader.Read(bootstrapDependencyManifestStream);
 
                 DebugMessage("EdgeAssemblyResolver::AddCompiler (CLR) - Adding dependencies for the compiler");
-                // string entryAssemblyPath = bootstrapDependencyManifest.Replace(".deps.json", ".dll");
-                //
-                // if (File.Exists(entryAssemblyPath))
-                // {
-                //     Assembly entryAssembly = Assembly.Load(new AssemblyName(Path.GetFileNameWithoutExtension(entryAssemblyPath)));
-                //     compilerDependencyContext = compilerDependencyContext.Merge(DependencyContext.Load(entryAssembly));
-                // }
 
                 AddDependencies(compilerDependencyContext, false);
 
