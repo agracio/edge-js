@@ -36,12 +36,21 @@ var helloWorld = edge.func(function () {/*
 
 ## Electron
 
-For use with Electron refer to `electron-edge-js` instead. https://github.com/agracio/electron-edge-js
+For use with Electron refer to `electron-edge-js`. https://github.com/agracio/electron-edge-js
 
 ## Mono
 
 Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but the focus will be on .NET Framework and .NET Core.
 Mono tests are now excluded from CI on Travis and AppVeyor.
+
+## Quick start
+
+Simple app that shows how to work with .NET Core using compiled C# libraries.  
+https://github.com/agracio/edge-js-quick-start
+
+## Async execution
+
+Edge.js written as synchronous C++ Node.js module and will cause apps to freeze when executing long running .NET code.
 
 Edge.js readme
 ==============================
