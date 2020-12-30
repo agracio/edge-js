@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>EdgeJs</id>
-    <version>11.3.3</version>
+    <version>11.15.0</version>
     <authors>agracio</authors>
     <owners>agracio</owners>
     <licenseUrl>https://raw.githubusercontent.com/agracio/edge-js/master/LICENSE</licenseUrl>
