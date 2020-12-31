@@ -1,35 +1,33 @@
-FROM ubuntu:bionic
+FROM ubuntu:focal
 
 # update apt-get
-RUN apt-get -y update > /dev/null
-RUN apt-get -y upgrade > /dev/null
+RUN apt-get -y update
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get install -y apt-utils
 
 # install curl, sudo, wget
-RUN apt-get install -y curl sudo wget > /dev/null
+RUN apt-get install -y curl sudo wget
 
 RUN mkdir /devvol
 VOLUME /devvol
 
-RUN apt-get -y update > /dev/null
+RUN apt-get -y update
 
 # install dependencies
-RUN apt-get install -y apt-transport-https build-essential libgconf-2-4 python git libglib2.0-dev > /dev/null
+RUN apt-get install -y apt-transport-https build-essential libgconf-2-4 python git libglib2.0-dev
 
 # install node
 
-RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-RUN apt-get install -y nodejs > /dev/null
+RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+RUN sudo apt-get install -y nodejs
 
 # install net core
 
-RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
-RUN sudo mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
-RUN wget -q https://packages.microsoft.com/config/ubuntu/18.04/prod.list 
-RUN sudo mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
-RUN sudo chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
-RUN sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
-
-RUN apt-get -y update > /dev/null
-RUN apt-get install -y dotnet-sdk-2.1  > /dev/null
+RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+RUN sudo dpkg -i packages-microsoft-prod.deb
+RUN sudo apt-get update
+RUN sudo apt-get install -y dotnet-sdk-5.0
 
 RUN npm i -g node-gyp
