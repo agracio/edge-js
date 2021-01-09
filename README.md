@@ -59,6 +59,22 @@ Edge.js readme
  
 An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, MacOS, and Linux. 
 
+### Script CLR from Node.Js
+
+|   	|.NET 4.5          |Mono 4.x - 5.x    |CoreCLR           |
+|---	|:--:	           |:--:	      |:--:	         |
+|Windows|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+|Linux  |:x:               |:heavy_check_mark:|:heavy_check_mark:|
+|MacOS  |:x:               |:heavy_check_mark:|:heavy_check_mark:|
+
+### Script Node.Js from CLR
+
+|   	|.NET 4.5          |Mono 4.x - 5.x    |CoreCLR           |
+|---	|:--:	           |:--:	      |:--:	         |
+|Windows|:heavy_check_mark:|:x:               |:x:               |
+|Linux  |:x:               |:x:               |:x:               |
+|MacOS  |:x:               |:x:               |:x:               |
+
 ![image](https://cloud.githubusercontent.com/assets/822369/11969685/e9476f3a-a8d1-11e5-94d4-847bfc4ed960.png)
 
 You can script C# from a Node.js process:
