@@ -75,8 +75,6 @@ An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET
 |Linux  |:x:               |:x:               |:x:               |
 |MacOS  |:x:               |:x:               |:x:               |
 
-![image](https://cloud.githubusercontent.com/assets/822369/11969685/e9476f3a-a8d1-11e5-94d4-847bfc4ed960.png)
-
 You can script C# from a Node.js process:
 
 **ES5**
