@@ -55,8 +55,6 @@ Edge.js written as synchronous C++ Node.js module and will cause apps to freeze 
 Edge.js readme
 ==============================
 
-**NEW** Edge.js is now on Slack at https://edgejs.slack.com. Join [here](https://webtask.it.auth0.com/api/run/tjanczuk/edgejs-slack-invite). 
- 
 An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, MacOS, and Linux. 
 
 ### Script CLR from Node.Js
