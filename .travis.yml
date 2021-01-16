@@ -10,7 +10,7 @@ node_js:
  - "10.14.0"
 
 install:
- - curl -sSL -k -o osx-net-core.pkg https://download.visualstudio.microsoft.com/download/pr/59a7b78f-4e86-473b-b230-c84d15505cec/766e3e5f35e7bb9677dd785071c5fbf7/dotnet-sdk-2.1.500-osx-x64.pkg
+ - curl -sSL -k -o osx-net-core.pkg https://download.visualstudio.microsoft.com/download/pr/52bd43f7-88c9-420c-80c0-f19bae344293/a8d56f01fdb6f71adb5e22c3ddd1c3c6/dotnet-sdk-5.0.102-osx-x64.pkg
  - sudo installer -pkg osx-net-core.pkg -target /
  - export PATH=/usr/local/share/dotnet:$PATH
  - npm install -q
