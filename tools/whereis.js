@@ -11,7 +11,7 @@ module.exports = function() {
     		var filename = arguments[j];
 	        var filePath = path.join(directories[i], filename);
 
-	        if (fs.existsSync(filePath)) {
+	        if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
 	            return filePath;
 	        }
 	    }
