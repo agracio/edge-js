@@ -8,7 +8,8 @@ environment:
     # - nodejs: "15"
     - nodejs: "14"
     - nodejs: "12"
-    - nodejs: "10"
+    # yargs requires NodeJs >= 12
+    #- nodejs: "10"
 
 install:
   - cmd: powershell Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs) x64

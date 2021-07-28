@@ -79,8 +79,6 @@ function createJunitReports(framework, createHtml){
                         console.log(err);
                     });
                 }
-
-
             }
         })
     }).on('error', function(err) {
