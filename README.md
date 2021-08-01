@@ -28,50 +28,29 @@ var helloWorld = edge.func(function () {/*
 
 ## Main differences from `edge`
 
-* Support for Node.Js 10.x, 12.x, 14.x, 15.x
-* Support for .NET Core 1.0.1 - 5.x on Windows/Linux/macOS.
+* Support for Node.Js 12.x, 14.x, 16.x
+* Support for .NET Core 1.0.1 - 2.x on Windows/Linux/macOS.
 * Support for Mono runtime 4.8.x - 5.x.
 * Fixes AccessViolationException when running Node.js code from C# [PR #573](https://github.com/tjanczuk/edge/pull/573).
 * Fixes StackOverflowException [PR #566](https://github.com/tjanczuk/edge/pull/566) that occurs when underlying C# code throws complex exception.
 
 ## Electron
 
-For use with Electron refer to `electron-edge-js`. https://github.com/agracio/electron-edge-js
+For use with Electron refer to `electron-edge-js` instead. https://github.com/agracio/electron-edge-js
 
 ## Mono
 
 Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but the focus will be on .NET Framework and .NET Core.
 Mono tests are now excluded from CI on Travis and AppVeyor.
 
-## Quick start
-
-Simple app that shows how to work with .NET Core using compiled C# libraries.  
-https://github.com/agracio/edge-js-quick-start
-
-## Async execution
-
-Edge.js written as synchronous C++ Node.js module and will cause apps to freeze when executing long running .NET code.
-
 Edge.js readme
 ==============================
 
+**NEW** Edge.js is now on Slack at https://edgejs.slack.com. Join [here](https://webtask.it.auth0.com/api/run/tjanczuk/edgejs-slack-invite). 
+ 
 An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, MacOS, and Linux. 
 
-### Script CLR from Node.Js
-
-|   	|.NET 4.5          |Mono 4.x - 5.x    |CoreCLR           |
-|---	|:--:	           |:--:	      |:--:	         |
-|Windows|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
-|Linux  |:x:               |:heavy_check_mark:|:heavy_check_mark:|
-|MacOS  |:x:               |:heavy_check_mark:|:heavy_check_mark:|
-
-### Script Node.Js from CLR
-
-|   	|.NET 4.5          |Mono 4.x - 5.x    |CoreCLR           |
-|---	|:--:	           |:--:	      |:--:	         |
-|Windows|:heavy_check_mark:|:x:               |:x:               |
-|Linux  |:x:               |:x:               |:x:               |
-|MacOS  |:x:               |:x:               |:x:               |
+![image](https://cloud.githubusercontent.com/assets/822369/11969685/e9476f3a-a8d1-11e5-94d4-847bfc4ed960.png)
 
 You can script C# from a Node.js process:
 
@@ -1269,7 +1248,7 @@ Read more about [performance of Edge.js on the wiki](https://github.com/tjanczuk
 
 ### Building on Windows
 
-You must have Visual Studio 2017 toolset, Python 2.7.x, and node-gyp installed for building.
+You must have Visual Studio 2019* toolset, Python 3.6.x, and node-gyp installed for building.
 
 To build and test the project against all supported versions of Node.js in x86 and x64 flavors, run the following:
 
@@ -1746,10 +1725,11 @@ These are unstructions for building the Edge.js NuGet package on Windows. The pa
 
 Preprequisties:
 
-* Visual Studio 2017
+* Visual Studio 2019
 * Node.js (tested with v8.10.0)
-* Python 2.7.x  
-* node-gyp (tested with 3.6.1)  
+* Python 3.6.x  
+* node-gyp (latest)  
+* NASM (for opn-ssl) https://www.nasm.us/
 
 To buid the NuGet package, open the Visual Studio 2013 Developer Command Prompt and call:
 

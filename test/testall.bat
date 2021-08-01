@@ -10,15 +10,13 @@ if "%1"=="" set run64=Y
 if "%1"=="x64" set run64=Y
 
 if "%run32%"=="Y" (
-	call "%SELF%\test.bat" ia32 14.3.0
-	call "%SELF%\test.bat" ia32 13.0.1
+	call "%SELF%\test.bat" ia32 16.6.0
+	call "%SELF%\test.bat" ia32 14.17.4
 	call "%SELF%\test.bat" ia32 12.13.0
-	call "%SELF%\test.bat" ia32 10.14.0
 )
 
 if "%run64%"=="Y" (
-	call "%SELF%\test.bat" x64 14.3.0
-	call "%SELF%\test.bat" x64 13.0.1
+	call "%SELF%\test.bat" x64 16.6.0
+	call "%SELF%\test.bat" x64 14.17.4
 	call "%SELF%\test.bat" x64 12.13.0
-	call "%SELF%\test.bat" x64 10.14.0
 )
