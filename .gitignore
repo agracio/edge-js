@@ -72,5 +72,6 @@ tools/nuget/*.nupkg
 tools/nuget/*.zip
 tools/*.nupkg
 tools/*.zip
+tools/nuget.exe
 
 test-results*.*
