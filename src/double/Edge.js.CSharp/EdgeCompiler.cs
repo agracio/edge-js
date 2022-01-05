@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,7 @@ public class EdgeCompiler
     private static readonly bool DebuggingEnabled = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("EDGE_CS_DEBUG"));
     private static readonly bool DebuggingSelfEnabled = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("EDGE_CS_DEBUG_SELF"));
     private static readonly bool CacheEnabled = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("EDGE_CS_CACHE"));
-    private static readonly Dictionary<string, Func<object, Task<object>>> FuncCache = new Dictionary<string, Func<object, Task<object>>>();
+    private static readonly ConcurrentDictionary<string, Func<object, Task<object>>> FuncCache = new ConcurrentDictionary<string, Func<object, Task<object>>>();
     private static Func<Stream, Assembly> _assemblyLoader;
 
     public static void SetAssemblyLoader(Func<Stream, Assembly> assemblyLoader)
