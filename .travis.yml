@@ -4,9 +4,9 @@ os:
   - osx
 
 node_js:
- - "16.6.0"
- - "14.17.4"
- - "12.13.0"
+ - "18.4.0"
+ - "16.15.1"
+ - "14.19.3"
 
 install:
  - curl -sSL -k -o osx-net-core.pkg https://download.visualstudio.microsoft.com/download/pr/52bd43f7-88c9-420c-80c0-f19bae344293/a8d56f01fdb6f71adb5e22c3ddd1c3c6/dotnet-sdk-5.0.102-osx-x64.pkg
