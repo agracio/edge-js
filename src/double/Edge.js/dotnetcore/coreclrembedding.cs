@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Loader;
 using System.Linq.Expressions;
 using System.Dynamic;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections;
 using System.Threading.Tasks;
@@ -505,12 +506,12 @@ public class CoreCLREmbedding
 
     private static readonly bool DebugMode = Environment.GetEnvironmentVariable("EDGE_DEBUG") == "1";
     private static readonly long MinDateTimeTicks = 621355968000000000;
-    private static readonly Dictionary<Type, List<Tuple<string, Func<object, object>>>> TypePropertyAccessors = new Dictionary<Type, List<Tuple<string, Func<object, object>>>>();
+    private static readonly ConcurrentDictionary<Type, List<Tuple<string, Func<object, object>>>> TypePropertyAccessors = new ConcurrentDictionary<Type, List<Tuple<string, Func<object, object>>>>();
     private static readonly int PointerSize = Marshal.SizeOf<IntPtr>();
     private static readonly int V8BufferDataSize = Marshal.SizeOf<V8BufferData>();
     private static readonly int V8ObjectDataSize = Marshal.SizeOf<V8ObjectData>();
     private static readonly int V8ArrayDataSize = Marshal.SizeOf<V8ArrayData>();
-    private static readonly Dictionary<string, Tuple<Type, MethodInfo>> Compilers = new Dictionary<string, Tuple<Type, MethodInfo>>();
+    private static readonly ConcurrentDictionary<string, Tuple<Type, MethodInfo>> Compilers = new ConcurrentDictionary<string, Tuple<Type, MethodInfo>>();
 
     public static void Initialize(IntPtr context, IntPtr exception)
     {
