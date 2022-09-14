@@ -451,12 +451,12 @@ void deps_resolver_t::init_known_entry_path(const deps_entry_t& entry, const pal
     {
         return;
     }
-    if (m_coreclr_path.empty() && ends_with(entry.relative_path, _X("/") + pal::string_t(LIBCORECLR_NAME), false))
+    if (m_coreclr_path.empty() && (ends_with(entry.relative_path, _X("/") + pal::string_t(LIBCORECLR_NAME), false) || entry.relative_path == pal::string_t(LIBCORECLR_NAME)))
     {
         m_coreclr_path = path;
         return;
     }
-    if (m_clrjit_path.empty() && ends_with(entry.relative_path, _X("/") + pal::string_t(LIBCLRJIT_NAME), false))
+    if (m_clrjit_path.empty() && (ends_with(entry.relative_path, _X("/") + pal::string_t(LIBCLRJIT_NAME), false) || entry.relative_path == pal::string_t(LIBCLRJIT_NAME)))
     {
         m_clrjit_path = path;
         return;
@@ -613,6 +613,7 @@ bool deps_resolver_t::resolve_probe_paths(probe_paths_t* probe_paths, std::unord
     }
 
     // If we found coreclr and the jit during native path probe, set the paths now.
+
     probe_paths->coreclr = m_coreclr_path;
     probe_paths->clrjit = m_clrjit_path;
 
