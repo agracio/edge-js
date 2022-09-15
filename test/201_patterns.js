@@ -224,7 +224,7 @@ describe('call patterns', function () {
             });
 
             func(null, function (error, result) {
-                assert.equal(result, "12.0.0.0");
+                assert.equal(result, "13.0.0.0");
                 done();
             });
         });
