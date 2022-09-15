@@ -81,13 +81,13 @@ bool HasEnvironmentVariable(const char* variableName)
 #pragma unmanaged
 #endif
 #ifdef HAVE_CORECLR
-        #if NODE_MAJOR_VERSION >= 18
+        #if NODE_MAJOR_VERSION >= 10
 		NAN_MODULE_WORKER_ENABLED(edge_coreclr, init)
 	#else
 		NODE_MODULE(edge_coreclr, init)
 	#endif
 #else
-	#if NODE_MAJOR_VERSION >= 18
+	#if NODE_MAJOR_VERSION >= 10
 		NAN_MODULE_WORKER_ENABLED(edge_nativeclr, init)
 	#else
 		NODE_MODULE(edge_nativeclr, init)
