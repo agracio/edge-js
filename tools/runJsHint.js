@@ -55,7 +55,7 @@ filesToLint.forEach(function (filename) {
 });
 
 if (utils.errors > 0) {
-	return process.exit(1);
+	process.exit(1);
 }
 
 console.log('Success: no linting errors.');
