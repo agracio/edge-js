@@ -28,7 +28,7 @@ var helloWorld = edge.func(function () {/*
 
 ## Main differences from `edge`
 
-* Support for Node.Js 14.x, 16.x, 18.x
+* Support for Node.Js 14.x, 16.x, 18.x, 19.x 
 * Support for .NET Core 1.0.1 - 6.x on Windows/Linux/macOS.
 * Support for Mono runtime 4.8.x - 5.x.
 * Fixes AccessViolationException when running Node.js code from C# [PR #573](https://github.com/tjanczuk/edge/pull/573).
