@@ -23,7 +23,7 @@
         "<!(node -e \"require('nan')\")"
       ],
       'cflags+': [
-        '-DHAVE_CORECLR -D_NO_ASYNCRTIMP -std=c++14 -Wno-reorder -Wno-sign-compare -Wno-mismatched-tags -Wno-missing-braces -Wno-redundant-move -Wno-deprecated-declarations -Wno-unused-private-field -Wno-unused-variable'
+        '-DHAVE_CORECLR -D_NO_ASYNCRTIMP -std=c++17 -Wno-reorder -Wno-sign-compare -Wno-mismatched-tags -Wno-missing-braces -Wno-redundant-move -Wno-deprecated-declarations -Wno-unused-private-field -Wno-unused-variable'
       ],
       'cflags!': [
         '-fno-exceptions',
@@ -53,7 +53,7 @@
         ],
         'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
         'GCC_ENABLE_CPP_RTTI': 'YES',
-        'CLANG_CXX_LANGUAGE_STANDARD': 'c++14',
+        'CLANG_CXX_LANGUAGE_STANDARD': 'c++17',
         'CLANG_CXX_LIBRARY': 'libc++',
         'MACOSX_DEPLOYMENT_TARGET': '10.7'
       },
@@ -161,7 +161,7 @@
         "<!(node -e \"require('nan')\")"
       ],
       'cflags+': [
-        '-DHAVE_NATIVECLR -std=c++14'
+        '-DHAVE_NATIVECLR -std=c++17'
       ],
       'xcode_settings': {
         'OTHER_CFLAGS': [
