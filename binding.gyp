@@ -23,7 +23,7 @@
         "<!(node -e \"require('nan')\")"
       ],
       'cflags+': [
-        '-DHAVE_CORECLR -D_NO_ASYNCRTIMP -std=c++17 -Wno-reorder -Wno-sign-compare -Wno-mismatched-tags -Wno-missing-braces -Wno-redundant-move -Wno-deprecated-declarations -Wno-unused-private-field -Wno-unused-variable'
+        '-DHAVE_CORECLR -D_NO_ASYNCRTIMP -std=c++14 -Wno-reorder -Wno-sign-compare -Wno-mismatched-tags -Wno-missing-braces -Wno-redundant-move -Wno-deprecated-declarations -Wno-unused-private-field -Wno-unused-variable'
       ],
       'cflags!': [
         '-fno-exceptions',
@@ -55,7 +55,7 @@
         'GCC_ENABLE_CPP_RTTI': 'YES',
         'CLANG_CXX_LANGUAGE_STANDARD': 'c++17',
         'CLANG_CXX_LIBRARY': 'libc++',
-        'MACOSX_DEPLOYMENT_TARGET': '10.7'
+        'MACOSX_DEPLOYMENT_TARGET': '12.0'
       },
       'sources+': [
         'src/common/v8synchronizationcontext.cpp',
@@ -116,7 +116,8 @@
                 '/DHAVE_CORECLR',
                 '/EHsc',
                 '/D_NO_ASYNCRTIMP',
-                '/D_HAS_EXCEPTIONS'
+                '/D_HAS_EXCEPTIONS',
+                "-std:c++17"
               ]
             },
             'VCLinkerTool': {
@@ -237,7 +238,8 @@
               'AdditionalOptions': [
                 '/clr',
                 '/wd4506',
-                '/DHAVE_NATIVECLR'
+                '/DHAVE_NATIVECLR',
+                "-std:c++17"
               ]
             },
             'VCLinkerTool': {

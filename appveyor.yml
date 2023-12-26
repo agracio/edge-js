@@ -48,5 +48,6 @@ skip_commits:
     - '**/*.bat'
     - '.travis.yml'
     - 'Dockerfile'
+    - 'README'
 
 build: off
