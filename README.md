@@ -29,37 +29,39 @@ var helloWorld = edge.func(function () {/*
 ## Main differences from `edge`
 
 * Support for Node.Js 16.x, 18.x, 20.x 
-* Support for .NET Core 1.0.1 - 6.x on Windows/Linux/macOS.
+* Support for .NET Core 1.0.1 - 8.x on Windows/Linux/macOS.
 * Support for Mono runtime 4.8.x - 5.x.
 * Fixes AccessViolationException when running Node.js code from C# [PR #573](https://github.com/tjanczuk/edge/pull/573).
 * Fixes StackOverflowException [PR #566](https://github.com/tjanczuk/edge/pull/566) that occurs when underlying C# code throws complex exception.
 
 ## Electron
 
-For use with Electron refer to `electron-edge-js` instead. https://github.com/agracio/electron-edge-js
+For use with Electron refer to `electron-edge-js`. https://github.com/agracio/electron-edge-js
 
 ## Mono
 
 Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but the focus will be on .NET Framework and .NET Core.
 Mono tests are now excluded from CI on Travis and AppVeyor.
 
-## Requirements (Windows)
-
-You must install [Microsoft Visual C++ Redistributable (x86)](https://www.microsoft.com/en-us/download/details.aspx?id=52685)
-
 ## .NET 6 and higher
 
 Inline C# code and .csx files are not supported, use compiled .NET libraries instead. 
+
+## F# Support
+
+Only supported when using .NET 4.x projects on Windows.
 
 ## Quick start
 
 Simple app that shows how to work with .NET Core using compiled C# libraries.  
 https://github.com/agracio/edge-js-quick-start
 
-Edge.js readme
-==============================
+## Requirements (Windows)
 
-**NEW** Edge.js is now on Slack at https://edgejs.slack.com. Join [here](https://webtask.it.auth0.com/api/run/tjanczuk/edgejs-slack-invite). 
+You must install [Microsoft Visual C++ Redistributable (x86)](https://www.microsoft.com/en-us/download/details.aspx?id=52685)
+
+Original Edge.js readme
+==============================
  
 An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, MacOS, and Linux. 
 
