@@ -233,6 +233,7 @@ public class Startup
 
             DebugMessage("EdgeCompiler::TryCompile (CLR) - Reference to {0} resolved to {1}", referenceName, compileAssemblies[referenceName]);
             metadataReferences.Add(MetadataReference.CreateFromFile(compileAssemblies[referenceName]));
+            metadataReferences.Add(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
         }
 
         CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: DebuggingEnabled

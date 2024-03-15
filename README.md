@@ -472,7 +472,7 @@ node app.js
 
 Edge.js also supports running published .NET Core applications on servers that do not have the .NET Core SDK and CLI installed, which is a common scenario in production environments.  To do so, the `.csproj` for your application should meet the following requirements:
 
- 1. It should target the `netcoreapp1.x`, `netcoreapp2.x`, `netstandard1.6` or `netstandard2.0` framework moniker.
+ 1. It should target the `netcoreapp2.x`, `netstandard1.6` or `netstandard2.0` framework moniker.
  2. It should reference `Microsoft.NETCore.DotNetHost` and `Microsoft.NETCore.DotNetHostPolicy`.  This is required so that the publish process can provide all the native libraries required to create a completely standalone version of your application.
  3. `<PreserveCompilationContext>true</PreserveCompilationContext>` and `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` should be present under `<PropertyGroup>`.  You can add an empty `Main()` implementation to your project to accommodate it; this method will not be called, but is just a requirement in order for `dotnet publish` to generate a completely standalone app.
 

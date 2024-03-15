@@ -101,8 +101,7 @@ mkdir "%SELF%\build\nuget\lib"
 robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release" "%SELF%\build\nuget\lib"
 rem robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\net40" "%SELF%\build\nuget\lib\net40"
 rem robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\net45" "%SELF%\build\nuget\lib\net45"
-rem robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\netcoreapp1.1" "%SELF%\build\nuget\lib\netcoreapp1.1"
-rem robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\netcoreapp2.0" "%SELF%\build\nuget\lib\netcoreapp2.0"
+rem robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\netcoreapp3.1" "%SELF%\build\nuget\lib\netcoreapp3.1"
 
 cd "%SELF%"
 exit /b 0
@@ -200,9 +199,8 @@ ROBOCOPY build/nuget/content/edge/x86 nuget/content/edge/x86 *.* /NFL /NDL /NJH 
 ROBOCOPY build/nuget/content/edge/x64 nuget/content/edge/x64 *.* /NFL /NDL /NJH /NJS /nc /ns /np
 
 ROBOCOPY build/nuget/lib/net40 nuget/lib/net40 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
-ROBOCOPY build/nuget/lib/net461 nuget/lib/net461 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
-ROBOCOPY build/nuget/lib/netcoreapp1.1 nuget/lib/netcoreapp1.1 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
-ROBOCOPY build/nuget/lib/netcoreapp2.0 nuget/lib/netcoreapp2.0 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
+ROBOCOPY build/nuget/lib/net462 nuget/lib/net462 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
+ROBOCOPY build/nuget/lib/netcoreapp3.1 nuget/lib/netcoreapp3.1 *.dll /NFL /NDL /NJH /NJS /nc /ns /np
 
 rem nuget pack
 exit /b 0

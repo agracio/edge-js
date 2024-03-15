@@ -529,7 +529,7 @@ describe('edge-cs', function () {
         });
     }
 
-    if (process.env.EDGE_USE_CORECLR) {
+    if (true) {
         it(prefix + ' fails when dynamically loading an assembly that doesn\'t exist', function (done) {
             assert.throws(function() {
                 var func = edge.func({

@@ -3,7 +3,7 @@
     <Description>Edge.js enables scripting CLR languages from Node.js. This package is a dependency of Edge.js and supports scripting C# from Node.</Description>
     <AssemblyTitle>C# compiler for Edge.js</AssemblyTitle>
     <VersionPrefix>1.2.0</VersionPrefix>
-    <TargetFrameworks>netcoreapp1.1</TargetFrameworks>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Edge.js.CSharp</AssemblyName>
     <PackageId>Edge.js.CSharp</PackageId>
     <PackageProjectUrl>https://github.com/tjanczuk/edge</PackageProjectUrl>
