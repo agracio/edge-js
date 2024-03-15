@@ -12,16 +12,13 @@ environment:
 
 install:
   - sh: if [ "$APPVEYOR_BUILD_WORKER_IMAGE" = 'Ubuntu2204' ]; then sudo apt-get -qq update && sudo apt-get -y -qq install build-essential libgconf-2-4 python3 libglib2.0-dev; fi
-  - ps: Write-Host "Downloading .NET Core 7 SDK..."
-  - ps: (New-Object System.Net.WebClient).DownloadFile('https://download.visualstudio.microsoft.com/download/pr/f2ec926e-0d98-4a8b-8c70-722ccc2ca0e5/b59941b0c60f16421679baafdb7e9338/dotnet-sdk-7.0.407-win-x64.exe','dotnet-core-sdk.exe')
-  - ps: Write-Host "Installing .NET Core SDK..."
-  - ps: Invoke-Command -ScriptBlock { dotnet-core-sdk.exe /S /v/qn }
-  - cmd: powershell Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs) x64
+  - ps: .\appveyor.ps1  
+  - dotnet --version
+  - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs) x64
   - sh: nvm ls
   - sh: nvm install $nodejs
   - sh: nvm use $nodejs
   - node -p "[process.version,process.arch].join(' ')"
-  - dotnet --version
   - npm install -q
   - cmd: npm i -q  xunit-viewer >nul
   - sh: npm i xunit-viewer --silent &> /dev/null
