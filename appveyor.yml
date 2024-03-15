@@ -13,9 +13,9 @@ environment:
 
 install:
   - sh: if [ "$APPVEYOR_BUILD_WORKER_IMAGE" = 'Ubuntu2204' ]; then sudo apt-get -qq update && sudo apt-get -y -qq install build-essential libgconf-2-4 python3 libglib2.0-dev; fi
-  - ps: .\appveyor.ps1  
+  - cmd: powershell .\appveyor.ps1  
   - dotnet --version
-  - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs) x64
+  - cmd: powershell Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs) x64
   - sh: nvm ls
   - sh: nvm install $nodejs
   - sh: nvm use $nodejs
