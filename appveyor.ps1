@@ -15,7 +15,7 @@ ls
 
 Write-Host "$(Get-TimeStamp) Installing .NET Core SDK..."
 
-Start-Process -Wait 'dotnet-core-sdk.exe' -ArgumentList '/install /quiet /norestart';
+Start-Process -Wait 'C:\dotnet-core-sdk.exe' -ArgumentList '/install /quiet /norestart';
 
 # Invoke-Command -ScriptBlock { dotnet-core-sdk.exe /install /quiet /norestart }
 
