@@ -13,6 +13,8 @@ Write-Host "$(Get-TimeStamp) Downloading latest .NET Core SDK..."
 
 Write-Host "$(Get-TimeStamp) Installing .NET Core SDK..."
 
-Invoke-Command -ScriptBlock { dotnet-core-sdk.exe /S /v/qn }
+Start-Process -Wait 'dotnet-core-sdk.exe' -ArgumentList '/install /quiet /norestart';
+
+# Invoke-Command -ScriptBlock { dotnet-core-sdk.exe /install /quiet /norestart }
 
 Write-Host "$(Get-TimeStamp) Installation succeeded." -ForegroundColor Green
