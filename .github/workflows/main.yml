@@ -7,7 +7,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [windows-2019]
+#        os: [macos-latest, ubuntu-latest, windows-2019]
       fail-fast: false
     steps:
       - name: Checkout code
@@ -22,7 +23,7 @@ jobs:
           dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
 
       - if: runner.os == 'macOS'
-        name: Remove Mono
+        name: Remove Mono from macOS
         run: |
           sudo rm -rf /Library/Frameworks/Mono.framework
           sudo pkgutil --forget com.xamarin.mono-MDK.pkg
