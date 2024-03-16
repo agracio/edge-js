@@ -12,9 +12,6 @@
   <ItemGroup>
     <Compile Remove="double\**\*.cs;hello_class.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Runtime"/>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\src\double\Edge.js\Edge.js.csproj" />

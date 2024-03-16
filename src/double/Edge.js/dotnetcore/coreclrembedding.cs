@@ -407,7 +407,9 @@ public class CoreCLREmbedding
                     asset += ".dll";
                 }
                 
-                var assemblyPath = Path.Combine(RuntimeEnvironment.RuntimePath.Replace(@"\coreclr.dll", "").Replace(@"/libcoreclr.so", "").Replace(@"/libcoreclr.dylib", ""), Path.GetFileName(asset));
+                var runtimePath = Path.GetDirectoryName(RuntimeEnvironment.RuntimePath);
+                
+                var assemblyPath = Path.Combine(runtimePath, Path.GetFileName(asset));
                 if (File.Exists(assemblyPath))
                 {
                     CompileAssemblies[runtimeLibrary.Name] = assemblyPath;
