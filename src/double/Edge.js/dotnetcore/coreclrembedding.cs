@@ -236,18 +236,6 @@ public class CoreCLREmbedding
                 AddDependencies(dependencyContext, RuntimeEnvironment.StandaloneApplication);
             }
 
-            //string entryAssemblyPath = dependencyManifestFile.Replace(".deps.json", ".dll");
-
-            //if (File.Exists(entryAssemblyPath))
-            //{
-            //    Assembly entryAssembly = Assembly.Load(new AssemblyName(Path.GetFileNameWithoutExtension(entryAssemblyPath)));
-           //     Lazy<DependencyContext> defaultDependencyContext = new Lazy<DependencyContext>(() => DependencyContext.Load(entryAssembly));
-           //     dependencyContext = dependencyContext.Merge(defaultDependencyContext);
-
-                // I really don't like doing it this way, but it's the easiest way to give the running code access to the default dependency context data
-                //typeof(DependencyContext).GetField("_defaultContext", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, defaultDependencyContext);
-            //}
-
             DebugMessage("EdgeAssemblyResolver::LoadDependencyManifest (CLR) - Finished");
         }
 
@@ -438,11 +426,7 @@ public class CoreCLREmbedding
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing compile dependency {0}", compileLibrary.Name);
 
                 string assemblyPath;
-                // var asset = compileLibrary.Name;
-                // if (!asset.EndsWith(".dll"))
-                // {
-                //     asset += ".dll";
-                // }
+
                 if (standalone && File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)))))
                     assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)));
                 else 
@@ -452,10 +436,6 @@ public class CoreCLREmbedding
                         assemblyPath = Path.Combine(_packagesPath, compileLibrary.Name.ToLower(), compileLibrary.Version, compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar));
                 }
 
-                // if (!File.Exists(assemblyPath))
-                // {
-                //     assemblyPath = Path.Combine(RuntimeEnvironment.RuntimePath.Replace(@"\coreclr.dll", ""), Path.GetFileName(asset));
-                // }
                 if (!CompileAssemblies.ContainsKey(compileLibrary.Name))
                 {
                     if (File.Exists(assemblyPath))
