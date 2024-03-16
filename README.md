@@ -1,4 +1,5 @@
 # Edge.js: .NET and Node.js in-process
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/756f265af5aa4f3c997c7ddf825d3d9f)](https://app.codacy.com/gh/agracio/edge-js?utm_source=github.com&utm_medium=referral&utm_content=agracio/edge-js&utm_campaign=Badge_Grade)
 <!---[![Build Status](https://app.travis-ci.com/agracio/edge-js.svg?branch=master)](https://app.travis-ci.com/github/agracio/edge-js)--->
 [![Build status](https://ci.appveyor.com/api/projects/status/3hs8xq7jieufw507/branch/master?svg=true)](https://ci.appveyor.com/project/agracio/edge-js/branch/master)
 
