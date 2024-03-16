@@ -52,7 +52,7 @@ jobs:
         name: Run Windows tests
         run: |
           npm test
-          echo "1" | Out-File -FilePath $env:EDGE_USE_CORECLR -Append
+          echo "EDGE_USE_CORECLR=1" | Out-File -FilePath $env:GITHUB_ENV -Append
           npm test
       - if: runner.os == 'Linux'
         name: Run Linux tests
