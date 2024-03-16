@@ -13,17 +13,23 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
           node-version: '20.x'
+          
+      - if: runner.os == 'Windows'  
+        name: Setup MSBuild for Windows
+        uses: microsoft/setup-msbuild@v1.3.1
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
 
       - if: runner.os == 'macOS'
-        name: Remove Mono from macOS
+        name: Remove Mono from macOS # Mono interferes with Core CLR gyp compile
         run: |
           sudo rm -rf /Library/Frameworks/Mono.framework
           sudo pkgutil --forget com.xamarin.mono-MDK.pkg
