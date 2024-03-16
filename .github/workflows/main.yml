@@ -16,13 +16,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+
       - if: runner.os == 'Windows'
         name: testing variables
         run: |
           echo "EDGE_USE_CORECLR=1" >> $GITHUB_ENV
           echo "${{ env.EDGE_USE_CORECLR }}"
           echo "EDGE_USE_CORECLR=" | Out-File -FilePath $env:GITHUB_ENV -Append
+          SET EDGE_USE_CORECLR=1
           echo "${{ env.EDGE_USE_CORECLR }}"
 
       - name: Setup NodeJS
