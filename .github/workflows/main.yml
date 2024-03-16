@@ -35,10 +35,10 @@ jobs:
         name: Run Windows tests
         run: |
           npm test
-          SET EDGE_USE_CORECLR=1 & npm tests
+          SET EDGE_USE_CORECLR=1 & npm test
       - if: runner.os == 'Linux'
         name: Run Linux tests
-        run: EDGE_USE_CORECLR=1 npm tests
+        run: EDGE_USE_CORECLR=1 npm test
       - if: runner.os == 'macOS'
         name: Run macOS tests
         run: EDGE_USE_CORECLR=1 npm test
