@@ -3,7 +3,7 @@ name: Main
 on: push
 
 env:
-  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
 
 jobs:
   main:
@@ -23,7 +23,7 @@ jobs:
           node-version: '20.x'
 
       - if: runner.os == 'Windows'  
-        name: Setup CSC
+        name: Setup CSC for Windows
         uses: yoavain/Setup-CSC@v5
 
       - name: Setup dotnet
@@ -52,7 +52,8 @@ jobs:
         name: Run Windows tests
         run: |
           npm test
-          SET EDGE_USE_CORECLR=1 & npm test
+          echo "1" | Out-File -FilePath $env:EDGE_USE_CORECLR -Append
+          npm test
       - if: runner.os == 'Linux'
         name: Run Linux tests
         run: EDGE_USE_CORECLR=1 npm test
