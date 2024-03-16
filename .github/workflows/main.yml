@@ -20,9 +20,10 @@ jobs:
       - if: runner.os == 'Windows'
         name: testing variables
         run: |
-          echo "EDGE_USE_CORECLR=1" >> $GITHUB_ENV
+          echo "EDGE_USE_CORECLR=1" | Out-File -FilePath $env:GITHUB_ENV -Append
           echo "${{ env.EDGE_USE_CORECLR }}"
           echo "EDGE_USE_CORECLR=" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "${{ env.EDGE_USE_CORECLR }}"
           SET EDGE_USE_CORECLR=1
           echo "${{ env.EDGE_USE_CORECLR }}"
 
