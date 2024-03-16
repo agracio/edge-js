@@ -18,10 +18,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20.x'
-          
+
       - if: runner.os == 'Windows'  
-        name: Setup MSBuild for Windows
-        uses: microsoft/setup-msbuild@v1.3.1
+        name: Setup CSC
+        uses: yoavain/Setup-CSC@v5
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
