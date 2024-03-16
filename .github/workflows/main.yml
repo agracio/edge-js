@@ -20,22 +20,25 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
-      - name: Install dependencies
-        run:   |
-          if [ "$RUNNER_OS" == "Linux" ]; then
-            EDGE_USE_CORECLR=1 npm i
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-            npm i
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-            EDGE_USE_CORECLR=1 npm i
-          fi
-      - name: Run tests
-        run:   |
-          if [ "$RUNNER_OS" == "Linux" ]; then
-            EDGE_USE_CORECLR=1 npm test
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-            npm test
-            SET EDGE_USE_CORECLR=1 & npm test
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-            EDGE_USE_CORECLR=1 npm test
-          fi
+      
+      - if: runner.os == 'Windows'
+        name: Install Windows dependencies
+        run: npm i
+      - if: runner.os == 'Linux'
+        name: Install Linux dependencies
+        run: EDGE_USE_CORECLR=1 npm i
+      - if: runner.os == 'macOS'
+        name: Install macOS dependencies
+        run: EDGE_USE_CORECLR=1 npm i
+
+      - if: runner.os == 'Windows'
+        name: Run Windows tests
+        run: |
+          npm test
+          SET EDGE_USE_CORECLR=1 & npm tests
+      - if: runner.os == 'Linux'
+        name: Run Linux tests
+        run: EDGE_USE_CORECLR=1 npm tests
+      - if: runner.os == 'macOS'
+        name: Run macOS tests
+        run: EDGE_USE_CORECLR=1 npm test
