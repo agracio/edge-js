@@ -1,6 +1,13 @@
 # Edge.js: .NET and Node.js in-process
 <!---[![Build Status](https://app.travis-ci.com/agracio/edge-js.svg?branch=master)](https://app.travis-ci.com/github/agracio/edge-js)--->
-[![Build status](https://ci.appveyor.com/api/projects/status/3hs8xq7jieufw507/branch/master?svg=true)](https://ci.appveyor.com/project/agracio/edge-js/branch/master)
+[![Build status][appveyor-image]][appveyor-url]
+[![NPM Downloads][downloads-image]][downloads-url]
+[![Codacy Badge][codacy-img]][codacy-url]
+[![Git Issues][issues-img]][issues-url]
+[![Closed Issues][closed-issues-img]][closed-issues-url]
+[![deps status][dependencies-img]][dependencies-url]
+[![MIT license][license-img]][license-url]
+
 
 
 This is a fork of [Edge.js](https://github.com/tjanczuk/edge) providing improvements and bug fixes that are not yet accepted into main Edge.js repo.
@@ -38,23 +45,19 @@ var helloWorld = edge.func(function () {/*
 
 For use with Electron refer to `electron-edge-js`. https://github.com/agracio/electron-edge-js
 
+## Quick start
+
+Sample app that shows how to work with .NET Core using compiled C# libraries.  
+https://github.com/agracio/edge-js-quick-start
+
 ## Mono
 
 Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but the focus will be on .NET Framework and .NET Core.
 Mono tests are now excluded from CI on Travis and AppVeyor.
 
-## .NET 6 and higher
-
-Inline C# code and .csx files are not supported, use compiled .NET libraries instead. 
-
 ## F# Support
 
 Only supported when using .NET 4.x projects on Windows.
-
-## Quick start
-
-Simple app that shows how to work with .NET Core using compiled C# libraries.  
-https://github.com/agracio/edge-js-quick-start
 
 ## Requirements (Windows)
 
@@ -1796,3 +1799,25 @@ The edge module is intended to remain a very small component with core functiona
 ## More
 
 Issues? Feedback? You [know what to do](https://github.com/tjanczuk/edge/issues/new). Pull requests welcome.
+
+[dependencies-url]: https://www.npmjs.com/package/edge-js?activeTab=dependencies
+[dependencies-img]: https://img.shields.io/librariesio/release/npm/edge-js.svg?style=flat-square
+
+[downloads-image]: https://img.shields.io/npm/dw/edge-js.svg?style=flat-square
+[downloads-url]: https://img.shields.io/npm/dw/edge-js.svg
+
+[appveyor-image]:https://ci.appveyor.com/api/projects/status/3hs8xq7jieufw507/branch/master?svg=true
+[appveyor-url]:https://ci.appveyor.com/project/agracio/edge-js/branch/master
+
+[license-url]: https://github.com/agracio/edge-js/blob/master/LICENSE
+[license-img]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
+
+[issues-img]: https://img.shields.io/github/issues/agracio/edge-js.svg?style=flat-square
+[issues-url]: https://github.com/agracio/edge-js/issues
+[closed-issues-img]: https://img.shields.io/github/issues-closed-raw/agracio/edge-js.svg?style=flat-square&color=brightgreen
+[closed-issues-url]: https://github.com/agracio/edge-js/issues?q=is%3Aissue+is%3Aclosed
+
+[codacy-img]: https://app.codacy.com/project/badge/Grade/3833e15b273d4add8d2030764e8977d9
+[codacy-url]: https://app.codacy.com/gh/agracio/edge-js/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade
+
+

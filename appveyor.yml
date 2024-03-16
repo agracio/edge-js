@@ -47,6 +47,7 @@ skip_commits:
     - samples/*
     - stress/*
     - performance/*
+    - .github/*8
     - '**/*.md'
     - '**/*.d.ts'
     - '**/*.bat'

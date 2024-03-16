@@ -19,8 +19,23 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '7.0.x' # SDK Version to use; x will use the latest version of the 7.0 channel
+          dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
       - name: Install dependencies
-        run: npm i
+        run:   |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            EDGE_USE_CORECLR=1 npm i
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            npm i
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            EDGE_USE_CORECLR=1 npm i
+          fi
       - name: Run tests
-        run: npm test
+        run:   |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            EDGE_USE_CORECLR=1 npm test
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            npm test
+            SET EDGE_USE_CORECLR=1 & npm test
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            EDGE_USE_CORECLR=1 npm test
+          fi
