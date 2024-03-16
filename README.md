@@ -35,11 +35,12 @@ var helloWorld = edge.func(function () {/*
 
 ## Main differences from `edge`
 
-* Support for Node.Js 16.x, 18.x, 20.x 
-* Support for .NET Core 1.0.1 - 8.x on Windows/Linux/macOS.
+* Support for new versions of Node.Js.
+* Support for .NET Core 3.1 - 8.x on Windows/Linux/macOS.
 * Support for Mono runtime 4.8.x - 5.x.
 * Fixes AccessViolationException when running Node.js code from C# [PR #573](https://github.com/tjanczuk/edge/pull/573).
 * Fixes StackOverflowException [PR #566](https://github.com/tjanczuk/edge/pull/566) that occurs when underlying C# code throws complex exception.
+* Numerous bug fixes and improvements.
 
 ## Electron
 
@@ -49,6 +50,36 @@ For use with Electron refer to `electron-edge-js`. https://github.com/agracio/el
 
 Sample app that shows how to work with .NET Core using compiled C# libraries.  
 https://github.com/agracio/edge-js-quick-start
+
+## Node.Js Support
+
+| Version | Status              |
+| ------- | ------------------- |
+| 16.x    | Supported           |
+| 18.x    | Supported           |
+| 20.x    | Supported           |
+| 21.x    | No plans to support |
+| 22.x    | Awaiting release    |
+
+<table>
+<tr><th>Script CLR from Node.js </th><th>Script Node.js from CLR</th></tr>
+<tr><td>
+
+|         | .NET 4.5        | Mono 4.x        | CoreCLR         |
+| ------- | --------------- | --------------- | --------------- |
+| Windows | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Linux   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+| macOS   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+
+</td><td>
+
+|         | .NET 4.5        | Mono 4.x        | CoreCLR         |
+| ------- | --------------- | --------------- | --------------- |
+| Windows | :heavy_check_mark: | :x: | :x: |
+| Linux   | :x:                | :x: | :x: |
+| macOS   | :x:                | :x: | :x: |
+
+</td></tr> </table>
 
 ## Mono
 
