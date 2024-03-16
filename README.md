@@ -61,6 +61,24 @@ https://github.com/agracio/edge-js-quick-start
 | 21.x    | No plans to support |
 | 22.x    | Awaiting release    |
 
+## Mono
+
+Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but the focus will be on .NET Framework and .NET Core.
+Mono tests are now excluded from CI.
+
+## F# Support
+
+Only supported when using .NET 4.x projects on Windows.
+
+## Requirements (Windows)
+
+You must install [Microsoft Visual C++ Redistributable (x86)](https://www.microsoft.com/en-us/download/details.aspx?id=52685)
+
+Original Edge.js readme
+==============================
+ 
+An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, MacOS, and Linux. 
+
 <table>
 <tr><th>Script CLR from Node.js </th><th>Script Node.js from CLR</th></tr>
 <tr><td>
@@ -80,26 +98,6 @@ https://github.com/agracio/edge-js-quick-start
 | macOS   | :x:                | :x: | :x: |
 
 </td></tr> </table>
-
-## Mono
-
-Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but the focus will be on .NET Framework and .NET Core.
-Mono tests are now excluded from CI on Travis and AppVeyor.
-
-## F# Support
-
-Only supported when using .NET 4.x projects on Windows.
-
-## Requirements (Windows)
-
-You must install [Microsoft Visual C++ Redistributable (x86)](https://www.microsoft.com/en-us/download/details.aspx?id=52685)
-
-Original Edge.js readme
-==============================
- 
-An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, MacOS, and Linux. 
-
-![image](https://cloud.githubusercontent.com/assets/822369/11969685/e9476f3a-a8d1-11e5-94d4-847bfc4ed960.png)
 
 You can script C# from a Node.js process:
 
