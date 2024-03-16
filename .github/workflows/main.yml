@@ -17,14 +17,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # - if: runner.os == 'Windows'
+      #   name: testing variables
+      #   run: |
+      #     echo "EDGE_USE_CORECLR=1" | Out-File -FilePath $env:GITHUB_ENV -Append
+      #     echo "${{ env.EDGE_USE_CORECLR }}"
+      #     echo "EDGE_USE_CORECLR=" | Out-File -FilePath $env:GITHUB_ENV -Append
+      #     echo "${{ env.EDGE_USE_CORECLR }}"
+      #     SET EDGE_USE_CORECLR=1
+      #     echo "${{ env.EDGE_USE_CORECLR }}"
       - if: runner.os == 'Windows'
         name: testing variables
+        env:
+          EDGE_USE_CORECLR: 1 # required to setup CSC
         run: |
-          echo "EDGE_USE_CORECLR=1" | Out-File -FilePath $env:GITHUB_ENV -Append
-          echo "${{ env.EDGE_USE_CORECLR }}"
-          echo "EDGE_USE_CORECLR=" | Out-File -FilePath $env:GITHUB_ENV -Append
-          echo "${{ env.EDGE_USE_CORECLR }}"
-          SET EDGE_USE_CORECLR=1
           echo "${{ env.EDGE_USE_CORECLR }}"
 
       - name: Setup NodeJS
