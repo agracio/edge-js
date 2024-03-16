@@ -2,6 +2,9 @@ name: Main
 
 on: push
 
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
 jobs:
   main:
     runs-on: ${{ matrix.os }}
