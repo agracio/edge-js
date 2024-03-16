@@ -37,13 +37,14 @@
   "license": "Apache-2.0",
   "dependencies": {
     "edge-cs": "1.2.1",
-    "nan": "^2.17.0"
+    "nan": "^2.19.0"
   },
   "devDependencies": {
-    "follow-redirects": "^1.13.0",
-    "junit-report-merger": "0.0.6",
-    "mocha": "5.1.1",
-    "mocha-junit-reporter": "^1.17.0"
+    "follow-redirects": "^1.15.6",
+    "junit-report-merger": "6.0.3",
+    "mocha": "10.3.0",
+    "mocha-junit-reporter": "^2.2.1",
+    "xunit-viewer": "^10.6.1"
   },
   "homepage": "https://github.com/agracio/edge-js",
   "repository": {
@@ -55,6 +56,6 @@
   },
   "scripts": {
     "install": "node tools/install.js",
-    "test": "node tools/test.js"
+    "test": "node --expose-gc tools/test.js"
   }
 }

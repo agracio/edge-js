@@ -56,7 +56,7 @@ function runOnSuccess(code, framework) {
 
 function createJunitReports(framework, createHtml){
     let suffix = createHtml ? '-xunit-viewer' : '';
-    spawn('node', [mocha, testDir, '-R', 'mocha-junit-reporter', '-t', '10000', '-gc', '--reporter-options', `mochaFile=./test-results-${framework}${suffix}.xml,testCaseSwitchClassnameAndName=${createHtml ? 'true' : ''}`], {
+    spawn('node', [mocha, testDir, '-R', 'mocha-junit-reporter', '-t', '10000', '-n', 'expose-gc', '--reporter-options', `mochaFile=./test-results-${framework}${suffix}.xml,testCaseSwitchClassnameAndName=${createHtml ? 'true' : ''}`], {
         stdio: 'inherit'
     }).on('close', function(code) {
         let source = [];

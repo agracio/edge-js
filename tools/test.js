@@ -54,7 +54,7 @@ function run(cmd, args, onClose){
 function runOnSuccess(code, signal) {
 	if (code === 0) {
 		process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'netcoreapp3.1');
-		spawn('node', [mocha, testDir, '-R', 'spec', '-t', '10000', '-gc'], { 
+		spawn('node', [mocha, testDir, '-R', 'spec', '-t', '10000', '-n', 'expose-gc'], { 
 			stdio: 'inherit' 
 		}).on('error', function(err) {
 			console.log(err); 
