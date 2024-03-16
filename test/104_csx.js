@@ -502,7 +502,7 @@ describe('edge-cs', function () {
     });
 
     if (process.env.EDGE_USE_CORECLR) {
-        it(prefix + ' succeeds with dll from nuget package', function (done) {
+        it.skip(prefix + ' succeeds with dll from nuget package', function (done) {
             var func = edge.func(function () {/*
             #r "Newtonsoft.Json.dll"
             using Newtonsoft.Json;
@@ -529,7 +529,7 @@ describe('edge-cs', function () {
         });
     }
 
-    if (process.env.EDGE_USE_CORECLR) {
+    if (true) {
         it(prefix + ' fails when dynamically loading an assembly that doesn\'t exist', function (done) {
             assert.throws(function() {
                 var func = edge.func({

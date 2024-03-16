@@ -341,7 +341,7 @@
                         'lib/bootstrap/*.cs'
                       ],
                       'outputs': [
-                        'lib/bootstrap/bin/$(BUILDTYPE)/netcoreapp1.1/bootstrap.dll'
+                        'lib/bootstrap/bin/$(BUILDTYPE)/netcoreapp3.1/bootstrap.dll'
                       ],
                       'action': [
                         'bash',

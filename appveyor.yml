@@ -4,6 +4,7 @@ image:
   - macos-monterey
 
 environment:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
   matrix:
     # node.js
     - nodejs: "16"
@@ -12,12 +13,13 @@ environment:
 
 install:
   - sh: if [ "$APPVEYOR_BUILD_WORKER_IMAGE" = 'Ubuntu2204' ]; then sudo apt-get -qq update && sudo apt-get -y -qq install build-essential libgconf-2-4 python3 libglib2.0-dev; fi
+  - cmd: powershell .\appveyor.ps1  
+  - dotnet --version
   - cmd: powershell Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs) x64
   - sh: nvm ls
   - sh: nvm install $nodejs
   - sh: nvm use $nodejs
   - node -p "[process.version,process.arch].join(' ')"
-  - dotnet --version
   - npm install -q
   - cmd: npm i -q  xunit-viewer >nul
   - sh: npm i xunit-viewer --silent &> /dev/null
@@ -45,6 +47,8 @@ skip_commits:
     - samples/*
     - stress/*
     - performance/*
+    - .github/*
+    - .github/**/*
     - '**/*.md'
     - '**/*.d.ts'
     - '**/*.bat'

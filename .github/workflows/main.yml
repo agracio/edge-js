@@ -1,0 +1,58 @@
+name: Main
+
+on: push
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
+
+jobs:
+  main:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-2019]
+      fail-fast: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.x'
+
+      - if: runner.os == 'Windows'  
+        name: Setup CSC for Windows
+        uses: yoavain/Setup-CSC@v5
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
+
+      - if: runner.os == 'macOS'
+        name: Remove Mono from macOS # Mono interferes with Core CLR gyp compile
+        run: |
+          sudo rm -rf /Library/Frameworks/Mono.framework
+          sudo pkgutil --forget com.xamarin.mono-MDK.pkg
+          sudo rm /etc/paths.d/mono-commands
+ 
+      - name: npm install
+        run: npm i
+
+      - name: Install Annotation Support
+        run: npm install mocha-github-actions-reporter
+
+      - if: runner.os == 'Windows'
+        name: Run .NET 4.x tests
+        run: npm test
+        env:
+          MOCHA_REPORTER: mocha-github-actions-reporter
+          # this is so mocha-github-actions-reporter can find mocha
+          NODE_PATH: lib
+
+      - name: "Run .net core tests"
+        env:
+          EDGE_USE_CORECLR: 1
+        run: npm test
+

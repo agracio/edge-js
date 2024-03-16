@@ -1,6 +1,13 @@
 # Edge.js: .NET and Node.js in-process
 <!---[![Build Status](https://app.travis-ci.com/agracio/edge-js.svg?branch=master)](https://app.travis-ci.com/github/agracio/edge-js)--->
-[![Build status](https://ci.appveyor.com/api/projects/status/3hs8xq7jieufw507/branch/master?svg=true)](https://ci.appveyor.com/project/agracio/edge-js/branch/master)
+[![Build status][appveyor-image]][appveyor-url]
+[![NPM Downloads][downloads-image]][downloads-url]
+[![Codacy Badge][codacy-img]][codacy-url]
+[![Git Issues][issues-img]][issues-url]
+[![Closed Issues][closed-issues-img]][closed-issues-url]
+[![deps status][dependencies-img]][dependencies-url]
+[![MIT license][license-img]][license-url]
+
 
 
 This is a fork of [Edge.js](https://github.com/tjanczuk/edge) providing improvements and bug fixes that are not yet accepted into main Edge.js repo.
@@ -28,33 +35,40 @@ var helloWorld = edge.func(function () {/*
 
 ## Main differences from `edge`
 
-* Support for Node.Js 16.x, 18.x, 20.x 
-* Support for .NET Core 1.0.1 - 8.x on Windows/Linux/macOS.
+* Support for new versions of Node.Js.
+* Support for .NET Core 3.1 - 8.x on Windows/Linux/macOS.
 * Support for Mono runtime 4.8.x - 5.x.
 * Fixes AccessViolationException when running Node.js code from C# [PR #573](https://github.com/tjanczuk/edge/pull/573).
 * Fixes StackOverflowException [PR #566](https://github.com/tjanczuk/edge/pull/566) that occurs when underlying C# code throws complex exception.
+* Numerous bug fixes and improvements.
 
 ## Electron
 
 For use with Electron refer to `electron-edge-js`. https://github.com/agracio/electron-edge-js
 
+## Quick start
+
+Sample app that shows how to work with .NET Core using compiled C# libraries.  
+https://github.com/agracio/edge-js-quick-start
+
+## Node.Js Support
+
+| Version | Status              |
+| ------- | ------------------- |
+| 16.x    | Supported           |
+| 18.x    | Supported           |
+| 20.x    | Supported           |
+| 21.x    | No plans to support |
+| 22.x    | Awaiting release    |
+
 ## Mono
 
 Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but the focus will be on .NET Framework and .NET Core.
-Mono tests are now excluded from CI on Travis and AppVeyor.
-
-## .NET 6 and higher
-
-Inline C# code and .csx files are not supported, use compiled .NET libraries instead. 
+Mono tests are now excluded from CI.
 
 ## F# Support
 
 Only supported when using .NET 4.x projects on Windows.
-
-## Quick start
-
-Simple app that shows how to work with .NET Core using compiled C# libraries.  
-https://github.com/agracio/edge-js-quick-start
 
 ## Requirements (Windows)
 
@@ -65,7 +79,25 @@ Original Edge.js readme
  
 An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, MacOS, and Linux. 
 
-![image](https://cloud.githubusercontent.com/assets/822369/11969685/e9476f3a-a8d1-11e5-94d4-847bfc4ed960.png)
+<table>
+<tr><th>Script CLR from Node.js </th><th>Script Node.js from CLR</th></tr>
+<tr><td>
+
+|         | .NET 4.5        | Mono 4.x        | CoreCLR         |
+| ------- | --------------- | --------------- | --------------- |
+| Windows | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Linux   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+| macOS   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+
+</td><td>
+
+|         | .NET 4.5        | Mono 4.x        | CoreCLR         |
+| ------- | --------------- | --------------- | --------------- |
+| Windows | :heavy_check_mark: | :x: | :x: |
+| Linux   | :x:                | :x: | :x: |
+| macOS   | :x:                | :x: | :x: |
+
+</td></tr> </table>
 
 You can script C# from a Node.js process:
 
@@ -472,7 +504,7 @@ node app.js
 
 Edge.js also supports running published .NET Core applications on servers that do not have the .NET Core SDK and CLI installed, which is a common scenario in production environments.  To do so, the `.csproj` for your application should meet the following requirements:
 
- 1. It should target the `netcoreapp1.x`, `netcoreapp2.x`, `netstandard1.6` or `netstandard2.0` framework moniker.
+ 1. It should target the `netcoreapp2.x`, `netstandard1.6` or `netstandard2.0` framework moniker.
  2. It should reference `Microsoft.NETCore.DotNetHost` and `Microsoft.NETCore.DotNetHostPolicy`.  This is required so that the publish process can provide all the native libraries required to create a completely standalone version of your application.
  3. `<PreserveCompilationContext>true</PreserveCompilationContext>` and `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` should be present under `<PropertyGroup>`.  You can add an empty `Main()` implementation to your project to accommodate it; this method will not be called, but is just a requirement in order for `dotnet publish` to generate a completely standalone app.
 
@@ -1796,3 +1828,25 @@ The edge module is intended to remain a very small component with core functiona
 ## More
 
 Issues? Feedback? You [know what to do](https://github.com/tjanczuk/edge/issues/new). Pull requests welcome.
+
+[dependencies-url]: https://www.npmjs.com/package/edge-js?activeTab=dependencies
+[dependencies-img]: https://img.shields.io/librariesio/release/npm/edge-js.svg?style=flat-square
+
+[downloads-image]: https://img.shields.io/npm/dw/edge-js.svg?style=flat-square
+[downloads-url]: https://img.shields.io/npm/dw/edge-js.svg
+
+[appveyor-image]:https://ci.appveyor.com/api/projects/status/3hs8xq7jieufw507/branch/master?svg=true
+[appveyor-url]:https://ci.appveyor.com/project/agracio/edge-js/branch/master
+
+[license-url]: https://github.com/agracio/edge-js/blob/master/LICENSE
+[license-img]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
+
+[issues-img]: https://img.shields.io/github/issues/agracio/edge-js.svg?style=flat-square
+[issues-url]: https://github.com/agracio/edge-js/issues
+[closed-issues-img]: https://img.shields.io/github/issues-closed-raw/agracio/edge-js.svg?style=flat-square&color=brightgreen
+[closed-issues-url]: https://github.com/agracio/edge-js/issues?q=is%3Aissue+is%3Aclosed
+
+[codacy-img]: https://app.codacy.com/project/badge/Grade/3833e15b273d4add8d2030764e8977d9
+[codacy-url]: https://app.codacy.com/gh/agracio/edge-js/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade
+
+
