@@ -39,6 +39,18 @@ jobs:
           sudo rm /etc/paths.d/mono-commands
       
       - if: runner.os == 'Windows'
+        name: testing variables
+        run: |
+          echo "EDGE_USE_CORECLR=1" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "${{ env.EDGE_USE_CORECLR }}"
+          echo "EDGE_USE_CORECLR=" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "${{ env.EDGE_USE_CORECLR }}"
+
+      - if: ${{ (runner.os == 'Linux') || (runner.os == 'macOS') }}
+        name: Run tests
+        run: echo condition
+  
+      - if: runner.os == 'Windows'
         name: Install Windows dependencies
         run: npm i
       - if: runner.os == 'Linux'
@@ -53,10 +65,14 @@ jobs:
         run: |
           npm test
           echo "EDGE_USE_CORECLR=1" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "${{ env.EDGE_USE_CORECLR }}"
           npm test
-      - if: runner.os == 'Linux'
-        name: Run Linux tests
-        run: EDGE_USE_CORECLR=1 npm test
-      - if: runner.os == 'macOS'
-        name: Run macOS tests
+      # - if: runner.os == 'Linux'
+      #   name: Run Linux tests
+      #   run: EDGE_USE_CORECLR=1 npm test
+      # - if: runner.os == 'macOS'
+      #   name: Run macOS tests
+      #   run: EDGE_USE_CORECLR=1 npm test
+      - if: ${{ (runner.os == 'Linux') || (runner.os == 'macOS') }}
+        name: Run tests
         run: EDGE_USE_CORECLR=1 npm test
