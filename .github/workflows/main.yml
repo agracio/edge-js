@@ -40,9 +40,16 @@ jobs:
       - name: npm install
         run: npm i
 
+      - name: Install Annotation Support
+        run: npm install mocha-github-actions-reporter
+
       - if: runner.os == 'Windows'
         name: Run .NET 4.x tests
         run: npm test
+        env:
+          MOCHA_REPORTER: mocha-github-actions-reporter
+          # this is so mocha-github-actions-reporter can find mocha
+          NODE_PATH: lib
 
       - name: "Run .net core tests"
         env:
