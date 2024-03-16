@@ -20,6 +20,13 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
+
+      - if: runner.os == 'macOS'
+        name: Remove Mono
+        run: |
+          sudo rm -rf /Library/Frameworks/Mono.framework
+          sudo pkgutil --forget com.xamarin.mono-MDK.pkg
+          sudo rm /etc/paths.d/mono-commands
       
       - if: runner.os == 'Windows'
         name: Install Windows dependencies
