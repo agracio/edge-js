@@ -16,6 +16,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        
+      - if: runner.os == 'Windows'
+        name: testing variables
+        run: |
+          echo "EDGE_USE_CORECLR=1" >> $GITHUB_ENV
+          echo "${{ env.EDGE_USE_CORECLR }}"
+          echo "EDGE_USE_CORECLR=" | Out-File -FilePath $env:GITHUB_ENV -Append
+          echo "${{ env.EDGE_USE_CORECLR }}"
 
       - name: Setup NodeJS
         uses: actions/setup-node@v2
@@ -38,17 +46,6 @@ jobs:
           sudo pkgutil --forget com.xamarin.mono-MDK.pkg
           sudo rm /etc/paths.d/mono-commands
       
-      - if: runner.os == 'Windows'
-        name: testing variables
-        run: |
-          echo "EDGE_USE_CORECLR=1" | Out-File -FilePath $env:GITHUB_ENV -Append
-          echo "${{ env.EDGE_USE_CORECLR }}"
-          echo "EDGE_USE_CORECLR=" | Out-File -FilePath $env:GITHUB_ENV -Append
-          echo "${{ env.EDGE_USE_CORECLR }}"
-
-      - if: ${{ (runner.os == 'Linux') || (runner.os == 'macOS') }}
-        name: Run tests
-        run: echo condition
   
       - if: runner.os == 'Windows'
         name: Install Windows dependencies
