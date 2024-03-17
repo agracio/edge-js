@@ -36,6 +36,11 @@ jobs:
           sudo rm -rf /Library/Frameworks/Mono.framework
           sudo pkgutil --forget com.xamarin.mono-MDK.pkg
           sudo rm /etc/paths.d/mono-commands
+
+      - if: runner.os == 'macOS' && matrix.node == '16.x'
+        name: Add missing packages for macOS NodeJs 16 # Mono interferes with Core CLR gyp compile
+        run: |
+          pip install setuptools
  
       - name: npm install
         run: npm i
