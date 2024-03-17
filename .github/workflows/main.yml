@@ -10,8 +10,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-2019]
-      fail-fast: false
+        #os: [macos-latest, ubuntu-latest, windows-2019]
+        os: [windows-2019]
+     fail-fast: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -46,13 +47,24 @@ jobs:
       - if: runner.os == 'Windows'
         name: Run .NET 4.x tests
         run: npm test
-        env:
-          MOCHA_REPORTER: mocha-github-actions-reporter
-          # this is so mocha-github-actions-reporter can find mocha
-          NODE_PATH: lib
+      - if: runner.os == 'Windows'
+        name: Create .NET 4.x tests report
+        run: node tools/coverage.js
 
       - name: "Run .net core tests"
+        run: npm test
         env:
           EDGE_USE_CORECLR: 1
-        run: npm test
+
+      - name: "Run .net core tests report"
+        run: node tools/coverage.js
+        env:
+          EDGE_USE_CORECLR: 1
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: Mocha junit Tests            # Name of the check run which will be created
+          path: test-results.xml    # Path to test results
+          reporter: jest-junit        # Format of test results          
 
