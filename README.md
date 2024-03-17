@@ -33,6 +33,17 @@ var helloWorld = edge.func(function () {/*
 */});
 ```
 
+## Migration from .NET Core 1.1 to .NET Core 3.1 :exclamation: 
+
+Edge Js C# code has been migrated to .NET 3.1 changing `EdgeJs.dll` reference folder from 
+```bash
+lib/bootstrap/bin/Release/netcoreapp1.1
+```
+to
+```bash
+lib/bootstrap/bin/Release/netcoreapp3.1
+```
+
 ## Main differences from `edge`
 
 * Support for new versions of Node.Js.
@@ -63,7 +74,7 @@ https://github.com/agracio/edge-js-quick-start
 
 ## Mono
 
-Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but the focus will be on .NET Core.
+Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but focus will be on .NET Core.
 Mono tests are now excluded from CI.
 
 ## F# Support
