@@ -1,11 +1,9 @@
 {
   "name": "edge-js",
   "author": {
-    "name": "Tomasz Janczuk <tomasz@janczuk.org>",
-    "url": "http://tomasz.janczuk.org",
-    "twitter": "tjanczuk"
+    "name": "agracio"
   },
-  "version": "20.10.3",
+  "version": "21.7.1",
   "description": "Edge.js: run .NET and Node.js in-process on Windows, Mac OS, and Linux",
   "tags": [
     "owin",
@@ -16,7 +14,8 @@
     "c#",
     "mono",
     "managed",
-    ".net"
+    ".net",
+    "edge-js"
   ],
   "keywords": [
     "owin",
@@ -27,14 +26,15 @@
     "c#",
     "mono",
     "managed",
-    ".net"
+    ".net",
+    "edge-js"
   ],
   "main": "./lib/edge.js",
   "types": "edge-js.d.ts",
   "engines": {
-    "node": ">= 6"
+    "node": ">= 16"
   },
-  "license": "Apache-2.0",
+  "license": "MIT",
   "dependencies": {
     "edge-cs": "1.2.1",
     "nan": "^2.19.0"

@@ -58,17 +58,31 @@ https://github.com/agracio/edge-js-quick-start
 | 16.x    | Supported           |
 | 18.x    | Supported           |
 | 20.x    | Supported           |
-| 21.x    | No plans to support |
+| 21.x    | Supported           |
 | 22.x    | Awaiting release    |
 
 ## Mono
 
-Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but the focus will be on .NET Framework and .NET Core.
+Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but the focus will be on .NET Core.
 Mono tests are now excluded from CI.
 
 ## F# Support
 
-Only supported when using .NET 4.x projects on Windows.
+`edge-fs` only supports .NET 4.x projects on Windows, does not support Core CLR on any plarform.
+
+## Node.js application packaging
+
+When packaging your application using Webpack make sure that `edge-js` is specified as external module.
+
+```js
+  externals: {
+    'edge-js': 'commonjs2 edge-js',
+  },
+  node: {
+    __dirname: true,
+    __filename: true,
+  },
+```
 
 ## Requirements (Windows)
 
