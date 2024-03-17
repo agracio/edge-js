@@ -10,10 +10,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        #os: [macos-latest, ubuntu-latest, windows-2019]
-        os: [windows-2019]
-        node: [20.x]
-      fail-fast: false
+        os: [macos-latest, ubuntu-latest, windows-2019]
+        node: [21.x, 20.x, 18.x, 16.x]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,7 +26,7 @@ jobs:
         uses: yoavain/Setup-CSC@v5
 
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
 
@@ -54,10 +52,11 @@ jobs:
         env:
           EDGE_USE_CORECLR: 1
 
-      - name: "Run .net core tests report"
+      - name: "Create .net core tests report"
         run: node tools/coverage.js
         env:
           EDGE_USE_CORECLR: 1
+
       - name: Test Report
         uses: dorny/test-reporter@v1
         with:
