@@ -12,15 +12,16 @@ jobs:
       matrix:
         #os: [macos-latest, ubuntu-latest, windows-2019]
         os: [windows-2019]
+        node: [20.x]
       fail-fast: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '${{ matrix.node }}'
 
       - if: runner.os == 'Windows'  
         name: Setup CSC for Windows
@@ -41,9 +42,6 @@ jobs:
       - name: npm install
         run: npm i
 
-      - name: Install Annotation Support
-        run: npm install mocha-github-actions-reporter
-
       - if: runner.os == 'Windows'
         name: Run .NET 4.x tests
         run: npm test
@@ -62,9 +60,8 @@ jobs:
           EDGE_USE_CORECLR: 1
       - name: Test Report
         uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
         with:
-          name: Mocha junit Tests  # Name of the check run which will be created
+          name: Test results (${{ matrix.os }})-@${{ matrix.node }}  # Name of the check run which will be created
           path: test-results.xml   # Path to test results
           reporter: jest-junit     # Format of test results          
 
