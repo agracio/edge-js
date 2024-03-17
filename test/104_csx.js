@@ -529,41 +529,39 @@ describe('edge-cs', function () {
         });
     }
 
-    if (true) {
-        it(prefix + ' fails when dynamically loading an assembly that doesn\'t exist', function (done) {
-            assert.throws(function() {
-                var func = edge.func({
-                    source: function () {/* 
-                        #r "System.Reflection"
-                        #r "System.Runtime.Loader"
+    it(prefix + ' fails when dynamically loading an assembly that doesn\'t exist', function (done) {
+        assert.throws(function() {
+            var func = edge.func({
+                source: function () {/* 
+                    #r "System.Reflection"
+                    #r "System.Runtime.Loader"
 
-                        using System.Runtime.Loader;
-                        using System.Threading.Tasks;
-                        using System.Reflection;
+                    using System.Runtime.Loader;
+                    using System.Threading.Tasks;
+                    using System.Reflection;
 
-                        public class Startup 
+                    public class Startup 
+                    {
+                        public async Task<object> Invoke(object input) 
                         {
-                            public async Task<object> Invoke(object input) 
-                            {
-                                var assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName("Package.Doesnt.Exist"));
-                                return "Hello, " + input.ToString();
-                            }
-                        }           
-                    */}
-                });
+                            var assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName("Package.Doesnt.Exist"));
+                            return "Hello, " + input.ToString();
+                        }
+                    }           
+                */}
+            });
 
-                func("JavaScript");
+            func("JavaScript");
+            done();
+        },
+        function (error) {
+            if ((error instanceof Error) && error.message.match(/Could not load the specified file/)) {
                 done();
-            },
-            function (error) {
-                if ((error instanceof Error) && error.message.match(/Could not load the specified file/)) {
-                    done();
-                    return true;
-                }
-                done();
-                return false;
-            },
-            'Unexpected result');
-        });
-    }
+                return true;
+            }
+            done();
+            return false;
+        },
+        'Unexpected result');
+    });
 });

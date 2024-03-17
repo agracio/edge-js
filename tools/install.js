@@ -11,7 +11,7 @@ if (process.platform === 'win32') {
 	function copyFile(filePath, filename) {
 		return function(copyToDir) {
 			//console.log( 'copy '+filename+' from '+filePath+' to '+ copyToDir );
-			outFile = path.resolve(copyToDir, filename);
+			var outFile = path.resolve(copyToDir, filename);
 			if ( fs.existsSync( outFile ) ) {
 				// clear readonly: add write permission to ogw (222 octal -> 92 hex -> 146 decimal)
 				fs.chmodSync( outFile, fs.statSync(outFile).mode | 146 )
