@@ -33,9 +33,9 @@ var helloWorld = edge.func(function () {/*
 */});
 ```
 
-## Migration from .NET Core 1.1 to .NET Core 3.1 :exclamation: 
+## Migration to .NET Core 3.1 :exclamation: 
 
-Edge Js C# code has been migrated to .NET 3.1 changing `EdgeJs.dll` reference folder from 
+EdgeJs C# code has been migrated to .NET 3.1 changing `EdgeJs.dll` and `Edge.js.CSharp.dll` reference folder from 
 ```bash
 lib/bootstrap/bin/Release/netcoreapp1.1
 ```
@@ -59,7 +59,7 @@ For use with Electron refer to `electron-edge-js`. https://github.com/agracio/el
 
 ## Quick start
 
-Sample app that shows how to work with .NET Core using compiled C# libraries.  
+Sample app that shows how to work with .NET Core using inline code and compiled C# libraries.  
 https://github.com/agracio/edge-js-quick-start
 
 ## Node.Js Support
