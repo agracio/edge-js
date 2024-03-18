@@ -55,6 +55,9 @@ skip_commits:
     - '**/*.bat'
     - '.travis.yml'
     - 'Dockerfile'
-    - 'README'
+    - 'README.md'
+    - 'LICENSE*'
+    - '.idea/**'
+    - '.vscode/**'
 
 build: off

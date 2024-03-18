@@ -1,6 +1,23 @@
 name: Main
 
-on: push
+on: 
+  push:
+    paths-ignore:
+      - 'samples/*'
+      - 'stress/*'
+      - 'performance/*'
+      - '.github/FUNDING.YML'
+      - '**/*.md'
+      - '**/*.d.ts'
+      - '**/*.bat'
+      - '.travis.yml'
+      - 'Dockerfile'
+      - '.gitconfig'
+      - '.gitignore'
+      - 'appveyor.*'
+      - 'LICENSE*'
+      - '.idea/**'
+      - '.vscode/**'
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
