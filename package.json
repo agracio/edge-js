@@ -32,7 +32,8 @@
   "main": "./lib/edge.js",
   "types": "edge-js.d.ts",
   "engines": {
-    "node": ">= 16"
+    "npm" : ">=8.0.0",
+    "node": ">=16.0.0"
   },
   "license": "MIT",
   "dependencies": {
