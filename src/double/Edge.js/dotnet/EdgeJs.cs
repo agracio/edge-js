@@ -76,6 +76,9 @@ namespace EdgeJs
         [DllImport("node.dll", EntryPoint = "?Start@node@@YAHHQEAPEAD@Z", CallingConvention = CallingConvention.Cdecl)]
         static extern int NodeStartx64(int argc, string[] argv);
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        private static extern int GetShortPathName(string LongPath, StringBuilder ShortPath, int BufferSize);
+
         [DllImport("kernel32.dll", EntryPoint = "LoadLibrary")]
         static extern int LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpLibFileName);
 
@@ -116,7 +119,14 @@ namespace EdgeJs
                                     argv.Add(p);
                                 }
                             }
-                            argv.Add(Path.Combine(AssemblyDirectory, "edge", "double_edge.js"));
+
+                            // Workaround for unicode characters in path
+                            string path = AssemblyDirectory + "\\edge\\double_edge.js";
+                            StringBuilder shortPath = new StringBuilder(255);
+                            int result = GetShortPathName(path, shortPath, shortPath.Capacity);
+                            argv.Add(shortPath.ToString());
+                            // End workaround for unicode characters in path
+                            
                             argv.Add(string.Format("-EdgeJs:{0}", Path.Combine(edgeDirectory, "EdgeJs.dll")));
                             nodeStart(argv.Count, argv.ToArray());
                             waitHandle.Set();
