@@ -20,6 +20,19 @@ refs:
     - &InstallNode
       node/install:
         node-version: << parameters.node-version >>
+    - &InstallDotnet
+      run:
+        name: Install dotnet
+        command: |
+          if [[ $OSTYPE == darwin* ]]; then
+              /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+              brew install --cask dotnet-sdk
+          elif [[ $OSTYPE == linux* ]]; then
+              wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+            sudo dpkg -i packages-microsoft-prod.deb
+            sudo apt-get update
+            sudo apt-get install -y dotnet-sdk-8.0
+          fi
     - &InstallDotnetLinux
       run:
         name: Install dotnet
@@ -46,7 +59,6 @@ refs:
       run:
         name: Test
         command: EDGE_USE_CORECLR=1 npm test
-
 jobs:
   test:
     parameters:
@@ -58,14 +70,15 @@ jobs:
     steps:
       - when:
           condition:
-             equal: ['linux', << parameters.os.name >>]
+             equal: ['linux', << parameters.os >>]
           steps:
             - *InstallDotnetLinux
       - when:
           condition:
-             equal: ['macos', << parameters.os.name >>]
+             equal: ['macos', << parameters.os >>]
           steps:
             - *InstallDotnetMacos
+      - *InstallDotnet  
       - *InstallNode  
       - *Versions    
       - checkout
