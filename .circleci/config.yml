@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  node: circleci/node@4.7
+  
 executors:
   windows: # Docker using the Base Convenience Image
     machine:
