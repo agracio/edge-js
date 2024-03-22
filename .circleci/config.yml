@@ -52,8 +52,6 @@ jobs:
     parameters:
       os:
         type: executor
-      os-name:
-        type: string
       node-version:
         type: string
     executor: << parameters.os >>
