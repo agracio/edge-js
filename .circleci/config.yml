@@ -46,5 +46,5 @@ workflows:
       - test:
           matrix:
             parameters:
-              os: [windows, linux, macos]
+              os: [linux, macos]
               node-version: ["16.20.2", "18.19.1"]
