@@ -57,14 +57,14 @@ jobs:
       - when:
           condition:
             equal:
-              - 'linux'
+              - linux
               - << parameters.os >>
           steps:
             - *InstallDotnetLinux
       - when:
           condition:
             equal:
-              - 'macos'
+              - macos
               - << parameters.os >>
           steps:
             - *InstallDotnetMacos
@@ -77,7 +77,7 @@ jobs:
     # environment:
     #   FOO: bar
 workflows:
-  all-tests:
+  tests:
     jobs:
       - test:
           matrix:
