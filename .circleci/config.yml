@@ -8,7 +8,7 @@ orbs:
 executors:
   windows: # Docker using the Base Convenience Image
     machine:
-      image: windows-server-2019:current
+      image: windows-server-2022-gui:current
   linux: # a Linux VM running Ubuntu 20.04
     machine:
       image: ubuntu-2204:current
@@ -31,6 +31,7 @@ jobs:
           install-yarn: false
 
       - run: npm i
+      - run: EDGE_USE_CORECLR=1 npm test
 
 workflows:
   all-tests:
