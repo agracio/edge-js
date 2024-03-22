@@ -50,18 +50,20 @@ jobs:
     parameters:
       os:
         type: executor
+      os-name:
+        type: string
       node-version:
         type: string
     executor: << parameters.os >>
     steps:
       - when:
           condition:
-             equal: ['linux', << parameters.os >>]
+             equal: ['linux', << parameters.os-name >>]
           steps:
             - *InstallDotnetLinux
       - when:
           condition:
-             equal: ['macos', << parameters.os >>]
+             equal: ['macos', << parameters.os-name >>]
           steps:
             - *InstallDotnetMacos
       - *InstallNode  
@@ -69,7 +71,6 @@ jobs:
       - checkout
       - *NpmInstall
       - *Test
-      
     # environment:
     #   FOO: bar
 workflows:
@@ -79,5 +80,6 @@ workflows:
           matrix:
             parameters:
               os: ['linux', 'macos']
+              os-name: ['linux', 'macos']
               node-version: ["16.20.2", "18.19.1"]
              
