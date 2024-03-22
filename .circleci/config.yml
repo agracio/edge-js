@@ -26,12 +26,12 @@ jobs:
           install-yarn: false
 
       - run: npm i
-      
+
 workflows:
   all-tests:
     jobs:
       - test:
           matrix:
             parameters:
-              os: [docker, linux, macos]
+              os: [windows, linux, macos]
               node-version: ["16.20.2", "18.19.1"]

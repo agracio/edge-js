@@ -59,5 +59,7 @@ skip_commits:
     - 'LICENSE*'
     - '.idea/**'
     - '.vscode/**'
+    - .circleci/*
+    - .circleci/**/*
 
 build: off
