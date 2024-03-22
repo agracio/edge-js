@@ -15,6 +15,41 @@ executors:
   macos: 
     macos:
       xcode: 14.2.0
+refs:
+  steps:
+    - &InstallNode
+      node/install:
+        node-version: << parameters.node-version >>
+    - &InstallDotnetLinux
+      steps:
+        - run: wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+        - run: sudo dpkg -i packages-microsoft-prod.deb
+        - run: sudo apt-get update
+        - run: sudo apt-get install -y dotnet-sdk-8.0
+    - &InstallDotnetMacos
+      run:
+        name: Install PNPM
+        command: brew install --cask dotnet-sdk
+    - &Versions
+      run:
+        name: Versions
+        command: node -v && npm -v && dotnet -version
+    - &NpmInstall
+      run:
+        name: Install Dependencies
+        command: npm install
+    - &Build
+      run:
+        name: Build
+        command: npx pnpm build
+    - &Test
+      run:
+        name: Test
+        command: EDGE_USE_CORECLR=1 npm test
+    - &EnsureNode
+      run:
+        name: EnsureNode
+        command: nvm use << parameters.node-version >> ; npm i -g which-
 
 jobs:
   setup:
@@ -37,22 +72,29 @@ jobs:
         type: string
     executor: << parameters.os >>
     steps:
+      - when:
+          condition:
+            equal:
+              - 'linux'
+              - << parameters.os >>
+          steps:
+            - *InstallDotnetLinux
+      - when:
+          condition:
+            equal:
+              - 'macos'
+              - << parameters.os >>
+          steps:
+            - *InstallDotnetMacos
+      - *InstallNode  
+      - *Versions    
       - checkout
-      - node/install:
-          node-version: << parameters.node-version >>
-          install-yarn: false
-
-      - run: npm i
-      - run: EDGE_USE_CORECLR=1 npm test
+      - *NpmInstall
+      - *Test
 
 workflows:
   all-tests:
     jobs:
-      - setup:
-          matrix:
-            parameters:
-              os: [linux]
-              node-version: ["16.20.2", "18.19.1"]
       - test:
           matrix:
             parameters:
