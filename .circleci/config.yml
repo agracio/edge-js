@@ -56,16 +56,12 @@ jobs:
     steps:
       - when:
           condition:
-            equal:
-              - linux
-              - << parameters.os >>
+             equal: ['linux', << parameters.os >>]
           steps:
             - *InstallDotnetLinux
       - when:
           condition:
-            equal:
-              - macos
-              - << parameters.os >>
+             equal: ['macos', << parameters.os >>]
           steps:
             - *InstallDotnetMacos
       - *InstallNode  
@@ -82,6 +78,6 @@ workflows:
       - test:
           matrix:
             parameters:
-              os: [linux, macos]
+              os: ['linux', 'macos']
               node-version: ["16.20.2", "18.19.1"]
              
