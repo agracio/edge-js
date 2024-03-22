@@ -6,17 +6,24 @@ orbs:
   macos: circleci/macos@2.4.1
 
 executors:
-  windows: # Docker using the Base Convenience Image
-    machine:
-      image: windows-server-2022-gui:current
-  linux: # a Linux VM running Ubuntu 20.04
+  # windows: # Docker using the Base Convenience Image
+  #   machine:
+  #     image: windows-server-2019:current
+  linux: 
     machine:
       image: ubuntu-2204:current
-  macos: # macos executor running Xcode
+  macos: 
     macos:
       xcode: 14.2.0
 
 jobs:
+  setup:
+    executor: linux
+    steps:
+      - run: wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+      - run: sudo dpkg -i packages-microsoft-prod.deb
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y dotnet-sdk-8.0
   test:
     parameters:
       os:
