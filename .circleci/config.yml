@@ -31,11 +31,13 @@ refs:
     - &InstallDotnetMacos
       run:
         name: Install dotnet
-        command: brew install --cask dotnet-sdk
+        command: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          brew install --cask dotnet-sdk
     - &Versions
       run:
         name: Versions
-        command: node -v && npm -v && dotnet -version
+        command: node -v && npm -v && dotnet --version
     - &NpmInstall
       run:
         name: Install Dependencies
@@ -58,12 +60,12 @@ jobs:
     steps:
       - when:
           condition:
-             equal: ['linux', << parameters.os-name >>]
+             equal: ['linux', << parameters.os.name >>]
           steps:
             - *InstallDotnetLinux
       - when:
           condition:
-             equal: ['macos', << parameters.os-name >>]
+             equal: ['macos', << parameters.os.name >>]
           steps:
             - *InstallDotnetMacos
       - *InstallNode  
@@ -80,6 +82,5 @@ workflows:
           matrix:
             parameters:
               os: ['linux', 'macos']
-              os-name: ['linux', 'macos']
               node-version: ["16.20.2", "18.19.1"]
              
