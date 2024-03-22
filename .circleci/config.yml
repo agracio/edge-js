@@ -21,14 +21,16 @@ refs:
       node/install:
         node-version: << parameters.node-version >>
     - &InstallDotnetLinux
-      steps:
-        - run: wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-        - run: sudo dpkg -i packages-microsoft-prod.deb
-        - run: sudo apt-get update
-        - run: sudo apt-get install -y dotnet-sdk-8.0
+      run:
+        name: Install dotnet
+        command: |
+          wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+          sudo dpkg -i packages-microsoft-prod.deb
+          sudo apt-get update
+          sudo apt-get install -y dotnet-sdk-8.0
     - &InstallDotnetMacos
       run:
-        name: Install PNPM
+        name: Install dotnet
         command: brew install --cask dotnet-sdk
     - &Versions
       run:
@@ -38,32 +40,12 @@ refs:
       run:
         name: Install Dependencies
         command: npm install
-    - &Build
-      run:
-        name: Build
-        command: npx pnpm build
     - &Test
       run:
         name: Test
         command: EDGE_USE_CORECLR=1 npm test
-    - &EnsureNode
-      run:
-        name: EnsureNode
-        command: nvm use << parameters.node-version >> ; npm i -g which-
 
 jobs:
-  setup:
-    parameters:
-      os:
-        type: executor
-      node-version:
-        type: string
-    executor: linux
-    steps:
-      - run: wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-      - run: sudo dpkg -i packages-microsoft-prod.deb
-      - run: sudo apt-get update
-      - run: sudo apt-get install -y dotnet-sdk-8.0
   test:
     parameters:
       os:
@@ -91,7 +73,9 @@ jobs:
       - checkout
       - *NpmInstall
       - *Test
-
+      
+    # environment:
+    #   FOO: bar
 workflows:
   all-tests:
     jobs:
