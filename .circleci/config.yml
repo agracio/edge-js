@@ -43,8 +43,14 @@ jobs:
 workflows:
   all-tests:
     jobs:
+      - setup:
+          matrix:
+            parameters:
+              os: [linux]
+              node-version: ["16.20.2", "18.19.1"]
       - test:
           matrix:
             parameters:
               os: [linux, macos]
               node-version: ["16.20.2", "18.19.1"]
+             
