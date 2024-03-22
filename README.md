@@ -5,7 +5,7 @@
 [![Codacy Badge][codacy-img]][codacy-url]
 [![Git Issues][issues-img]][issues-url]
 [![Closed Issues][closed-issues-img]][closed-issues-url]
-[![deps status][dependencies-img]][dependencies-url]
+<!-- [![deps status][dependencies-img]][dependencies-url] -->
 <!--[![MIT license][license-img]][license-url] -->
 
 
