@@ -77,7 +77,7 @@ jobs:
       - *NpmInstall
       - *Test
       - store_test_results:
-          path: ~/junit
+          path: ./junit
     # environment:
     #   FOO: bar
 workflows:
