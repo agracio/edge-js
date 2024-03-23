@@ -55,7 +55,7 @@ refs:
         command: node -v && npm -v && dotnet --version
     - &NpmInstall
       run:
-        name: Install Dependencies
+        name: NPM Install
         command: npm install
     - &Test
       run:

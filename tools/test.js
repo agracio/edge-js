@@ -6,7 +6,8 @@ var output = path.resolve(testDir, 'Edge.Tests.dll');
 var buildParameters = ['-target:library', '/debug', '-out:' + output, input];
 var mocha = path.resolve(__dirname, '../node_modules/mocha/bin/mocha');
 var fs = require('fs');
-var runner = process.argv[1].replace('--', '');
+var runner = process.argv[2].replace('--', '');
+console.log(process.argv)
 
 if (!process.env.EDGE_USE_CORECLR) {
 	if (process.platform !== 'win32') {
