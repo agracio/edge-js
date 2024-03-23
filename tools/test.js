@@ -6,6 +6,7 @@ var output = path.resolve(testDir, 'Edge.Tests.dll');
 var buildParameters = ['-target:library', '/debug', '-out:' + output, input];
 var mocha = path.resolve(__dirname, '../node_modules/mocha/bin/mocha');
 var fs = require('fs');
+var runner = process.argv[1].replace('--', '');
 
 if (!process.env.EDGE_USE_CORECLR) {
 	if (process.platform !== 'win32') {
@@ -54,10 +55,19 @@ function run(cmd, args, onClose){
 function runOnSuccess(code, signal) {
 	if (code === 0) {
 		process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'netcoreapp3.1');
-		spawn('node', [mocha, testDir, '-R', 'spec', '-t', '10000', '-n', 'expose-gc'], { 
-			stdio: 'inherit' 
-		}).on('error', function(err) {
-			console.log(err); 
-		});
+        if(runner === 'circleci'){
+            spawn('node', [mocha, testDir, '-R', 'mocha-junit-reporter', '-t', '10000', '-n', 'expose-gc', '--reporter-options', `mochaFile=./junit/test-results.xml`], { 
+                stdio: 'inherit' 
+            }).on('error', function(err) {
+                console.log(err); 
+            });
+        }
+        else{
+            spawn('node', [mocha, testDir, '-R', 'spec', '-t', '10000', '-n', 'expose-gc'], { 
+                stdio: 'inherit' 
+            }).on('error', function(err) {
+                console.log(err); 
+            });
+        }
 	}
 }

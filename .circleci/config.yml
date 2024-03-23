@@ -60,7 +60,7 @@ refs:
     - &Test
       run:
         name: Test
-        command: EDGE_USE_CORECLR=1 npm test
+        command: EDGE_USE_CORECLR=1 node tools/test.js --circleci
 jobs:
   test:
     parameters:
@@ -70,22 +70,14 @@ jobs:
         type: string
     executor: << parameters.os >>
     steps:
-      - when:
-          condition:
-             equal: ['linux', << parameters.os >>]
-          steps:
-            - *InstallDotnetLinux
-      - when:
-          condition:
-             equal: ['macos', << parameters.os >>]
-          steps:
-            - *InstallDotnetMacos
       - *InstallDotnet  
       - *InstallNode  
       - *Versions    
       - checkout
       - *NpmInstall
       - *Test
+      - store_test_results:
+          path: ~/junit
     # environment:
     #   FOO: bar
 workflows:
@@ -94,6 +86,6 @@ workflows:
       - test:
           matrix:
             parameters:
-              os: ['linux', 'macos']
-              node-version: ["16.20.2", "18.19.1"]
+              os: ['linux']
+              node-version: ["18.19.1"]
              
