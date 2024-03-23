@@ -57,7 +57,7 @@ function runOnSuccess(code, signal) {
 	if (code === 0) {
 		process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'netcoreapp3.1');
         if(runner === 'circleci'){
-            spawn('node', [mocha, testDir, '-R', 'mocha-junit-reporter', '-t', '10000', '-n', 'expose-gc', '--reporter-options', `mochaFile=./junit/test-results.xml`], { 
+            spawn('node', [mocha, testDir, '-R', 'mocha-junit-reporter', '-t', '10000', '-n', 'expose-gc', '--reporter-options', `mochaFile=~/junit/test-results.xml`], { 
                 stdio: 'inherit' 
             }).on('error', function(err) {
                 console.log(err); 
