@@ -718,11 +718,27 @@ public class CoreCLREmbedding
             object compilerInstance = Activator.CreateInstance(compilerType);
 
             DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Starting compilation");
-            Func<object, Task<object>> compiledFunction = (Func<object, Task<object>>)compileMethod.Invoke(compilerInstance, new object[]
+            var parameters =  compileMethod.GetParameters();
+
+            Func<object, Task<object>> compiledFunction;
+            // edge-cs compiler expects 2 parameters while most other compilers only expect 'options'
+            // not ideal if there are more compilers that need different arguments, should be revisited in the future
+            if (parameters.Length == 1)
             {
-                options,
-                Resolver.CompileAssemblies
-            });
+                compiledFunction = (Func<object, Task<object>>)compileMethod.Invoke(compilerInstance, new object[]
+                {
+                    options
+                });
+            }
+            else
+            {
+                compiledFunction = (Func<object, Task<object>>)compileMethod.Invoke(compilerInstance, new object[]
+                {
+                    options,
+                    Resolver.CompileAssemblies
+                });
+                
+            }
             DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Compilation complete");
 
             GCHandle handle = GCHandle.Alloc(compiledFunction);
