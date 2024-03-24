@@ -1049,7 +1049,8 @@ You need Windows, [Node.js](http://nodejs.org), and [.NET 4.5](http://www.micros
 `edge-ms-sql` differences from `edge-sql`
  * Provides optional `commandTimeout` parameter to set SQL command timeout. [SqlCommand.CommandTimeout](https://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout(v=vs.110).aspx)
  * Attempts to treat all other types of SQL statements as `select` instead of throwing exception. This allows to execute complex SQL queries that declare variables and temp tables before running `select` statement.
-
+ * Supports returning multiple results from query.
+ 
  #### Supported SQL statements
 
  * **select**
@@ -1059,8 +1060,6 @@ You need Windows, [Node.js](http://nodejs.org), and [.NET 4.5](http://www.micros
  * **exec**
 
 All other statements will be interpreted as `select` and will try to use `ExecuteReaderAsync` .NET method of `SqlCommand` class instance.
-
-Select statement will always return last result of SQL command, there is no support for multiple results sets if you have multiple `select` statements in your SQL.
 
 Install edge and edge-ms-sql modules:
 
