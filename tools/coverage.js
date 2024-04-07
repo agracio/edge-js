@@ -47,7 +47,7 @@ function run(cmd, args, onClose, signal){
 
 function runOnSuccess(code, framework) {
     if (code === 0) {
-        process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'netcoreapp3.1');
+        process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'net6.0');
 
         createJunitReports(framework, false);
         createJunitReports(framework, true);

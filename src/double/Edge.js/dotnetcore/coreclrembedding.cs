@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyModel;
-using DotNetRuntimeEnvironment = Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment;
 using Semver;
 
 [StructLayout(LayoutKind.Sequential)]
@@ -252,7 +251,7 @@ public class CoreCLREmbedding
 
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing runtime dependency {1} {0}", runtimeLibrary.Name, runtimeLibrary.Type);
 
-                List<string> assets = runtimeLibrary.RuntimeAssemblyGroups.GetRuntimeAssets(DotNetRuntimeEnvironment.GetRuntimeIdentifier()).ToList();
+                List<string> assets = runtimeLibrary.RuntimeAssemblyGroups.GetRuntimeAssets(RuntimeInformation.RuntimeIdentifier).ToList();
 
                 if (!assets.Any())
                 {
@@ -355,12 +354,12 @@ public class CoreCLREmbedding
                          CompileAssemblies[libraryName] = supplementaryRuntimeLibraries[libraryName];
                     }
                 }
-
-                List<string> nativeAssemblies = runtimeLibrary.GetRuntimeNativeAssets(dependencyContext, DotNetRuntimeEnvironment.GetRuntimeIdentifier()).ToList();
+                
+                List<string> nativeAssemblies = runtimeLibrary.GetRuntimeNativeAssets(dependencyContext, RuntimeInformation.RuntimeIdentifier).ToList();
 
                 if (nativeAssemblies.Any())
                 {
-                    DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Adding native dependencies for {0}", DotNetRuntimeEnvironment.GetRuntimeIdentifier());
+                    DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Adding native dependencies for {0}", RuntimeInformation.RuntimeIdentifier);
 
                     foreach (string nativeAssembly in nativeAssemblies)
                     {

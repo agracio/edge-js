@@ -3,7 +3,7 @@
   "author": {
     "name": "agracio"
   },
-  "version": "21.7.2",
+  "version": "21.7.3",
   "description": "Edge.js: run .NET and Node.js in-process on Windows, Mac OS, and Linux",
   "tags": [
     "owin",

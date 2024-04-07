@@ -22,7 +22,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Xml;
-#if NETCOREAPP1_1 || NETCOREAPP2_2 || NETCOREAPP3_1
+#if NET6_0
 using Newtonsoft.Json;
 using System.Reflection;
 using Microsoft.Extensions.DependencyModel;
@@ -408,7 +408,7 @@ namespace Edge.Tests
             return serializer.Deserialize(new StringReader(@"<SerializationTest AttributeValue=""My attribute value""><ElementValue>This is an element value</ElementValue></SerializationTest>"));
         }
 
-#if NETCOREAPP1_1 || NETCOREAPP2_2 || NETCOREAPP3_1
+#if NET6_0
         public async Task<object> CorrectVersionOfNewtonsoftJsonUsed(object input)
         {
             return typeof(JsonConvert).GetTypeInfo().Assembly.GetName().Version.ToString();
