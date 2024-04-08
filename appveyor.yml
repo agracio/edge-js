@@ -27,12 +27,8 @@ install:
 
 test_script:
 
-  - cmd: npm test
-  - cmd: node tools/coverage.js
-  - cmd: SET EDGE_USE_CORECLR=1 & npm test
-  - cmd: SET EDGE_USE_CORECLR=1 & node tools/coverage.js
-  - sh: EDGE_USE_CORECLR=1 npm test
-  - sh: EDGE_USE_CORECLR=1 node tools/coverage.js
+  - cmd: node tools/test_ci.js
+  - sh: node tools/test_ci.js
 
 after_test:
   - ps: |
@@ -40,8 +36,7 @@ after_test:
       $file = '.\test-results.xml'
       (New-Object 'System.Net.WebClient').UploadFile($url, (Resolve-Path '.\test-results.xml'))
       Push-AppveyorArtifact (Resolve-Path '.\test-results.xml')
-      Push-AppveyorArtifact (Resolve-Path '.\test-results-xunit-viewer.xml')
-      Push-AppveyorArtifact (Resolve-Path '.\test-results-xunit-viewer.html')
+      Push-AppveyorArtifact (Resolve-Path '.\mochawesome.json')
 
 skip_commits:
   files:

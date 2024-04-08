@@ -50,7 +50,7 @@ function runOnSuccess(code, framework) {
         process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'net6.0');
 
         createJunitReports(framework, false);
-        createJunitReports(framework, true);
+        //createJunitReports(framework, true);
     }
 }
 
