@@ -97,12 +97,12 @@ function mergeFiles(){
         }
     })
 
-    if(fs.existsSync(`./test-results-coreclr.xml`)){
-        fs.rmSync(`./test-results-coreclr.xml`);
-    }
-    if(fs.existsSync(`./test-results-net.xml`)){
-        fs.rmSync(`./test-results-net.xml`);
-    }
+    // if(fs.existsSync(`./test-results-coreclr.xml`)){
+    //     fs.rmSync(`./test-results-coreclr.xml`);
+    // }
+    // if(fs.existsSync(`./test-results-net.xml`)){
+    //     fs.rmSync(`./test-results-net.xml`);
+    // }
 
     const options = {
         files: [
