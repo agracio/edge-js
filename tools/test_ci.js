@@ -8,7 +8,7 @@ var mocha = path.resolve(__dirname, '../node_modules/mocha/bin/mocha');
 var fs = require('fs');
 const merge = require('junit-report-merger');
 const mochawesomeMerge = require('mochawesome-merge');
-const marge = require('mochawesome-report-generator')
+//const marge = require('mochawesome-report-generator')
 
 if (!process.env.EDGE_USE_CORECLR) {
 	if (process.platform !== 'win32') {
@@ -49,7 +49,7 @@ function run(cmd, args, onClose){
     });
 
     command.on('close', function(code){
-        console.log(result);
+        //console.log(result);
         onClose(code, '');
 	});
 }
@@ -63,7 +63,14 @@ function runOnSuccess(code, signal) {
         var framework = process.env.EDGE_USE_CORECLR ? 'coreclr' :'net';
 
 		process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'net6.0');
-		spawn('node', [mocha, testDir, '--reporter',  'mocha-multi-reporters',  '--reporter-options', `configFile=./test/config.json,cmrOutput=mocha-junit-reporter+mochaFile+${framework}:mochawesome+reportFilename+${framework}` , '-t', '10000', '-n', 'expose-gc'], { 
+		spawn('node', 
+        [   mocha, 
+            testDir, 
+            '--reporter',  'mocha-multi-reporters',  
+            '--reporter-options', `configFile=./test/config.json,cmrOutput=mocha-junit-reporter+mochaFile+${framework}:mochawesome+reportFilename+${framework}`,
+            '-t', '10000',
+            '-n', 'expose-gc'
+        ], { 
 			stdio: 'inherit' 
 		}).on('close', function(code) {
             mergeFiles();
@@ -97,26 +104,18 @@ function mergeFiles(){
         }
     })
 
-    // if(fs.existsSync(`./test-results-coreclr.xml`)){
-    //     fs.rmSync(`./test-results-coreclr.xml`);
-    // }
-    // if(fs.existsSync(`./test-results-net.xml`)){
-    //     fs.rmSync(`./test-results-net.xml`);
-    // }
-
     const options = {
         files: [
           './mochawesome-report/*.json',
         ],
       }
-      const margeOptions = {
-        reportFilename: 'mochawesome.html',
-        reportDir: './mochawesome-report'
-      }
+    //   const margeOptions = {
+    //     reportFilename: 'mochawesome.html',
+    //     reportDir: './mochawesome-report'
+    //   }
       
       mochawesomeMerge.merge(options).then(report => {
         fs.writeFileSync('mochawesome.json', JSON.stringify(report, null, 2))
-        marge.create(report, margeOptions)
-            .then(() => console.log('Test reports complete'))
+        //marge.create(report, margeOptions).then(() => console.log('Test reports complete'))
       })
 }
