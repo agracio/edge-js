@@ -35,9 +35,10 @@
         '-Wdeprecated-declarations',
         '-Wunused-private-field',
         '-Wunused-variable',
-        '-Wunused-result',
-        '-Wclass-memaccess',
-        '-Wcast-function-type'
+        '-Wno-unused-result',
+        '-Wno-class-memaccess',
+        '-Wno-cast-function-type',
+        '-Wno-unused-but-set-variable'
       ],
       'cflags_cc!': [
         '-fno-exceptions',
@@ -49,9 +50,10 @@
         '-Wdeprecated-declarations',
         '-Wunused-private-field',
         '-Wunused-variable',
-        '-Wunused-result',
-        '-Wclass-memaccess',
-        '-Wcast-function-type'
+        '-Wno-unused-result',
+        '-Wno-class-memaccess',
+        '-Wno-cast-function-type',
+        '-Wno-unused-but-set-variable'
       ],
       'xcode_settings': {
         'OTHER_CFLAGS': [
