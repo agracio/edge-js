@@ -49,7 +49,7 @@ function run(cmd, args, onClose){
     });
 
     command.on('close', function(code){
-        //console.log(result);
+        console.log(result);
         onClose(code, '');
 	});
 }
@@ -57,31 +57,21 @@ function run(cmd, args, onClose){
 function runOnSuccess(code, signal) {
 	if (code === 0) {
         //run .NET Framework then Core CLR
-        // does not work in AppVeyor
-        //process.platform === 'win32' && !process.env.EDGE_USE_CORECLR ? delete process.env.EDGE_USE_CORECLR : process.env.EDGE_USE_CORECLR = 1
+        process.platform === 'win32' && !process.env.EDGE_USE_CORECLR ? delete process.env.EDGE_USE_CORECLR : process.env.EDGE_USE_CORECLR = 1
 
         var framework = process.env.EDGE_USE_CORECLR ? 'coreclr' :'net';
 
 		process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'net6.0');
-		spawn('node', 
-        [   mocha, 
-            testDir, 
-            '--reporter',  'mocha-multi-reporters',  
-            '--reporter-options', `configFile=./test/config.json,cmrOutput=mocha-junit-reporter+mochaFile+${framework}:mochawesome+reportFilename+${framework}`,
-            '-t', '10000',
-            '-n', 'expose-gc'
-        ], { 
+		spawn('node', [mocha, testDir, '--reporter',  'mocha-multi-reporters',  '--reporter-options', `configFile=./test/config.json,cmrOutput=mocha-junit-reporter+mochaFile+${framework}:mochawesome+reportFilename+${framework}` , '-t', '10000', '-n', 'expose-gc'], { 
 			stdio: 'inherit' 
-		}).on('close', function(code) {
-            mergeFiles();
-            // running both .NET and CoreCLR does not work on AppVeyor and likely any other CI
-			// if(!process.env.EDGE_USE_CORECLR){
-            //     process.env.EDGE_USE_CORECLR = 1;
-            //     runOnSuccess(code, signal);
-            // }
-            // else{
-            //     mergeFiles();
-            // }
+		}).on('close', function(err) {
+			if(!process.env.EDGE_USE_CORECLR){
+                process.env.EDGE_USE_CORECLR = 1;
+                runOnSuccess(code, signal);
+            }
+            else{
+                mergeFiles();
+            }
 		}).on('error', function(err) {
 			console.log(err); 
 		});;
@@ -109,13 +99,14 @@ function mergeFiles(){
           './mochawesome-report/*.json',
         ],
       }
-    //   const margeOptions = {
-    //     reportFilename: 'mochawesome.html',
-    //     reportDir: './mochawesome-report'
-    //   }
-      
+      const margeOptions = {
+        reportFilename: 'mochawesome.html',
+        reportDir: './mochawesome-report'
+      }
+
       mochawesomeMerge.merge(options).then(report => {
         fs.writeFileSync('mochawesome.json', JSON.stringify(report, null, 2))
-        //marge.create(report, margeOptions).then(() => console.log('Test reports complete'))
+        // marge.create(report, margeOptions)
+        //     .then(() => console.log('Test reports complete'))
       })
 }
