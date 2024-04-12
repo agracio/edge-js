@@ -108,7 +108,7 @@ public class EdgeCompiler
 
             if (!string.IsNullOrEmpty(fileName))
             {
-                lineDirective = string.Format("#line {0} \"{1}\"\n", lineNumber, fileName.Replace("\\", "\\\\"));
+                lineDirective = $"#line {lineNumber} \"{fileName.Replace("\\", "\\\\")}\"\n";
             }
         }
 

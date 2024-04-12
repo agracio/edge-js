@@ -15,24 +15,21 @@ environment:
 install:
   - sh: if [ "$APPVEYOR_BUILD_WORKER_IMAGE" = 'Ubuntu2204' ]; then sudo apt-get -qq update && sudo apt-get -y -qq install build-essential libgconf-2-4 python3 libglib2.0-dev; fi
   - cmd: powershell .\appveyor.ps1  
-  - dotnet --version
   - cmd: powershell Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs) x64
   - sh: nvm ls
   - sh: nvm install $nodejs
   - sh: nvm use $nodejs
-  - node -p "[process.version,process.arch].join(' ')"
+  - cmd: node -v && npm -v && dotnet --version
+  - sh: node -v && npm -v && dotnet --version
   - npm install -q
   - cmd: npm i -q  xunit-viewer >nul
   - sh: npm i xunit-viewer --silent &> /dev/null
 
 test_script:
 
-  - cmd: npm test
-  - cmd: node tools/coverage.js
-  - cmd: SET EDGE_USE_CORECLR=1 & npm test
-  - cmd: SET EDGE_USE_CORECLR=1 & node tools/coverage.js
-  - sh: EDGE_USE_CORECLR=1 npm test
-  - sh: EDGE_USE_CORECLR=1 node tools/coverage.js
+  - cmd: node tools/test_ci.js
+  - cmd: SET EDGE_USE_CORECLR=1 & node tools/test_ci.js
+  - sh: EDGE_USE_CORECLR=1 node tools/test_ci.js
 
 after_test:
   - ps: |
@@ -40,8 +37,7 @@ after_test:
       $file = '.\test-results.xml'
       (New-Object 'System.Net.WebClient').UploadFile($url, (Resolve-Path '.\test-results.xml'))
       Push-AppveyorArtifact (Resolve-Path '.\test-results.xml')
-      Push-AppveyorArtifact (Resolve-Path '.\test-results-xunit-viewer.xml')
-      Push-AppveyorArtifact (Resolve-Path '.\test-results-xunit-viewer.html')
+      Push-AppveyorArtifact (Resolve-Path '.\mochawesome.json')
 
 skip_commits:
   files:

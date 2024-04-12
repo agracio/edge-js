@@ -214,6 +214,19 @@ describe('call patterns', function () {
 
     });
 
+    it(prefix + ' can deserialize using XmlSerializer', function (done) {
+        var func = edge.func({
+            assemblyFile: edgeTestDll,
+            typeName: 'Edge.Tests.Startup',
+            methodName: 'DeserializeObject'
+        });
+
+        func(null, function (error, result) {
+            assert.equal(result.AttributeValue, "My attribute value");
+            assert.equal(result.ElementValue, "This is an element value");
+            done();
+        });
+    });
 
     if (process.env.EDGE_USE_CORECLR) {
         it(prefix + ' merged dependencies choose correct version', function (done) {
@@ -242,18 +255,5 @@ describe('call patterns', function () {
             });
         });
 
-        it(prefix + ' can deserialize using XmlSerializer', function (done) {
-            var func = edge.func({
-                assemblyFile: edgeTestDll,
-                typeName: 'Edge.Tests.Startup',
-                methodName: 'DeserializeObject'
-            });
-
-            func(null, function (error, result) {
-                assert.equal(result.AttributeValue, "My attribute value");
-                assert.equal(result.ElementValue, "This is an element value");
-                done();
-            });
-        });
     }
 });
