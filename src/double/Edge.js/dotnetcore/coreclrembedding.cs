@@ -145,6 +145,11 @@ public class CoreCLREmbedding
         protected override Assembly Load(AssemblyName assemblyName)
         {
             DebugMessage("EdgeAssemblyLoadContext::Load (CLR) - Trying to load {0}", assemblyName.Name);
+            if (assemblyName.Name == "netstandard")
+            {
+                DebugMessage("EdgeAssemblyLoadContext::Load (CLR) - Skipping {0}", assemblyName.Name);
+                return null;
+            }
 
             string assemblyPath = Resolver.GetAssemblyPath(assemblyName.Name);
 
@@ -666,7 +671,8 @@ public class CoreCLREmbedding
 
             MethodInfo compileMethod;
             Type compilerType;
-
+            DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Compiler loading {0} assembly", compiler);
+            
             if (!Compilers.ContainsKey(compiler))
             {
                 if (DependencyContext.Default ==null || !DependencyContext.Default.RuntimeLibraries.Any(l => l.Name == compiler))
@@ -680,8 +686,16 @@ public class CoreCLREmbedding
 
                     Resolver.AddCompiler(options["bootstrapDependencyManifest"].ToString());
                 }
-                
-                Assembly compilerAssembly = Assembly.Load(new AssemblyName(compiler));
+
+                Assembly compilerAssembly;
+                if (File.Exists(compiler))
+                {
+                    compilerAssembly = Assembly.LoadFrom(compiler);
+                }
+                else
+                {
+                    compilerAssembly = Assembly.Load(new AssemblyName(compiler));
+                }
                 DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Compiler assembly {0} loaded successfully", compiler);
 
                 compilerType = compilerAssembly.GetType("EdgeCompiler");
@@ -807,8 +821,7 @@ public class CoreCLREmbedding
                 {
                     DebugMessage("CoreCLREmbedding::CallFunc (CLR) - .NET method ran synchronously, marshalling data for V8");
 
-                    V8Type taskResultType;
-                    IntPtr marshalData = MarshalCLRToV8(functionTask.Result, out taskResultType);
+                    IntPtr marshalData = MarshalCLRToV8(functionTask.Result, out var taskResultType);
 
                     DebugMessage("CoreCLREmbedding::CallFunc (CLR) - Method return data is of type {0}", taskResultType.ToString("G"));
 

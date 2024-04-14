@@ -3,7 +3,7 @@
   "author": {
     "name": "agracio"
   },
-  "version": "21.7.3",
+  "version": "21.7.4",
   "description": "Edge.js: run .NET and Node.js in-process on Windows, Mac OS, and Linux",
   "tags": [
     "owin",
@@ -37,7 +37,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "edge-cs": "1.2.1",
+    "edge-cs": "npm:@agracio/edge-cs@^1.3.3",
     "nan": "^2.19.0"
   },
   "devDependencies": {
