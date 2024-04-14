@@ -36,11 +36,10 @@ var helloWorld = edge.func(function () {/*
 ## Migration to .NET 6 :exclamation: 
 
 Edge.Js C# code has been migrated to .NET 6.  
-If your project is referencing `EdgeJs.dll` and `Edge.js.CSharp.dll` file locations have changed.
+If your project is referencing `EdgeJs.dll` file locations have changed.
 
 ```bash
 node_modules/edge-js/lib/bootstrap/bin/Release/net6.0/EdgeJs.dll
-node_modules/edge-js/lib/bootstrap/bin/Release/net6.0/Edge.js.CSharp.dll
 ```
 
 ## Main differences from `edge`
