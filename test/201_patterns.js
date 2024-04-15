@@ -228,32 +228,36 @@ describe('call patterns', function () {
         });
     });
 
-    if (process.env.EDGE_USE_CORECLR) {
-        it(prefix + ' merged dependencies choose correct version', function (done) {
-            var func = edge.func({
-                assemblyFile: edgeTestDll,
-                typeName: 'Edge.Tests.Startup',
-                methodName: 'CorrectVersionOfNewtonsoftJsonUsed'
-            });
-
-            func(null, function (error, result) {
-                assert.equal(result, "13.0.0.0");
-                done();
-            });
+    it(prefix + ' merged dependencies choose correct version', function (done) {
+        if (!process.env.EDGE_USE_CORECLR) {
+            this.skip();
+        }
+        var func = edge.func({
+            assemblyFile: edgeTestDll,
+            typeName: 'Edge.Tests.Startup',
+            methodName: 'CorrectVersionOfNewtonsoftJsonUsed'
         });
 
-        it.skip(prefix + ' can use DependencyContext.Default', function (done) {
-            var func = edge.func({
-                assemblyFile: edgeTestDll,
-                typeName: 'Edge.Tests.Startup',
-                methodName: 'CanUseDefaultDependencyContext'
-            });
+        func(null, function (error, result) {
+            assert.equal(result, "13.0.0.0");
+            done();
+        });
+    });
 
-            func(null, function (error, result) {
-                assert.equal(result, "12.0.1");
-                done();
-            });
+    it.skip(prefix + ' can use DependencyContext.Default', function (done) {
+        if (!process.env.EDGE_USE_CORECLR) {
+            this.skip();
+        }
+        var func = edge.func({
+            assemblyFile: edgeTestDll,
+            typeName: 'Edge.Tests.Startup',
+            methodName: 'CanUseDefaultDependencyContext'
         });
 
-    }
+        func(null, function (error, result) {
+            assert.equal(result, "12.0.1");
+            done();
+        });
+    });
+
 });

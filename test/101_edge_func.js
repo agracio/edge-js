@@ -59,17 +59,21 @@ describe('edge.func', function () {
 		);
 	});
 
-	if (!process.env.EDGE_USE_CORECLR) {
-		it(prefix + ' succeeds with assemblyFile as string', function () {
-			var func = edge.func(edgeTestDll);
-			assert.equal(typeof func, 'function');
-		});
+	it(prefix + ' succeeds with assemblyFile as string', function () {
+		if (process.env.EDGE_USE_CORECLR) {
+			this.skip();
+		}
+		var func = edge.func(edgeTestDll);
+		assert.equal(typeof func, 'function');
+	});
 
-		it(prefix + ' succeeds with assemblyFile as options property', function () {
-			var func = edge.func({ assemblyFile: edgeTestDll });
-			assert.equal(typeof func, 'function');
-		});
-	}
+	it(prefix + ' succeeds with assemblyFile as options property', function () {
+		if (process.env.EDGE_USE_CORECLR) {
+			this.skip();
+		}
+		var func = edge.func({ assemblyFile: edgeTestDll });
+		assert.equal(typeof func, 'function');
+	});
 
 	it(prefix + ' succeeds with assemblyFile and type name', function () {
 		var func = edge.func({
