@@ -74,12 +74,8 @@ https://github.com/agracio/edge-js-quick-start
 
 ## Mono
 
-Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but focus will be on .NET Core.
-Mono tests are now excluded from CI.
-
-## F# Support
-
-`edge-fs` only supports .NET 4.x projects on Windows, does not support Core CLR on any plarform.
+Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but focus will be on .NET Core.  
+Mono tests are excluded from CI.
 
 ## Node.js application packaging
 
@@ -95,13 +91,39 @@ When packaging your application using Webpack make sure that `edge-js` is specif
   },
 ```
 
-## Inline C# code execution
+## Additional languages support
 
-Latest changes restore support for inline C# code as well as .csx files however this functionality should be used for testing purposes only.
+### F# scripting
 
-## Requirements (Windows)
+| Framework   | Platform      | Module     | Language code | Documentation |
+| ----------- | ------------  | -----------|-------------- | ------------- |
+| .NET 4.5    | Windows       | `edge-fs`  | `fs`| [Script F# in Node.js](#how-to-script-f-in-a-nodejs-application) |
+| CoreCLR     | Any           | In development | N/A| N/A |
 
-You must install [Microsoft Visual C++ Redistributable (x86)](https://www.microsoft.com/en-us/download/details.aspx?id=52685)
+### Python (IronPython) scripting
+
+**NOTE** This functionality requires IronPython 3.4
+
+| Framework   | Platform      | Module     | Language code | Documentation |
+| ----------- | ------------  | -----------|-------------- | ------------- |
+| .NET 4.5    | Windows       | `edge-py`  | `py`| [Script Python in a Node.js](#how-to-script-python-in-a-nodejs-application) |
+| CoreCLR     | Any           | `edge-iron-py` | `iron-py`| [Script Python in a Node.js CoreCLR ](https://github.com/agracio/edge-iron-py) |
+
+### PowerShell scripting
+
+| Framework   | Platform      | Module     | Language code | Documentation |
+| ----------- | ------------  | -----------|-------------- | ------------- |
+| .NET 4.5    | Windows       | `edge-ps`  | `ps` | [Script PowerShell in Node.js](#how-to-script-powershell-in-a-nodejs-application) |
+| CoreCLR     | Any           | In development | N/A| N/A |
+
+### MS SQL scripting
+
+Provides simple access to MS SQL without the need to write separate C# code.     
+
+| Framework     | Platform      | Module      | Language code | Documentation |
+| ------------- | ------------  | ----------- |-------------- | ------------- |
+| .NET Standard | Any           | `edge-ms-sql` | `ms-sql`| [Script T_SQL in Node.js](https://github.com/agracio/edge-ms-sql) |
+
 
 Original Edge.js readme
 ==============================
