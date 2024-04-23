@@ -74,7 +74,7 @@ https://github.com/agracio/edge-js-quick-start
 
 ## Mono
 
-Mono is no longer actively supported. Exisitng code will remain with no plans of removing it but focus will be on .NET Core.  
+Mono is no longer actively supported. Existing code will remain with no plans of removing it but focus will be on .NET Core.  
 Mono tests are excluded from CI.
 
 ## Node.js application packaging
@@ -106,8 +106,8 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 
 | Framework   | Platform      | Module     | Language code | Documentation |
 | ----------- | ------------  | -----------|-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-py`  | `py`| [Script Python in a Node.js](#how-to-script-python-in-a-nodejs-application) |
-| CoreCLR     | Any           | `edge-iron-py` | `iron-py`| [Script Python in a Node.js CoreCLR ](https://github.com/agracio/edge-iron-py) |
+| .NET 4.5    | Windows       | `edge-py`  | `py`| [Script Python in a Node.js](https://github.com/agracio/edge-py) |
+| CoreCLR     | Any?          | `edge-py`  | `py`| [Script Python in a Node.js](https://github.com/agracio/edge-py) |
 
 ### PowerShell scripting
 
@@ -122,7 +122,8 @@ Provides simple access to MS SQL without the need to write separate C# code.
 
 | Framework     | Platform      | Module      | Language code | Documentation |
 | ------------- | ------------  | ----------- |-------------- | ------------- |
-| .NET Standard | Any           | `edge-ms-sql` | `ms-sql`| [Script T_SQL in Node.js](https://github.com/agracio/edge-ms-sql) |
+| .NET 4.5      | Windows       | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) |
+| .NET Standard | Any           | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) |
 
 
 Original Edge.js readme
@@ -135,19 +136,19 @@ An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET
 <tr><th>Script CLR from Node.js </th><th>Script Node.js from CLR</th></tr>
 <tr><td>
 
-|         | .NET 4.5      | Mono 4.x      | CoreCLR       |
-| ------- | ------------- | ------------- | ------------- |
+|         | .NET 4.5           | Mono 4.x           | CoreCLR            |
+| ------- | ------------------ | ------------------ | ------------------ |
 | Windows | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | Linux   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
 | macOS   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
 
 </td><td>
 
-|         | .NET 4.5      | Mono 4.x      | CoreCLR       |
-| ------- | ------------- | ------------- | ------------- |
-| Windows | :heavy_check_mark: | :x: | :x: |
-| Linux   | :x:                | :x: | :x: |
-| macOS   | :x:                | :x: | :x: |
+|         | .NET 4.5           | Mono 4.x   | CoreCLR       |
+| ------- | ------------------ | ---------- | ------------- |
+| Windows | :heavy_check_mark: | :x:        | :x:           |
+| Linux   | :x:                | :x:        | :x:           |
+| macOS   | :x:                | :x:        | :x:           |
 
 </td></tr> </table>
 
@@ -1065,126 +1066,8 @@ lisp([], function(err, answer){
 
 ### How to: script T-SQL in a Node.js application
 
-**NOTE** This functionality has only been tested on Windows. Although ADO.NET exist in Mono, your mileage can vary. 
+**Full documentation available here https://github.com/agracio/edge-sql**
 
-The edge-ms-sql extension of Edge.js allows for accessing MS SQL databases by scripting T-SQL inside the Node.js application. The edge-ms-sql extension uses async ADO.NET SQL client to access MS SQL. 
-
-You need Windows, [Node.js](http://nodejs.org), and [.NET 4.5](http://www.microsoft.com/en-us/download/details.aspx?id=30653). To run the sample code below you also need a connection string to the sample Northwind database that ships with MS SQL. 
-
-`edge-ms-sql` differences from `edge-sql`
- * Provides optional `commandTimeout` parameter to set SQL command timeout. [SqlCommand.CommandTimeout](https://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout(v=vs.110).aspx)
- * Attempts to treat all other types of SQL statements as `select` instead of throwing exception. This allows to execute complex SQL queries that declare variables and temp tables before running `select` statement.
- * Supports returning multiple results from query.
- 
- #### Supported SQL statements
-
- * **select**
- * **update**
- * **insert**
- * **delete**
- * **exec**
-
-All other statements will be interpreted as `select` and will try to use `ExecuteReaderAsync` .NET method of `SqlCommand` class instance.
-
-Install edge and edge-ms-sql modules:
-
-```bash
-npm install edge-js
-npm install edge-ms-sql
-```
-
-Set your SQL connection string using environment variable. For passing connection string as a parameter see code examples below.
-
-```
-set EDGE_SQL_CONNECTION_STRING=Data Source=localhost;Initial Catalog=Northwind;Integrated Security=True
-```
-
-In your server.js:
-
-```js
-const edge = require('edge-js');
-
-var getTop10Products = edge.func('ms-sql', function () {/*
-    select top 10 * from Products
-*/});
-
-getTop10Products(null, function (error, result) {
-    if (error) throw error;
-    console.log(result);
-});
-```
-
-#### Parameterized queries
-
-You can construct a parameterized query once and provide parameter values on a per-call basis:
-
-##### SELECT
-
-```js
-const edge = require('edge-js');
-
-var getProduct = edge.func('ms-sql', function () {/*
-    select * from Products 
-    where ProductId = @myProductId
-*/});
-
-getProduct({ myProductId: 10 }, function (error, result) {
-    if (error) throw error;
-    console.log(result);
-});
-```
-
-##### UPDATE
-
-```js
-const edge = require('edge-js');
-
-var updateProductName = edge.func('ms-sql', function () {/*
-    update Products
-    set ProductName = @newName 
-    where ProductId = @myProductId
-*/});
-
-updateProductName({ myProductId: 10, newName: 'New Product' }, function (error, result) {
-    if (error) throw error;
-    console.log(result);
-});
-```
-
-##### Using parameterised function
-
-```js
-const edge = require('edge-js');
-
-var select = edge.func('ms-sql', {
-    source: 'select top 10 * from Products',
-    connectionString: 'SERVER=myserver;DATABASE=mydatabase;Integrated Security=SSPI',
-    commandTimeout: 100
-});
-
-select(null, function (error, result) {
-    if (error) throw error;
-    console.log(result);
-});
-```
- 
-##### Stored proc with input parameters  
-
- ```js
-const edge = require('edge-js');
-
-var storedProcParams = {inputParm1: 'input1', inputParam2: 25};
-
-var select = edge.func('ms-sql', {
-    source: 'exec myStoredProc',
-    connectionString: 'SERVER=myserver;DATABASE=mydatabase;Integrated Security=SSPI'
-});
-
-select(storedProcParams, function (error, result) {
-    if (error) throw error;
-    console.log(result);
-});
-```  
 
 ### How to: support for other CLR languages
 
