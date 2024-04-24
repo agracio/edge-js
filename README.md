@@ -74,7 +74,7 @@ https://github.com/agracio/edge-js-quick-start
 
 ## Mono
 
-Mono is no longer actively supported. Existing code will remain with no plans of removing it but focus will be on .NET Core.  
+Mono is no longer actively supported. Existing code will remain with no plans of removing it but focus will be on .NET Core. 
 Mono tests are excluded from CI.
 
 ## Node.js application packaging

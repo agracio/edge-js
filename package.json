@@ -1,7 +1,9 @@
 {
   "name": "edge-js",
   "author": {
-    "name": "agracio"
+    "name": "Tomasz Janczuk <tomasz@janczuk.org>",
+    "url": "http://tomasz.janczuk.org",
+    "twitter": "tjanczuk"
   },
   "version": "21.7.4",
   "description": "Edge.js: run .NET and Node.js in-process on Windows, Mac OS, and Linux",
