@@ -8,23 +8,34 @@
 <!-- [![deps status][dependencies-img]][dependencies-url] -->
 <!--[![MIT license][license-img]][license-url] -->
 
+-----
+### This library is based on https://github.com/tjanczuk/edge all credit for original work goes to Tomasz Janczuk. 
+------
 
+## Overview
+* Support for new versions of Node.Js.
+* Support for .NET Core 3.1 - 8.x on Windows/Linux/macOS.
+* Fixes AccessViolationException when running Node.js code from C# [PR #573](https://github.com/tjanczuk/edge/pull/573).
+* Fixes StackOverflowException [PR #566](https://github.com/tjanczuk/edge/pull/566) that occurs when underlying C# code throws complex exception.
+* Fixes issues [#469](https://github.com/tjanczuk/edge/issues/469), [#713](https://github.com/tjanczuk/edge/issues/713)
+* Other PRs: [PR #725](https://github.com/tjanczuk/edge/pull/725), [PR #640](https://github.com/tjanczuk/edge/pull/640)
+* Support for Mono runtime 4.8.x - 5.x.
+* Multiple bug fixes and improvements to the original code.
 
-This is a fork of [Edge.js](https://github.com/tjanczuk/edge) providing improvements and bug fixes that are not yet accepted into main Edge.js repo.
+----
+### NPM package is published as `edge-js`  https://www.npmjs.com/package/edge-js
 
-**NPM** package is published as `edge-js`. https://www.npmjs.com/package/edge-js.
+### NuGet package is published as [EdgeJs](https://www.nuget.org/packages/EdgeJs)
+----
 
-**NuGet** package is published as [EdgeJs](https://www.nuget.org/packages/EdgeJs).
-
-Usage is same as edge, replace `require('edge')` with `require('edge-js')`:
-
+### Usage
 ```bash
 npm install edge-js
 ```
 
-```diff
--var edge = require('edge');
-+var edge = require('edge-js');
+```js
+
+var edge = require('edge-js');
 
 var helloWorld = edge.func(function () {/*
     async (input) => {
@@ -41,17 +52,6 @@ If your project is referencing `EdgeJs.dll` file locations have changed.
 ```bash
 node_modules/edge-js/lib/bootstrap/bin/Release/net6.0/EdgeJs.dll
 ```
-
-## Main differences from `edge`
-
-* Support for new versions of Node.Js.
-* Support for .NET Core 3.1 - 8.x on Windows/Linux/macOS.
-* Support for Mono runtime 4.8.x - 5.x.
-* Fixes AccessViolationException when running Node.js code from C# [PR #573](https://github.com/tjanczuk/edge/pull/573).
-* Fixes StackOverflowException [PR #566](https://github.com/tjanczuk/edge/pull/566) that occurs when underlying C# code throws complex exception.
-* Fixes issues [#469](https://github.com/tjanczuk/edge/issues/469), [#713](https://github.com/tjanczuk/edge/issues/713)
-* Other PRs: [PR #725](https://github.com/tjanczuk/edge/pull/725), [PR #640](https://github.com/tjanczuk/edge/pull/640)
-* Multiple bug fixes and improvements to the original code.
 
 ## Electron
 
@@ -74,7 +74,7 @@ https://github.com/agracio/edge-js-quick-start
 
 ## Mono
 
-Mono is no longer actively supported. Existing code will remain with no plans of removing it but focus will be on .NET Core. 
+Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core. 
 Mono tests are excluded from CI.
 
 ## Node.js application packaging
@@ -95,32 +95,32 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 
 ### F# scripting
 
-| Framework   | Platform      | Module     | Language code | Documentation |
-| ----------- | ------------  | -----------|-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-fs`  | `fs`| [Script F# in Node.js](#how-to-script-f-in-a-nodejs-application) |
+| Framework   | Platform      | NPM Package | Language code | Documentation |
+| ----------- | ------------  | ----------- |-------------- | ------------- |
+| .NET 4.5    | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](#how-to-script-f-in-a-nodejs-application) |
 | CoreCLR     | Any           | In development | N/A| N/A |
 
 ### Python (IronPython) scripting
 
 **NOTE** This functionality requires IronPython 3.4
 
-| Framework   | Platform      | Module     | Language code | Documentation |
-| ----------- | ------------  | -----------|-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-py`  | `py`| [Script Python in a Node.js](https://github.com/agracio/edge-py) |
-| CoreCLR     | Any?          | `edge-py`  | `py`| [Script Python in a Node.js](https://github.com/agracio/edge-py) |
+| Framework   | Platform      | NPM Package  | Language code | Documentation |
+| ----------- | ------------  | ------------ |-------------- | ------------- |
+| .NET 4.5    | Windows       | `edge-py`    | `py`| [Script Python in a Node.js](https://github.com/agracio/edge-py) |
+| CoreCLR     | Any?          | `edge-py`    | `py`| [Script Python in a Node.js](https://github.com/agracio/edge-py) |
 
 ### PowerShell scripting
 
-| Framework   | Platform      | Module     | Language code | Documentation |
-| ----------- | ------------  | -----------|-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-ps`  | `ps` | [Script PowerShell in Node.js](#how-to-script-powershell-in-a-nodejs-application) |
+| Framework   | Platform      | NPM Package | Language code | Documentation |
+| ----------- | ------------  | ----------- |-------------- | ------------- |
+| .NET 4.5    | Windows       | `edge-ps`   | `ps` | [Script PowerShell in Node.js](#how-to-script-powershell-in-a-nodejs-application) |
 | CoreCLR     | Any           | In development | N/A| N/A |
 
 ### MS SQL scripting
 
 Provides simple access to MS SQL without the need to write separate C# code.     
 
-| Framework     | Platform      | Module      | Language code | Documentation |
+| Framework     | Platform      | NPM Package | Language code | Documentation |
 | ------------- | ------------  | ----------- |-------------- | ------------- |
 | .NET 4.5      | Windows       | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) |
 | .NET Standard | Any           | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) |

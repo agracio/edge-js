@@ -145,11 +145,6 @@ public class CoreCLREmbedding
         protected override Assembly Load(AssemblyName assemblyName)
         {
             DebugMessage("EdgeAssemblyLoadContext::Load (CLR) - Trying to load {0}", assemblyName.Name);
-            if (assemblyName.Name == "netstandard")
-            {
-                DebugMessage("EdgeAssemblyLoadContext::Load (CLR) - Skipping {0}", assemblyName.Name);
-                return null;
-            }
 
             string assemblyPath = Resolver.GetAssemblyPath(assemblyName.Name);
 
