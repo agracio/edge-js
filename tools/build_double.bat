@@ -10,9 +10,6 @@ if "%1" equ "" (
 call :build_lib
 if %ERRORLEVEL% neq 0 exit /b -1
 
-call :build_tools
-if %ERRORLEVEL% neq 0 exit /b -1
-
 call :download_node %1
 if %ERRORLEVEL% neq 0 exit /b -1
 
@@ -34,29 +31,6 @@ call :clean_nuget_package
 if %ERRORLEVEL% neq 0 exit /b -1
 call :copy_nuget_package
 if %ERRORLEVEL% neq 0 exit /b -1
-
-exit /b 0
-
-REM ===========================================================
-:build_tools
-echo :build_tools
-
-if not exist "%SELF%\build\download.exe" (
-	csc /out:"%SELF%\build\download.exe" "%SELF%\download.cs"
-) else (
-    echo "%SELF%\build\download.exe" already built.
-)
-
-if not exist "%SELF%\build\repl.exe" (
-	csc /out:"%SELF%\build\repl.exe" "%SELF%\repl.cs"
-) else (
-     echo "%SELF%\build\repl.exe" already built.
-)
-@REM if not exist "%SELF%\build\unzip.exe" (
-@REM 	csc /out:"%SELF%\build\unzip.exe" "%SELF%\unzip.cs"
-@REM ) else (
-@REM      echo "%SELF%\build\unzip.exe" already built.
-@REM )
 
 exit /b 0
 
@@ -91,14 +65,14 @@ REM ===========================================================
 :build_lib
 echo :build_lib
 
-if exist "%SELF%\build\nuget\lib\net462" (
- echo "%SELF%\build\nuget\lib\net462" already exists.
+if exist "%SELF%\build\nuget\lib\net45" (
+ echo "%SELF%\build\nuget\lib\net45" already exists.
  exit /b 0
  )
 
-mkdir "%SELF%\..\src\double\Edge.js\bin\Release\net462" > nul 2>&1
+mkdir "%SELF%\..\src\double\Edge.js\bin\Release\net45" > nul 2>&1
 
-csc /out:"%SELF%\..\src\double\Edge.js\bin\Release\net462\EdgeJs.dll" /target:library "%SELF%\..\src\double\Edge.js\dotnet\EdgeJs.cs"
+csc /out:"%SELF%\..\src\double\Edge.js\bin\Release\net45\EdgeJs.dll" /target:library "%SELF%\..\src\double\Edge.js\dotnet\EdgeJs.cs"
 if %ERRORLEVEL% neq 0 exit /b -1
 
 cd "%SELF%\..\src\double\Edge.js"
@@ -110,8 +84,6 @@ dotnet build --configuration Release
 if %ERRORLEVEL% neq 0 exit /b -1
 mkdir "%SELF%\build\nuget\lib"
 robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release" "%SELF%\build\nuget\lib"
-rem robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\net45" "%SELF%\build\nuget\lib\net45"
-rem robocopy /NFL /NDL /NJH /NJS /nc /ns /np /is /s "%SELF%\..\src\double\Edge.js\bin\Release\net6.0" "%SELF%\build\nuget\lib\net6.0"
 
 cd "%SELF%"
 exit /b 0
@@ -223,6 +195,7 @@ ROBOCOPY build/nuget/content/edge/x86 nuget/content/edge/x86 *.* /NFL /NDL /NJH 
 ROBOCOPY build/nuget/content/edge/x64 nuget/content/edge/x64 *.* /NFL /NDL /NJH /NJS /nc /ns /np
 
 ROBOCOPY build/nuget/lib/net462 nuget/lib/net462 edge*.dll /NFL /NDL /NJH /NJS /nc /ns /np
+ROBOCOPY build/nuget/lib/net45 nuget/lib/net45 edge*.dll /NFL /NDL /NJH /NJS /nc /ns /np
 
 rem nuget pack
 exit /b 0

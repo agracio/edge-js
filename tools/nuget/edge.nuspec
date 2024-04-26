@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>EdgeJs</id>
-    <version>20.12.2</version>
+    <version>20.12.3</version>
     <authors>Tomasz Janczuk</authors>
     <license type="expression">MIT</license>
     <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
@@ -15,7 +15,8 @@
     <tags>node.js .net edge edge.js clr coreclr interop javascript edge-js edgejs</tags>
     <readme>README.md</readme>
     <dependencies>
-      <group targetFramework=".NETFramework4.6.2"></group>
-    </dependencies>
+      <group targetFramework="net45"></group>
+      <group targetFramework="net462"></group>
+   </dependencies>
   </metadata>
 </package>
