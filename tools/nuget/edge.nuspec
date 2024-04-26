@@ -2,16 +2,20 @@
 <package >
   <metadata>
     <id>EdgeJs</id>
-    <version>11.15.0</version>
-    <authors>agracio</authors>
-    <owners>agracio</owners>
-    <licenseUrl>https://raw.githubusercontent.com/agracio/edge-js/master/LICENSE</licenseUrl>
+    <version>20.12.2</version>
+    <authors>Tomasz Janczuk</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
     <projectUrl>https://github.com/agracio/edge-js</projectUrl>
+    <repository type="git" url="https://github.com/agracio/edge-js.git"/>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <title>Run .NET and Node.js code in-process on Windows, macOS, and Linux</title>
-    <summary>Run .NET and Node.js code in-process on Windows, macOS, and Linux</summary>
-    <description>With Edge.js you can script Node.js in a .NET application. Edge.js allows you to run Node.js and .NET code in one process. You can call Node.js functions from .NET and .NET functions from Node.js. Edge.js takes care of marshalling data between CLR and V8. Edge.js also reconciles threading models of single threaded V8 and multi-threaded CLR. Edge.js ensures correct lifetime of objects on V8 and CLR heaps. This Edge.js NuGet package supports scripting Node.js v8.9.3.</description>
+    <title>Run .NET and Node.js code in one process on Windows, macOS, and Linux</title>
+    <description>Edge.js allows you to run Node.js and .NET code in one process. You can call Node.js functions from .NET and .NET functions from Node.js.</description>
     <copyright>Copyright 2017 Tomasz Janczuk</copyright>
-    <tags>node.js node .net edge edge.js v8 clr coreclr mono interop javascript</tags>
+    <tags>node.js .net edge edge.js clr coreclr interop javascript edge-js edgejs</tags>
+    <readme>README.md</readme>
+    <dependencies>
+      <group targetFramework=".NETFramework4.6.2"></group>
+    </dependencies>
   </metadata>
 </package>

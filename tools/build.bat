@@ -1,8 +1,8 @@
 @echo off
 set SELF=%~dp0
 if "%1" equ "" (
-    echo Usage: build.bat debug^|release "{version} {version}" ...
-    echo e.g. build.bat release "0.8.22 0.10.0"
+    echo Usage: build.bat debug^|release "{version}"
+    echo e.g. build.bat release "20.12.2"
     exit /b -1
 )
 

@@ -28,22 +28,6 @@
 ### NuGet package is published as [EdgeJs](https://www.nuget.org/packages/EdgeJs)
 ----
 
-### Usage
-```bash
-npm install edge-js
-```
-
-```js
-
-var edge = require('edge-js');
-
-var helloWorld = edge.func(function () {/*
-    async (input) => {
-        return ".NET Welcomes " + input.ToString();
-    }
-*/});
-```
-
 ## Migration to .NET 6 :exclamation: 
 
 Edge.Js C# code has been migrated to .NET 6.  
@@ -106,8 +90,8 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 
 | Framework   | Platform      | NPM Package  | Language code | Documentation |
 | ----------- | ------------  | ------------ |-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-py`    | `py`| [Script Python in a Node.js](https://github.com/agracio/edge-py) |
-| CoreCLR     | Any?          | `edge-py`    | `py`| [Script Python in a Node.js](https://github.com/agracio/edge-py) |
+| .NET 4.5    | Windows       | `edge-py`    | `py`| <a href="https://github.com/agracio/edge-py" target="_blank">Script Python in a Node.js</a> :link: |
+| CoreCLR     | Any?          | `edge-py`    | `py`| <a href="https://github.com/agracio/edge-py" target="_blank">Script Python in a Node.js</a> :link: |
 
 ### PowerShell scripting
 
@@ -122,8 +106,8 @@ Provides simple access to MS SQL without the need to write separate C# code.
 
 | Framework     | Platform      | NPM Package | Language code | Documentation |
 | ------------- | ------------  | ----------- |-------------- | ------------- |
-| .NET 4.5      | Windows       | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) |
-| .NET Standard | Any           | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) |
+| .NET 4.5      | Windows       | `edge-sql`  | `sql`| <a href="https://github.com/agracio/edge-sql" target="_blank">Script T-SQL in Node.js</a> :link: |
+| .NET Standard | Any           | `edge-sql`  | `sql`| <a href="https://github.com/agracio/edge-sql" target="_blank">Script T-SQL in Node.js</a> :link: |
 
 
 Original Edge.js readme

@@ -17,6 +17,7 @@ namespace EdgeJs
         static Func<object, Task<object>> compileFunc;
         static ManualResetEvent waitHandle = new ManualResetEvent(false);
         private static string edgeDirectory;
+        private static List<Func<object, Task<object>>> compiledFuncs = new List<Func<object, Task<object>>>();
 
         static Edge()
         {
@@ -70,11 +71,23 @@ namespace EdgeJs
 
             return Task<object>.FromResult((object)null);
         }
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public Task<object> IsInitializedInternal(object input)
+		{
+			return Task<object>.FromResult((object)(initialized ? "1" : "0"));
+		}
+		public static void Uninitialize()
+		{
+			lock (syncRoot)
+			{
+				initialized = false;
+			}
+		}
 
-        [DllImport("node.dll", EntryPoint = "?Start@node@@YAHHQAPAD@Z", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("libnode.dll", EntryPoint = "?Start@node@@YAHHQAPAD@Z", CallingConvention = CallingConvention.Cdecl)]
         static extern int NodeStartx86(int argc, string[] argv);
 
-        [DllImport("node.dll", EntryPoint = "?Start@node@@YAHHQEAPEAD@Z", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("libnode.dll", EntryPoint = "?Start@node@@YAHHQEAPEAD@Z", CallingConvention = CallingConvention.Cdecl)]
         static extern int NodeStartx64(int argc, string[] argv);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
@@ -94,12 +107,12 @@ namespace EdgeJs
                         Func<int, string[], int> nodeStart;
                         if (IntPtr.Size == 4)
                         {
-                            LoadLibrary(AssemblyDirectory + @"\edge\x86\node.dll");
+                            LoadLibrary(AssemblyDirectory + @"\edge\x86\libnode.dll");
                             nodeStart = NodeStartx86;
                         }
                         else if (IntPtr.Size == 8)
                         {
-                            LoadLibrary(AssemblyDirectory + @"\edge\x64\node.dll");
+                            LoadLibrary(AssemblyDirectory + @"\edge\x64\libnode.dll");
                             nodeStart = NodeStartx64;
                         }
                         else
@@ -130,7 +143,6 @@ namespace EdgeJs
                             
                             argv.Add(string.Format("-EdgeJs:{0}", Path.Combine(edgeDirectory, "EdgeJs.dll")));
                             nodeStart(argv.Count, argv.ToArray());
-                            waitHandle.Set();
                         }, 1048576); // Force typical Windows stack size because less is liable to break
 
                         v8Thread.IsBackground = true;
@@ -152,7 +164,44 @@ namespace EdgeJs
 
             var task = compileFunc(code);
             task.Wait();
-            return (Func<object, Task<object>>)task.Result;
+            // aborted?
+            if (true.Equals(task.Result))
+                return null;
+            // add compiled func to list
+            var f = (Func<object, Task<object>>)task.Result;
+            lock(syncRoot)
+            {
+                compiledFuncs.Add(f);
+            }
+            return f;
+        }
+
+        public static void Close()
+        {
+            if (compileFunc != null)
+            {
+                lock (syncRoot)
+                {
+                    // dispose all generated funcs
+                    foreach (var f in compiledFuncs)
+                        DisposeFunc(f);
+                    compiledFuncs.Clear();
+
+                    // dispose main compile func
+                    Edge.Func("ABORT");
+                    DisposeFunc(compileFunc);
+                    compileFunc = null;
+                }
+            }
+        }
+
+        private static void DisposeFunc(Func<object, Task<object>> func)
+        {
+            if (func == null)
+                return;
+            var d = func.Target as IDisposable;
+            if (d != null)
+                d.Dispose();
         }
     }
 }
