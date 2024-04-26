@@ -55,10 +55,6 @@ if not exist "%SELF%\build\node-%1" (
      echo "%SELF%\build\node-%1" already exists.
 )
 
-rem git clone --depth 1 --branch 20.12.2 https://github.com/nodejs/node.git node-20.12.2
-
-
-
 exit /b 0
 
 REM ===========================================================
