@@ -27,9 +27,9 @@ install:
 
 test_script:
 
-  - cmd: node tools/test_ci.js
-  - cmd: SET EDGE_USE_CORECLR=1 & node tools/test_ci.js
-  - sh: EDGE_USE_CORECLR=1 node tools/test_ci.js
+  - cmd: node tools/test.js CI
+  - cmd: SET EDGE_USE_CORECLR=1 & node tools/test.js CI
+  - sh: EDGE_USE_CORECLR=1 node tools/test.js CI
 
 after_test:
   - ps: |
@@ -60,5 +60,6 @@ skip_commits:
     - '*.nuspec'
     - 'tools/nuget/*'
     - '.npmignore'
+    - 'test/config.json'
 
 build: off

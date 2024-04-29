@@ -1,13 +1,9 @@
 {
-    "reporterEnabled": "mochawesome, mocha-junit-reporter",
+    "reporterEnabled": "mochawesome",
     "mochawesomeReporterOptions": {
-        "reportDir": "mochawesome-report",
+        "reportDir": "./test/mochawesome-report",
         "json": true,
         "html": false,
-        "reportFilename": "mochawesome-{id}.html"
-
-    },
-    "mochaJunitReporterReporterOptions": {
-	"mochaFile": "test-results-{id}.xml"
+        "reportFilename": "mochawesome-{id}.json"
     }
 }

@@ -85,3 +85,6 @@ test-results*.*
 /lib/native/win32/x64/*/vccorlib140.dll
 /lib/native/win32/x64/*/vcruntime140.dll
 
+test/mochawesome-report
+mochawesome-report
+

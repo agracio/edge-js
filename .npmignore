@@ -94,3 +94,6 @@ tools/nuget
 *.nupkg
 appveyor.*
 .github
+tools/coverage.js
+tools/test*.js
+tools/download*.js

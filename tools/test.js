@@ -6,6 +6,9 @@ var output = path.resolve(testDir, 'Edge.Tests.dll');
 var buildParameters = ['-target:library', '/debug', '-out:' + output, input];
 var mocha = path.resolve(__dirname, '../node_modules/mocha/bin/mocha');
 var fs = require('fs');
+const merge = require('junit-report-merger');
+const mochawesomeMerge = require('mochawesome-merge');
+const marge = require('mochawesome-report-generator')
 
 if (!process.env.EDGE_USE_CORECLR) {
 	if (process.platform !== 'win32') {
@@ -46,18 +49,100 @@ function run(cmd, args, onClose){
     });
 
     command.on('close', function(code){
-        console.log(result);
         onClose(code, '');
 	});
 }
 
 function runOnSuccess(code, signal) {
 	if (code === 0) {
+
 		process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'net6.0');
-		spawn('node', [mocha, testDir, '-R', 'spec', '-t', '10000', '-n', 'expose-gc'], { 
+
+        if(!process.argv[2])
+        {
+            spawn('node', [mocha, testDir, '-R', 'spec', '-t', '10000', '-n', 'expose-gc'], { 
+                stdio: 'inherit' 
+            }).on('error', function(err) {
+                console.log(err); 
+            });
+            return;
+        }
+
+        if(process.argv[2] === 'all')
+        {
+            process.platform === 'win32' && !process.env.EDGE_USE_CORECLR ? delete process.env.EDGE_USE_CORECLR : process.env.EDGE_USE_CORECLR = 1
+        }
+
+        var framework = process.env.EDGE_USE_CORECLR ? 'coreclr' :'net';
+        var config = process.argv[2] === 'CI' ? 'configCI.json' : 'config.json'
+
+		spawn('node', 
+        [   mocha, 
+            testDir, 
+            '--reporter',  'mocha-multi-reporters',  
+            '--reporter-options', `configFile=./test/${config},cmrOutput=mocha-junit-reporter+mochaFile+${framework}:mochawesome+reportFilename+${framework}`,
+            '-t', '10000',
+            '-n', 'expose-gc'
+        ], { 
 			stdio: 'inherit' 
+		}).on('close', function(code) {
+            if(process.argv[2] === 'all')
+            {
+                if(!process.env.EDGE_USE_CORECLR){
+                    process.env.EDGE_USE_CORECLR = 1;
+                    runOnSuccess(code, signal);
+                }
+                else{
+                    mergeFiles();
+                }
+            }
+            else{
+                mergeFiles();
+            }
 		}).on('error', function(err) {
 			console.log(err); 
-		});
+		});;
 	}
+}
+
+function mergeFiles(){
+
+    if(process.argv[2] === 'CI')
+    {
+        let source = [];
+        if(fs.existsSync(`./test-results-coreclr.xml`)){
+            source.push(`./test-results-coreclr.xml`);
+        }
+        if(fs.existsSync(`./test-results-net.xml`)){
+            source.push(`./test-results-net.xml`);
+        }
+
+        merge.mergeFiles(`./test-results.xml`, source, function(err) {
+            if(err)
+            {
+                console.log(err)
+            }
+        })
+    }
+
+    const options = {
+        files: [
+            process.argv[2] === 'CI' ? './mochawesome-report/*.json': './test/mochawesome-report/*.json',
+        ],
+    }
+
+    const margeOptions = {
+        reportFilename: 'mochawesome.html',
+        reportDir: './test/mochawesome-report'
+    }
+      
+    mochawesomeMerge.merge(options).then(report => {
+        var file = process.argv[2] === 'all' ? './test/mochawesome-report/mochawesome.json' : 'mochawesome.json';
+        fs.writeFileSync(file, JSON.stringify(report, null, 2))
+        console.log(`Mochawesome json created: ${file}`);
+        if(process.argv[2] === 'all')
+        {
+            marge.create(report, margeOptions).then(() => console.log(`Mochawesome report created: ${margeOptions.reportDir}/${margeOptions.reportFilename}`))
+        }
+    })
 }
