@@ -92,6 +92,19 @@ https://github.com/agracio/edge-js-quick-start
 Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core. 
 Mono tests are excluded from CI.
 
+## MacOS
+
+`edge-js` will fail to build on MacOS if Visual Studio for Mac is installed.
+VS installs incomplete Mono runtimes that `edge-js` fails to access during `nmp install`. 
+Removing VS does not remove Mono fully and leaves behind an incomplete Mono install.
+To remove Mono from macOS use this script
+
+```bash
+sudo rm -rf /Library/Frameworks/Mono.framework
+sudo pkgutil --forget com.xamarin.mono-MDK.pkg
+sudo rm /etc/paths.d/mono-commands
+```
+
 ## Node.js application packaging
 
 When packaging your application using Webpack make sure that `edge-js` is specified as external module.
@@ -146,10 +159,11 @@ Provides simple access to MS SQL without the need to write separate C# code.
 #### Full documentation [Scripting Node.Js from CLR](#how-to-integrate-nodejs-code-into-clr-code)
 
 #### Scripting CLR from Node.js sample app https://github.com/agracio/edge-js-quick-start
+----
 
 ### Scripting CLR from Node.js examples
 
-**Inline C# code**  
+### Inline C# code 
 
 #### ES5
 
@@ -185,14 +199,14 @@ helloWorld('JavaScript', function (error, result) {
 });
 ```
 
-**Passing parameters**
+### Passing parameters
 
 ```js
 var edge = require('edge-js');
 
 var helloWorld = edge.func(function () {/*
     async (dynamic input) => { 
-        return "Welcome " + input.name + ' ' + input.surname; 
+        return "Welcome " + input.name + " " + input.surname; 
     }
 */});
 
@@ -202,10 +216,10 @@ helloWorld({name: 'John', surname: 'Smith'}, function (error, result) {
 });
 ```
 
-**Using C# class**
+### Using C# class
 
 ```js
-var GetPerson = edge.func({
+var getPerson = edge.func({
     source: function () {/* 
         using System.Threading.Tasks;
         using System;
@@ -235,7 +249,7 @@ var GetPerson = edge.func({
     */}
 });
 
-GetPerson({name: 'John Smith', email: 'john.smith@myemailprovider', age: 35}, function(error, result) {
+getPerson({name: 'John Smith', email: 'john.smith@myemailprovider', age: 35}, function(error, result) {
     if (error) throw error;
     console.log(result);
     console.log();
@@ -249,12 +263,13 @@ public class Startup
 {
     public async Task<object> Invoke(dynamic input)
     {
-        return new Person(input.name, input.email, input.age);
+        // code
+        // return results
     }
 }
 ```
 
-**Using compiled .dll**
+### Using compiled assembly
 
 ```cs
 // People.cs
@@ -302,7 +317,7 @@ var edge = require('edge-js');
 
 var getPerson = edge.func({
     assemblyFile: myDll, // absolute path to .dll
-    typeName: EdgeJsMethods.Methods,
+    typeName: 'EdgeJsMethods.Methods',
     methodName: 'GetPerson'
 });
 
@@ -315,9 +330,39 @@ getPerson({name: 'John Smith', email: 'john.smith@myemailprovider', age: 35}, fu
 
 ### :exclamation: `edge.func()` only supports `public async Task<object> MyMethod(dynamic input)` C# methods.
 
+### Executing synchronously without function callback
+
+If your C# implementation will complete synchronously, you can call this function as any synchronous JavaScript function as follows:
+
+```js
+var edge = require('edge-js');
+
+var helloWorld = edge.func(function () {/*
+    async (input) => { 
+        return ".NET Welcomes " + input.ToString(); 
+    }
+*/});
+
+var result = helloWorld('JavaScript', true);
+```
+
+Calling C# asynchronous implementation as synchronous JavaScript function will fail 
+
+```js
+var edge = require('edge-js');
+
+var helloWorld = edge.func(function () {/*
+    async (input) => { 
+        return await Task.Run(() => ".NET Welcomes " + input.ToString());
+    }
+*/});
+
+// sync call will throw exception
+var result = helloWorld('JavaScript', true);
+```
+
 
 ----  
-
 
 <br/>Edge.js readme
 ==============================
@@ -599,7 +644,7 @@ var result = myFunction('Some input', true);
 
 The `true` parameter instead of a callback indicates that Node.js expects the C# implementation to complete synchronously. If the CLR function implementation does not complete synchronously, the call above will result in an exception. 
 
-One representation of CLR code that Edge.js accepts is C# source code. You can embed C# literal representing a .NET async lambda expression implementing the `Func<object,Task<object>>` delegate directly inside Node.js code:
+One representation of CLR code that Edge.js accepts is C# source code. You can embed C# literal representing a .NET async lambda expression implementing the `Func<object, Task<object>>` delegate directly inside Node.js code:
 
 ```javascript
 var add7 = edge.func('async (input) => { return (int)input + 7; }');
