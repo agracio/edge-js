@@ -55,5 +55,10 @@ skip_commits:
     - 'LICENSE*'
     - '.idea/**'
     - '.vscode/**'
+    - '.gitignore'
+    - '*.bat'
+    - '*.nuspec'
+    - 'tools/nuget/*'
+    - '.npmignore'
 
 build: off
