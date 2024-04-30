@@ -96,7 +96,7 @@ v8::Local<v8::Value> ClrFuncInvokeContext::CompleteOnV8Thread()
         default:
             argv[0] = Nan::New<v8::String>("The operation reported completion in an unexpected state.").ToLocalChecked();
         break;
-        case TaskStatusFaulted:
+        case (System::Threading::Tasks::TaskStatus)TaskStatusFaulted:
             if (this->Task->Exception != nullptr) {
                 argv[0] = ClrFunc::MarshalCLRExceptionToV8(this->Task->Exception);
             }
@@ -104,10 +104,10 @@ v8::Local<v8::Value> ClrFuncInvokeContext::CompleteOnV8Thread()
                 argv[0] = Nan::New<v8::String>("The operation has failed with an undetermined error.").ToLocalChecked();
             }
         break;
-        case TaskStatusCanceled:
+        case (System::Threading::Tasks::TaskStatus)TaskStatusCanceled:
             argv[0] = Nan::New<v8::String>("The operation was cancelled.").ToLocalChecked();
         break;
-        case TaskStatusRanToCompletion:
+        case (System::Threading::Tasks::TaskStatus)TaskStatusRanToCompletion:
             argc = 2;
             try {
                 argv[1] = ClrFunc::MarshalCLRToV8(this->Task->Result);
