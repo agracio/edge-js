@@ -23,7 +23,7 @@
         "<!(node -e \"require('nan')\")"
       ],
       'cflags+': [
-        '-DHAVE_CORECLR -D_NO_ASYNCRTIMP -std=c++14 -Wno-reorder -Wno-sign-compare -Wno-mismatched-tags -Wno-missing-braces -Wno-redundant-move -Wno-deprecated-declarations -Wno-unused-value -Wno-deprecated-copy -Wno-cast-function-type -Wno-class-memaccess -Wno-unused-but-set-variable -Wno-unused-result -Wno-unused-private-field -Wno-unused-variable'
+        '-DHAVE_CORECLR -D_NO_ASYNCRTIMP -std=c++20 -Wno-reorder -Wno-sign-compare -Wno-mismatched-tags -Wno-missing-braces -Wno-redundant-move -Wno-deprecated-declarations -Wno-unused-value -Wno-deprecated-copy -Wno-cast-function-type -Wno-class-memaccess -Wno-unused-but-set-variable -Wno-unused-result -Wno-unused-private-field -Wno-unused-variable'
       ],
       'cflags!': [
         '-fno-exceptions',
@@ -59,7 +59,7 @@
         ],
         'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
         'GCC_ENABLE_CPP_RTTI': 'YES',
-        'CLANG_CXX_LANGUAGE_STANDARD': 'c++17',
+        'CLANG_CXX_LANGUAGE_STANDARD': 'c++20',
         'CLANG_CXX_LIBRARY': 'libc++',
         'MACOSX_DEPLOYMENT_TARGET': '12.0'
       },
@@ -123,7 +123,7 @@
                 '/EHsc',
                 '/D_NO_ASYNCRTIMP',
                 '/D_HAS_EXCEPTIONS',
-                "-std:c++17"
+                "-std:c++20"
               ]
             },
             'VCLinkerTool': {
@@ -131,6 +131,9 @@
                 '/ignore:4248',
                 'shlwapi.lib'
               ]
+            },
+            "ClCompile": {
+              "LanguageStandard": "stdcpp20"
             }
           }
         },
@@ -156,7 +159,10 @@
                 '/ignore:4248',
                 'shlwapi.lib'
               ]
-            }
+            },
+             "ClCompile": {
+               "LanguageStandard": "stdcpp20"
+             }
           }
         }
       }
@@ -168,7 +174,7 @@
         "<!(node -e \"require('nan')\")"
       ],
       'cflags+': [
-        '-DHAVE_NATIVECLR -std=c++17'
+        '-DHAVE_NATIVECLR -std=c++20'
       ],
       'xcode_settings': {
         'OTHER_CFLAGS': [
@@ -213,15 +219,35 @@
                     'src/common/callbackhelper.cpp',
                     'src/common/edge.cpp'
                   ],
-                  'include_dirs': [
-                    '<!@(pkg-config mono-2 --cflags-only-I | sed s/-I//g)',
-                    '<!@(pkg-config glib-2.0 --cflags-only-I | sed s/-I//g)',
+                  'conditions': 
+                  [
+                    [
+                      '"<!((pkg-config mono-2 --libs 2>/dev/null) || echo not_found)"!="not_found"',
+                      {
+                            'include_dirs': [
+                               '<!@(pkg-config mono-2 --cflags-only-I | sed s/-I//g)',
+                               '<!@(pkg-config glib-2.0 --cflags-only-I | sed s/-I//g)',
+                            ],
+                            'link_settings': {
+                              'libraries': [
+                                '<!@(pkg-config mono-2 --libs)'
+                              ]
+                            }
+                      },
+                      '"<!((pkg-config mono-2 --libs 2>/dev/null) || echo not_found)"=="not_found"',
+                      {
+                            'include_dirs': [
+                              '<!@(<(DFLT_PKG_CONFIG_PATH) pkg-config mono-2 --cflags-only-I | sed s/-I//g)',
+                              '<!@(pkg-config glib-2.0 --cflags-only-I | sed s/-I//g)',
+                            ],
+                            'link_settings': {
+                              'libraries': [
+                                '<!@(<(DFLT_PKG_CONFIG_PATH) pkg-config mono-2 --libs)'
+                              ]
+                            }
+                      }
+                    ]
                   ],
-                  'link_settings': {
-                    'libraries': [
-                      '<!@(pkg-config mono-2 --libs)'
-                    ],
-                  }
                 },
                 {
                   'type': 'none'
@@ -245,13 +271,16 @@
                 '/clr',
                 '/wd4506',
                 '/DHAVE_NATIVECLR',
-                "-std:c++17"
+                "-std:c++20"
               ]
             },
             'VCLinkerTool': {
               'AdditionalOptions': [
                 '/ignore:4248'
               ]
+            },
+            "ClCompile": {
+              "LanguageStandard": "stdcpp20"
             }
           }
         },
@@ -274,7 +303,10 @@
               'AdditionalOptions': [
                 '/ignore:4248'
               ]
-            }
+            },
+             "ClCompile": {
+               "LanguageStandard": "stdcpp20"
+             }
           }
         }
       }
