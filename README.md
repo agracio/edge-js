@@ -37,14 +37,6 @@ The CLR code can be pre-compiled or specified as C#, F#, Python (IronPython), or
 ### NuGet package [EdgeJs](https://www.nuget.org/packages/EdgeJs)
 ----
 
-## Migration to .NET 6 :exclamation: 
-
-Edge.Js C# code has been migrated to .NET 6.  
-If your project is referencing `EdgeJs.dll` file locations have changed.
-
-```bash
-node_modules/edge-js/lib/bootstrap/bin/Release/net6.0/EdgeJs.dll
-```
 
 ## Electron
 
@@ -92,18 +84,6 @@ https://github.com/agracio/edge-js-quick-start
 Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core. 
 Mono tests are excluded from CI.
 
-## MacOS
-
-`edge-js` will fail to build on MacOS if Visual Studio for Mac is installed.
-VS installs incomplete Mono runtimes that `edge-js` fails to access during `nmp install`. 
-Removing VS does not remove Mono fully and leaves behind an incomplete Mono install.
-To remove Mono from macOS use this script
-
-```bash
-sudo rm -rf /Library/Frameworks/Mono.framework
-sudo pkgutil --forget com.xamarin.mono-MDK.pkg
-sudo rm /etc/paths.d/mono-commands
-```
 
 ## Node.js application packaging
 
@@ -316,7 +296,7 @@ namespace EdgeJsMethods
 var edge = require('edge-js');
 
 var getPerson = edge.func({
-    assemblyFile: myDll, // absolute path to .dll
+    assemblyFile: myDll, // path to .dll
     typeName: 'EdgeJsMethods.Methods',
     methodName: 'GetPerson'
 });
@@ -346,7 +326,7 @@ var helloWorld = edge.func(function () {/*
 var result = helloWorld('JavaScript', true);
 ```
 
-Calling C# asynchronous implementation as synchronous JavaScript function will fail 
+Calling C# asynchronous implementation as a synchronous JavaScript function will fail 
 
 ```js
 var edge = require('edge-js');
