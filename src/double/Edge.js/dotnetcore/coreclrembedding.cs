@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyModel;
-using DotNetRuntimeEnvironment = Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment;
 using Semver;
 
 [StructLayout(LayoutKind.Sequential)]
@@ -252,7 +251,7 @@ public class CoreCLREmbedding
 
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing runtime dependency {1} {0}", runtimeLibrary.Name, runtimeLibrary.Type);
 
-                List<string> assets = runtimeLibrary.RuntimeAssemblyGroups.GetRuntimeAssets(DotNetRuntimeEnvironment.GetRuntimeIdentifier()).ToList();
+                List<string> assets = runtimeLibrary.RuntimeAssemblyGroups.GetRuntimeAssets(RuntimeInformation.RuntimeIdentifier).ToList();
 
                 if (!assets.Any())
                 {
@@ -355,12 +354,12 @@ public class CoreCLREmbedding
                          CompileAssemblies[libraryName] = supplementaryRuntimeLibraries[libraryName];
                     }
                 }
-
-                List<string> nativeAssemblies = runtimeLibrary.GetRuntimeNativeAssets(dependencyContext, DotNetRuntimeEnvironment.GetRuntimeIdentifier()).ToList();
+                
+                List<string> nativeAssemblies = runtimeLibrary.GetRuntimeNativeAssets(dependencyContext, RuntimeInformation.RuntimeIdentifier).ToList();
 
                 if (nativeAssemblies.Any())
                 {
-                    DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Adding native dependencies for {0}", DotNetRuntimeEnvironment.GetRuntimeIdentifier());
+                    DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Adding native dependencies for {0}", RuntimeInformation.RuntimeIdentifier);
 
                     foreach (string nativeAssembly in nativeAssemblies)
                     {
@@ -667,7 +666,8 @@ public class CoreCLREmbedding
 
             MethodInfo compileMethod;
             Type compilerType;
-
+            DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Compiler loading {0} assembly", compiler);
+            
             if (!Compilers.ContainsKey(compiler))
             {
                 if (DependencyContext.Default ==null || !DependencyContext.Default.RuntimeLibraries.Any(l => l.Name == compiler))
@@ -681,8 +681,16 @@ public class CoreCLREmbedding
 
                     Resolver.AddCompiler(options["bootstrapDependencyManifest"].ToString());
                 }
-                
-                Assembly compilerAssembly = Assembly.Load(new AssemblyName(compiler));
+
+                Assembly compilerAssembly;
+                if (File.Exists(compiler))
+                {
+                    compilerAssembly = Assembly.LoadFrom(compiler);
+                }
+                else
+                {
+                    compilerAssembly = Assembly.Load(new AssemblyName(compiler));
+                }
                 DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Compiler assembly {0} loaded successfully", compiler);
 
                 compilerType = compilerAssembly.GetType("EdgeCompiler");
@@ -718,11 +726,27 @@ public class CoreCLREmbedding
             object compilerInstance = Activator.CreateInstance(compilerType);
 
             DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Starting compilation");
-            Func<object, Task<object>> compiledFunction = (Func<object, Task<object>>)compileMethod.Invoke(compilerInstance, new object[]
+            var parameters =  compileMethod.GetParameters();
+
+            Func<object, Task<object>> compiledFunction;
+            // edge-cs compiler expects 2 parameters while most other compilers only expect 'options'
+            // not ideal if there are more compilers that need different arguments, should be revisited in the future
+            if (parameters.Length == 1)
             {
-                options,
-                Resolver.CompileAssemblies
-            });
+                compiledFunction = (Func<object, Task<object>>)compileMethod.Invoke(compilerInstance, new object[]
+                {
+                    options
+                });
+            }
+            else
+            {
+                compiledFunction = (Func<object, Task<object>>)compileMethod.Invoke(compilerInstance, new object[]
+                {
+                    options,
+                    Resolver.CompileAssemblies
+                });
+                
+            }
             DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Compilation complete");
 
             GCHandle handle = GCHandle.Alloc(compiledFunction);
@@ -792,8 +816,7 @@ public class CoreCLREmbedding
                 {
                     DebugMessage("CoreCLREmbedding::CallFunc (CLR) - .NET method ran synchronously, marshalling data for V8");
 
-                    V8Type taskResultType;
-                    IntPtr marshalData = MarshalCLRToV8(functionTask.Result, out taskResultType);
+                    IntPtr marshalData = MarshalCLRToV8(functionTask.Result, out var taskResultType);
 
                     DebugMessage("CoreCLREmbedding::CallFunc (CLR) - Method return data is of type {0}", taskResultType.ToString("G"));
 

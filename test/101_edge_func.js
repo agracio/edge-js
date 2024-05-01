@@ -41,7 +41,7 @@ describe('edge.func', function () {
 	it(prefix + ' fails with missing assemblyFile or source', function () {
 		assert.throws(
 			function () { edge.func({}); },
-			/Provide DLL or source file name or .NET script literal as a string parmeter, or specify an options object/
+			/Provide DLL or source file name or .NET script literal as a string parameter, or specify an options object/
 		);
 	});
 
@@ -59,17 +59,21 @@ describe('edge.func', function () {
 		);
 	});
 
-	if (!process.env.EDGE_USE_CORECLR) {
-		it(prefix + ' succeeds with assemblyFile as string', function () {
-			var func = edge.func(edgeTestDll);
-			assert.equal(typeof func, 'function');
-		});
+	it(prefix + ' succeeds with assemblyFile as string', function () {
+		if (process.env.EDGE_USE_CORECLR) {
+			this.skip();
+		}
+		var func = edge.func(edgeTestDll);
+		assert.equal(typeof func, 'function');
+	});
 
-		it(prefix + ' succeeds with assemblyFile as options property', function () {
-			var func = edge.func({ assemblyFile: edgeTestDll });
-			assert.equal(typeof func, 'function');
-		});
-	}
+	it(prefix + ' succeeds with assemblyFile as options property', function () {
+		if (process.env.EDGE_USE_CORECLR) {
+			this.skip();
+		}
+		var func = edge.func({ assemblyFile: edgeTestDll });
+		assert.equal(typeof func, 'function');
+	});
 
 	it(prefix + ' succeeds with assemblyFile and type name', function () {
 		var func = edge.func({

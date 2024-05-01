@@ -1,9 +1,11 @@
 {
   "name": "edge-js",
   "author": {
-    "name": "agracio"
+    "name": "Tomasz Janczuk <tomasz@janczuk.org>",
+    "url": "http://tomasz.janczuk.org",
+    "twitter": "tjanczuk"
   },
-  "version": "21.7.1",
+  "version": "21.7.4",
   "description": "Edge.js: run .NET and Node.js in-process on Windows, Mac OS, and Linux",
   "tags": [
     "owin",
@@ -32,19 +34,23 @@
   "main": "./lib/edge.js",
   "types": "edge-js.d.ts",
   "engines": {
-    "npm" : ">=8.0.0",
+    "npm": ">=8.0.0",
     "node": ">=16.0.0"
   },
   "license": "MIT",
   "dependencies": {
-    "edge-cs": "1.2.1",
+    "edge-cs": "npm:@agracio/edge-cs@^1.3.5",
     "nan": "^2.19.0"
   },
   "devDependencies": {
     "follow-redirects": "^1.15.6",
     "junit-report-merger": "6.0.3",
-    "mocha": "10.3.0",
+    "mocha": "10.4.0",
     "mocha-junit-reporter": "^2.2.1",
+    "mocha-multi-reporters": "^1.5.1",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^4.3.0",
+    "mochawesome-report-generator": "^6.2.0",
     "xunit-viewer": "^10.6.1"
   },
   "homepage": "https://github.com/agracio/edge-js",

@@ -111,7 +111,7 @@ describe('edge-cs', function () {
         assert.throws(
             function () { edge.func('async_foo (input) => { return "Hello, " + input.ToString(); }'); },
             function (error) {
-                if ((error instanceof Error) && error.message.match(/Invalid expression term '=>'|Unexpected symbol `=>'|The name 'async_foo' does not exist in the current context/)) {
+                if ((error instanceof Error) && error.message.match(/Invalid expression term '=>'|Unexpected symbol `=>'|The name 'async_foo' does not exist in the current context|The type or namespace name 'async_foo' could not be found/)) {
                     return true;
                 }
                 return false;
@@ -501,33 +501,36 @@ describe('edge-cs', function () {
         'Unexpected result');
     });
 
-    if (process.env.EDGE_USE_CORECLR) {
-        it.skip(prefix + ' succeeds with dll from nuget package', function (done) {
-            var func = edge.func(function () {/*
-            #r "Newtonsoft.Json.dll"
-            using Newtonsoft.Json;
-            using System.Threading.Tasks;
-            public class MyObject
-            {
-                public string Message { get; set; }
-            }
-            public class Startup
-            {
-                public async Task<object> Invoke(object input)
-                {
-                    return JsonConvert.DeserializeObject<MyObject>("{ 'message': 'Hello from .NET' }");
-                }
-            }
-        */
-            });
 
-            func("JavaScript", function (error, result) {
-                assert.ifError(error);
-                assert.equal(result.Message, 'Hello from .NET');
-                done();
-            });
+    it(prefix + ' succeeds with dll from nuget package', function (done) {
+        if(!process.env.EDGE_USE_CORECLR){
+            this.skip();
+        }
+        var func = edge.func(function () {/*
+        #r "Newtonsoft.Json"
+        using Newtonsoft.Json;
+        using System.Threading.Tasks;
+        public class MyObject
+        {
+            public string Message { get; set; }
+        }
+        public class Startup
+        {
+            public async Task<object> Invoke(object input)
+            {
+                return JsonConvert.DeserializeObject<MyObject>("{ 'message': 'Hello from .NET' }");
+            }
+        }
+    */
         });
-    }
+
+        func("JavaScript", function (error, result) {
+            assert.ifError(error);
+            assert.equal(result.Message, 'Hello from .NET');
+            done();
+        });
+    });
+
 
     it(prefix + ' fails when dynamically loading an assembly that doesn\'t exist', function (done) {
         assert.throws(function() {

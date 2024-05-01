@@ -68,9 +68,7 @@ package-lock.json
 
 tools/nuget/content
 tools/nuget/lib
-tools/nuget/*.nupkg
 tools/nuget/*.zip
-tools/*.nupkg
 tools/*.zip
 tools/nuget.exe
 
@@ -85,6 +83,17 @@ test-results*.*
 /lib/native/win32/x64/*/vccorlib140.dll
 /lib/native/win32/x64/*/vcruntime140.dll
 
-test/mochawesome-report
-mochawesome-report
-
+test
+stress
+samples
+performance
+*.bat
+tools/*.cs
+tools/*.vbs
+tools/nuget
+*.nupkg
+appveyor.*
+.github
+tools/coverage.js
+tools/test*.js
+tools/download*.js
