@@ -1,0 +1,19 @@
+image:
+  - Visual Studio 2019
+
+environment:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+
+build:
+  - cmd: dotnet restore test/double/double_test/double_test.sln
+  - cmd: dotnet build test/double/double_test/double_test.sln --configuration Release
+
+test:
+  - cmd: nunit3-console test/double/double_test/bin/Release/net462/double_test.dll --result=nunit_edge_double.xml;format=AppVeyor
+
+only_commits:
+  files:
+    - 'test/double'
+
+build: off

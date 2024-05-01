@@ -61,5 +61,8 @@ skip_commits:
     - 'tools/nuget/*'
     - '.npmignore'
     - 'test/config.json'
+    - 'test/config.json'
+    - 'test/double'
+    - 'appveyor_double.yml'
 
 build: off
