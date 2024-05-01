@@ -1,0 +1,21 @@
+image:
+  - Visual Studio 2019
+
+environment:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+build_script:
+  - dotnet restore test/double/double_test/double_test.sln
+  - dotnet build test/double/double_test/double_test.sln --configuration Release
+
+test_script:
+  - nunit3-console test/double/double_test/bin/Release/net462/double_test.dll --result=test-results.xml;format=AppVeyor
+
+after_test:
+  - ps: |
+      Push-AppveyorArtifact (Resolve-Path '.\test-results.xml')
+
+only_commits:
+  files:
+    - 'test/double'
+    - 'appveyor_double.yml'
