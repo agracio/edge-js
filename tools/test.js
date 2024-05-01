@@ -120,10 +120,10 @@ function mergeFiles(){
         }
 
         var dir = runner === 'circleci' ? 'junit/' : '';
-        
+
         if(runner === 'circleci'){
-            if (!fs.existsSync(junit)){
-                fs.mkdirSync(junit);
+            if (!fs.existsSync('junit')){
+                fs.mkdirSync('junit');
             }
         }
 
