@@ -1,5 +1,5 @@
 image:
-  - Visual Studio 2015
+  - Visual Studio 2022
   - Ubuntu2204
   - macos-monterey
 
@@ -65,3 +65,6 @@ skip_commits:
     - 'appveyor_double.yml'
 
 build: off
+
+cache:
+  - node_modules -> package.json

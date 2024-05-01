@@ -10,12 +10,20 @@ const merge = require('junit-report-merger');
 const mochawesomeMerge = require('mochawesome-merge');
 const marge = require('mochawesome-report-generator')
 
+var runner = process.argv[2];
+
+if(process.argv[3] === 'coreclr'){
+    process.env.EDGE_USE_CORECLR = 1
+}
+
 if (!process.env.EDGE_USE_CORECLR) {
 	if (process.platform !== 'win32') {
 		buildParameters = buildParameters.concat(['-sdk:4.5']);
 	}
 
-	run(process.platform === 'win32' ? 'csc' : 'mcs', buildParameters, runOnSuccess);
+    var compiler = runner === 'circleci' || runner === 'CI' ? 'C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe' : 'csc'
+
+	run(process.platform === 'win32' ? compiler : 'mcs', buildParameters, runOnSuccess);
 }
 
 else {
@@ -58,7 +66,7 @@ function runOnSuccess(code, signal) {
 
 		process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'net6.0');
 
-        if(!process.argv[2])
+        if(!runner)
         {
             spawn('node', [mocha, testDir, '-R', 'spec', '-t', '10000', '-n', 'expose-gc'], { 
                 stdio: 'inherit' 
@@ -68,13 +76,13 @@ function runOnSuccess(code, signal) {
             return;
         }
 
-        if(process.argv[2] === 'all')
+        if(runner === 'all')
         {
             process.platform === 'win32' && !process.env.EDGE_USE_CORECLR ? delete process.env.EDGE_USE_CORECLR : process.env.EDGE_USE_CORECLR = 1
         }
 
         var framework = process.env.EDGE_USE_CORECLR ? 'coreclr' :'net';
-        var config = process.argv[2] === 'CI' ? 'configCI.json' : 'config.json'
+        var config = runner === 'CI' || runner === 'circleci' ? 'configCI.json' : 'config.json'
 
 		spawn('node', 
         [   mocha, 
@@ -86,7 +94,7 @@ function runOnSuccess(code, signal) {
         ], { 
 			stdio: 'inherit' 
 		}).on('close', function(code) {
-            if(process.argv[2] === 'all')
+            if(runner === 'all')
             {
                 if(!process.env.EDGE_USE_CORECLR){
                     process.env.EDGE_USE_CORECLR = 1;
@@ -107,7 +115,7 @@ function runOnSuccess(code, signal) {
 
 function mergeFiles(){
 
-    if(process.argv[2] === 'CI')
+    if(runner === 'CI' || runner === 'circleci')
     {
         let source = [];
         if(fs.existsSync(`./test-results-coreclr.xml`)){
@@ -117,7 +125,15 @@ function mergeFiles(){
             source.push(`./test-results-net.xml`);
         }
 
-        merge.mergeFiles(`./test-results.xml`, source, function(err) {
+        var dir = runner === 'circleci' ? 'junit/' : '';
+
+        if(runner === 'circleci'){
+            if (!fs.existsSync('junit')){
+                fs.mkdirSync('junit');
+            }
+        }
+
+        merge.mergeFiles(`./${dir}test-results.xml`, source, function(err) {
             if(err)
             {
                 console.log(err)
@@ -127,7 +143,7 @@ function mergeFiles(){
 
     const options = {
         files: [
-            process.argv[2] === 'CI' ? './mochawesome-report/*.json': './test/mochawesome-report/*.json',
+            runner === 'CI' || runner === 'circleci' ? './mochawesome-report/*.json': './test/mochawesome-report/*.json',
         ],
     }
 
@@ -137,10 +153,10 @@ function mergeFiles(){
     }
       
     mochawesomeMerge.merge(options).then(report => {
-        var file = process.argv[2] === 'all' ? './test/mochawesome-report/mochawesome.json' : 'mochawesome.json';
+        var file = runner === 'all' ? './test/mochawesome-report/mochawesome.json' : 'mochawesome.json';
         fs.writeFileSync(file, JSON.stringify(report, null, 2))
         console.log(`Mochawesome json created: ${file}`);
-        if(process.argv[2] === 'all')
+        if(runner === 'all')
         {
             marge.create(report, margeOptions).then(() => console.log(`Mochawesome report created: ${margeOptions.reportDir}/${margeOptions.reportFilename}`))
         }
