@@ -4,8 +4,7 @@ image:
 environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
-
-build:
+build_script:
   - cmd: dotnet restore test/double/double_test/double_test.sln
   - cmd: dotnet build test/double/double_test/double_test.sln --configuration Release
 
@@ -15,3 +14,5 @@ test:
 only_commits:
   files:
     - 'test/double'
+
+build: off
