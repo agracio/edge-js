@@ -42,10 +42,10 @@ jobs:
     steps:
       - checkout
       #- *InstallDotnet
-      - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install
-
+      # - node/install-packages:
+      #     cache-path: ~/project/node_modules
+      #     override-ci-command: npm install
+      - run: npm install 
       - run:
           name: Run tests
           command: EDGE_USE_CORECLR=1 node tools/test.js circleci --passWithNoTests
