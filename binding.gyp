@@ -373,7 +373,7 @@
                         'lib/bootstrap/*.cs'
                       ],
                       'outputs': [
-                        'lib/bootstrap/bin/$(BUILDTYPE)/net6.0/bootstrap.dll'
+                        'lib/bootstrap/bin/$(BUILDTYPE)/bootstrap.dll'
                       ],
                       'action': [
                         'bash',
