@@ -15,5 +15,3 @@ only_commits:
   files:
     - 'test/double'
     - 'appveyor_double.yml'
-
-build: off
