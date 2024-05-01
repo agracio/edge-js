@@ -40,20 +40,17 @@ refs:
               EDGE_USE_CORECLR=1 node tools/test.js circleci --passWithNoTests
           else
             node tools/test.js circleci --passWithNoTests
-              SET EDGE_USE_CORECLR=1 & node tools/test.js --passWithNoTests
+            node tools/test.js circleci coreclr --passWithNoTests
           fi
 
 jobs:
   test-node:
     # Install node dependencies and run tests
-    executor: win/server-2019
+    executor: win/default
     
     steps:
       - checkout
       - *InstallDotnet
-      # - run:
-      #     command: ls C:/Windows/Microsoft.NET/Framework64/v4.0.30319
-      #     shell: bash
       # - node/install-packages:
       #     cache-path: ~/project/node_modules
       #     override-ci-command: npm install

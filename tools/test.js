@@ -12,12 +12,18 @@ const marge = require('mochawesome-report-generator')
 
 var runner = process.argv[2];
 
+if(process.argv[3] === 'coreclr'){
+    process.env.EDGE_USE_CORECLR = 1
+}
+
 if (!process.env.EDGE_USE_CORECLR) {
 	if (process.platform !== 'win32') {
 		buildParameters = buildParameters.concat(['-sdk:4.5']);
 	}
 
-	run(process.platform === 'win32' ? 'C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe' : 'mcs', buildParameters, runOnSuccess);
+    var compiler = runner === 'circleci' ? 'C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe' : 'csc'
+
+	run(process.platform === 'win32' ? compiler : 'mcs', buildParameters, runOnSuccess);
 }
 
 else {
