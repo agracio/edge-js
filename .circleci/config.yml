@@ -48,7 +48,8 @@ jobs:
       - run:
           name: Run tests
           command: EDGE_USE_CORECLR=1 node tools/test.js circleci --passWithNoTests
-
+      - store_test_results:
+                path: ./junit
       - store_artifacts:
           path: ./mochawesome.json
           destination: mochawesome.json
@@ -57,6 +58,4 @@ workflows:
   build-and-test:
     jobs:
       - test-node
-    # - deploy:
-    #     requires:
-    #       - test-node
+
