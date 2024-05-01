@@ -52,7 +52,7 @@ jobs:
       - checkout
       - *InstallDotnet
       - run:
-          command: choco -y install netfx-4.8
+          command: choco -y --force install netfx-4.8
           shell: powershell
       # - node/install-packages:
       #     cache-path: ~/project/node_modules
