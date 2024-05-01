@@ -15,5 +15,3 @@ test:
 only_commits:
   files:
     - 'test/double'
-
-build: off
