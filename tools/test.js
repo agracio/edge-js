@@ -76,7 +76,7 @@ function runOnSuccess(code, signal) {
         }
 
         var framework = process.env.EDGE_USE_CORECLR ? 'coreclr' :'net';
-        var config = runner === 'CI' ? 'configCI.json' : 'config.json'
+        var config = runner === 'CI' || runner === 'circleci' ? 'configCI.json' : 'config.json'
 
 		spawn('node', 
         [   mocha, 
