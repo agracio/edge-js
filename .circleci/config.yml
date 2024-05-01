@@ -51,11 +51,10 @@ jobs:
     steps:
       - checkout
       - *InstallDotnet
-      - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install
-          shell: bash
-      # - run: npm install 
+      # - node/install-packages:
+      #     cache-path: ~/project/node_modules
+      #     override-ci-command: npm install
+      - run: npm install 
       - *Test
       # - run:
       #     name: Run tests
