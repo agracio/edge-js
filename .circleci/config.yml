@@ -10,6 +10,7 @@ refs:
         node-version: << parameters.node-version >>
     - &InstallDotnet
       run:
+        shell: bash
         name: Install dotnet
         command: |
           case $(uname) in
@@ -38,6 +39,7 @@ refs:
         command: npm install
     - &Test
       run:
+        shell: bash
         name: Test
         command: |
           case $(uname) in
