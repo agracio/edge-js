@@ -13,22 +13,16 @@ refs:
         shell: bash
         name: Install dotnet
         command: |
-          case $(uname) in
-            [Ll]inux*)
-              wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-              sudo dpkg -i packages-microsoft-prod.deb
-              sudo apt-get update
-              sudo apt-get install -y dotnet-sdk-8.0
-              sudo rm packages-microsoft-prod.deb
-              ;;
-            [Dd]arwin*)
+          if [[ $OSTYPE == darwin* ]]; then
               /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
               brew install --cask dotnet-sdk
-              ;;
-            msys*|MSYS*|nt|win*)
-              echo dotnet install not required
-              ;;
-          esac
+          elif [[ $OSTYPE == linux* ]]; then
+            wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+            sudo dpkg -i packages-microsoft-prod.deb
+            sudo apt-get update
+            sudo apt-get install -y dotnet-sdk-8.0
+            sudo rm packages-microsoft-prod.deb
+          fi
     - &Versions
       run:
         name: Versions
@@ -42,36 +36,31 @@ refs:
         shell: bash
         name: Test
         command: |
-          case $(uname) in
-            [Ll]inux*)
+          if [[ $OSTYPE == darwin* || $OSTYPE == linux* ]]; then
               EDGE_USE_CORECLR=1 node tools/test.js circleci --passWithNoTests
-              ;;
-            [Dd]arwin*)
-              EDGE_USE_CORECLR=1 node tools/test.js circleci --passWithNoTests
-              ;;
-            msys*|MSYS*|nt|win*)
-              node tools/test.js circleci --passWithNoTests
+          else
+            node tools/test.js circleci --passWithNoTests
               SET EDGE_USE_CORECLR=1 & node tools/test.js --passWithNoTests
-              ;;
-          esac
+          fi
 
 jobs:
   test-node:
     # Install node dependencies and run tests
-    executor: win/default
+    executor: win/server-2019
+    shell: bash
     steps:
       - checkout
       - *InstallDotnet
-      # - node/install-packages:
-      #     cache-path: ~/project/node_modules
-      #     override-ci-command: npm install
-      - run: npm install 
+      - node/install-packages:
+          cache-path: ~/project/node_modules
+          override-ci-command: npm install
+      # - run: npm install 
       - *Test
       # - run:
       #     name: Run tests
       #     command: EDGE_USE_CORECLR=1 node tools/test.js circleci --passWithNoTests
       - store_test_results:
-                path: ./junit
+          path: ./junit
       - store_artifacts:
           path: ./mochawesome.json
           destination: mochawesome.json
