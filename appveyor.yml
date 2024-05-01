@@ -67,5 +67,5 @@ skip_commits:
 build: off
 
 cache:
-  - C:\Users\appveyor\AppData\Roaming\npm-cache -> package.json # npm cache
+  - '%APPDATA%\npm-cache -> package.json' # npm cache
   - node_modules -> package.json
