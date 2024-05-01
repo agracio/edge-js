@@ -120,6 +120,12 @@ function mergeFiles(){
         }
 
         var dir = runner === 'circleci' ? 'junit/' : '';
+        
+        if(runner === 'circleci'){
+            if (!fs.existsSync(junit)){
+                fs.mkdirSync(junit);
+            }
+        }
 
         merge.mergeFiles(`./${dir}test-results.xml`, source, function(err) {
             if(err)
