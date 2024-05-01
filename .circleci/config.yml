@@ -41,7 +41,7 @@ jobs:
     executor: win/default
     steps:
       - checkout
-      - *InstallDotnet
+      #- *InstallDotnet
       - node/install-packages:
           cache-path: ~/project/node_modules
           override-ci-command: npm install
