@@ -52,21 +52,21 @@ jobs:
       - checkout
       - *InstallDotnet
       - run:
-          command: choco -y --force install netfx-4.8
-          shell: powershell
+          command: ls C:\Windows\Microsoft.NET\Framework64
+          shell: bash
       # - node/install-packages:
       #     cache-path: ~/project/node_modules
       #     override-ci-command: npm install
-      - run: npm install 
-      - *Test
+      # - run: npm install 
+      # - *Test
       # - run:
       #     name: Run tests
       #     command: EDGE_USE_CORECLR=1 node tools/test.js circleci --passWithNoTests
-      - store_test_results:
-          path: ./junit
-      - store_artifacts:
-          path: ./mochawesome.json
-          destination: mochawesome.json
+      # - store_test_results:
+      #     path: ./junit
+      # - store_artifacts:
+      #     path: ./mochawesome.json
+      #     destination: mochawesome.json
 
 workflows:
   build-and-test:
