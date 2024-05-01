@@ -22,8 +22,6 @@ install:
   - cmd: node -v && npm -v && dotnet --version
   - sh: node -v && npm -v && dotnet --version
   - npm install -q
-  - cmd: npm i -q  xunit-viewer >nul
-  - sh: npm i xunit-viewer --silent &> /dev/null
 
 test_script:
 
