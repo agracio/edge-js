@@ -47,13 +47,14 @@ jobs:
   test-node:
     # Install node dependencies and run tests
     executor: win/server-2019
-    shell: bash
+    
     steps:
       - checkout
       - *InstallDotnet
       - node/install-packages:
           cache-path: ~/project/node_modules
           override-ci-command: npm install
+          shell: bash
       # - run: npm install 
       - *Test
       # - run:
