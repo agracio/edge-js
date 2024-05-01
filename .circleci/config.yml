@@ -52,7 +52,7 @@ jobs:
       - checkout
       - *InstallDotnet
       - run:
-          command: ls C:/Windows/Microsoft.NET/Framework64
+          command: ls C:/Windows/Microsoft.NET/Framework64/v4.0.30319
           shell: bash
       # - node/install-packages:
       #     cache-path: ~/project/node_modules
