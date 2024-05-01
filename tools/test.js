@@ -21,7 +21,7 @@ if (!process.env.EDGE_USE_CORECLR) {
 		buildParameters = buildParameters.concat(['-sdk:4.5']);
 	}
 
-    var compiler = runner === 'circleci' ? 'C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe' : 'csc'
+    var compiler = runner === 'circleci' || runner === 'CI' ? 'C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe' : 'csc'
 
 	run(process.platform === 'win32' ? compiler : 'mcs', buildParameters, runOnSuccess);
 }
