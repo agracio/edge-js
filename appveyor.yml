@@ -63,3 +63,5 @@ skip_commits:
     - 'test/config.json'
     - 'test/double'
     - 'appveyor_double.yml'
+
+build: off
