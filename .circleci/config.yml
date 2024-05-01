@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@5
+  win: circleci/windows@5.0
 
 refs:
   steps:
@@ -37,7 +38,7 @@ refs:
 jobs:
   test-node:
     # Install node dependencies and run tests
-    executor: node/default
+    executor: win/default
     steps:
       - checkout
       - *InstallDotnet
