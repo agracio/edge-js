@@ -51,6 +51,9 @@ jobs:
     steps:
       - checkout
       - *InstallDotnet
+      - run:
+          command: choco install netfx-4.8
+          shell: powershell
       # - node/install-packages:
       #     cache-path: ~/project/node_modules
       #     override-ci-command: npm install
