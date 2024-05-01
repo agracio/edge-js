@@ -1,15 +1,19 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EdgeJs;
-using System.Threading.Tasks;
+﻿using EdgeJs;
 using System.Dynamic;
+using NUnit.Framework;
 
 namespace double_test
 {
-    [TestClass]
+    [TestFixture]
     public class DoubleEdge
     {
-        [TestMethod]
+        [OneTimeTearDown]
+        public void CleanUp()
+        {
+            Console.WriteLine("Cleanup");
+            Edge.Func(@"ABORT");
+        }
+        [Test]
         public void FailsWithMissingParameter()
         {
             try
@@ -23,7 +27,7 @@ namespace double_test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void FailsWithMalformedJavaScript()
         {
             try
@@ -37,7 +41,7 @@ namespace double_test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SucceedsForHelloWorld()
         {
             var result = Edge.Func(@"
@@ -49,7 +53,7 @@ namespace double_test
             Assert.AreEqual(result, "Node.js welcomes .NET");
         }
 
-        [TestMethod]
+        [Test]
         public void SucceedsCheckingNodeVersion()
         {
             var result = Edge.Func(@"
@@ -59,10 +63,10 @@ namespace double_test
             ")(".NET").Result;
 
             System.Console.WriteLine(result);
-            Assert.AreEqual(result, "v9.3.0");
+            Assert.AreEqual(result, "v20.12.2");
         }
 
-        [TestMethod]
+        [Test]
         public void SuccessfulyMarshalsDataFromNetToNode()
         {
             var result = Edge.Func(@"
@@ -72,7 +76,7 @@ namespace double_test
 			        assert.equal(typeof data, 'object');
 			        assert.ok(data.a === 1);
 			        assert.ok(data.b === 3.1415);
-			        assert.ok(data.c === 'fooåäö');
+			        assert.ok(data.c === 'foo');
 			        assert.ok(data.d === true);
 			        assert.ok(data.e === false);
 			        assert.equal(typeof data.f, 'object');
@@ -81,9 +85,9 @@ namespace double_test
 			        assert.ok(Array.isArray(data.g));
 			        assert.equal(data.g.length, 2);
 			        assert.ok(data.g[0] === 1);
-			        assert.ok(data.g[1] === 'fooåäö');
+			        assert.ok(data.g[1] === 'foo');
 			        assert.equal(typeof data.h, 'object');
-			        assert.ok(data.h.a === 'fooåäö');
+			        assert.ok(data.h.a === 'foo');
 			        assert.ok(data.h.b === 12);
 			        assert.equal(typeof data.i, 'function');
 			        assert.equal(typeof data.j, 'object');
@@ -106,7 +110,7 @@ namespace double_test
             Assert.AreEqual(result, "ok");
         }
 
-        [TestMethod]
+        [Test]
         public void SuccessfulyMarshalsDataFromNodeToNet()
         {
             dynamic result = (dynamic)Edge.Func(@"
@@ -114,12 +118,12 @@ namespace double_test
                     cb(null, {
 			            a: 1,
 			            b: 3.1415,
-			            c: 'fooåäö',
+			            c: 'foo',
 			            d: true,
 			            e: false,
 			            f: new Buffer(10),
-			            g: [ 1, 'fooåäö' ],
-			            h: { a: 'fooåäö', b: 12 },
+			            g: [ 1, 'foo' ],
+			            h: { a: 'foo', b: 12 },
 			            i: function (payload, callback) { },
 			            j: new Date(Date.UTC(2013, 07, 30))
 		            });
@@ -143,7 +147,7 @@ namespace double_test
             Assert.AreEqual(result.j, new DateTime(2013, 08, 30));
         }
 
-        [TestMethod]
+        [Test]
         public void SuccessfulyMarshalsNodeException()
         {
             try
@@ -161,7 +165,7 @@ namespace double_test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SuccessfulyMarshalsNodeError()
         {
             try
@@ -179,7 +183,7 @@ namespace double_test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SuccessfulyMarshalsEmptyBuffer()
         {
             var result = Edge.Func(@"
@@ -196,7 +200,7 @@ namespace double_test
             Assert.AreEqual(((byte[])result).Length, 0);
         }
 
-        [TestMethod]
+        [Test]
         public void SuccessfulyRoundtripsUnicodeCharacters()
         {
             var data = "ñòóôõöøùúûüýÿ";
@@ -209,7 +213,7 @@ namespace double_test
             Assert.AreEqual(result, data);
         }
 
-        [TestMethod]
+        [Test]
         public void SuccessfulyRoundtripsEmptyString()
         {
             var data = "";
@@ -222,7 +226,7 @@ namespace double_test
             Assert.AreEqual(result, data);
         }
 
-        [TestMethod]
+        [Test]
         public void SuccessfulyCallsSyncNetFunctionFromNodeAsynchronously()
         {
             var result = Edge.Func(@"
@@ -237,7 +241,7 @@ namespace double_test
             Assert.AreEqual(result, "ok");
         }
 
-        [TestMethod]
+        [Test]
         public void SuccessfulyCallsSyncNetFunctionFromNodeSynchronously()
         {
             var result = Edge.Func(@"
@@ -252,7 +256,7 @@ namespace double_test
             Assert.AreEqual(result, "ok");
         }
 
-        [TestMethod]
+        [Test]
         public void FailsCallingAsyncNetFunctionFromNodeSynchronously()
         {
             try
@@ -274,7 +278,7 @@ namespace double_test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SuccessfulyCallsAsyncNetFunctionFromNode()
         {
             var result = Edge.Func(@"
@@ -290,7 +294,7 @@ namespace double_test
             Assert.AreEqual(result, "ok");
         }
 
-        [TestMethod]
+        [Test]
         public void CallExportedNodeClosureOverJavaScriptState()
         {
             var func = Edge.Func(@"

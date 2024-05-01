@@ -22,11 +22,10 @@ install:
   - cmd: node -v && npm -v && dotnet --version
   - sh: node -v && npm -v && dotnet --version
   - npm install -q
-  - cmd: npm i -q  xunit-viewer >nul
-  - sh: npm i xunit-viewer --silent &> /dev/null
+  - cmd: echo npm install finished
 
 test_script:
-
+  - cmd: echo starting tests
   - cmd: node tools/test.js CI
   - cmd: SET EDGE_USE_CORECLR=1 & node tools/test.js CI
   - sh: EDGE_USE_CORECLR=1 node tools/test.js CI
@@ -61,5 +60,8 @@ skip_commits:
     - 'tools/nuget/*'
     - '.npmignore'
     - 'test/config.json'
+    - 'test/config.json'
+    - 'test/double'
+    - 'appveyor_double.yml'
 
 build: off

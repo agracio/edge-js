@@ -6,6 +6,7 @@
     <AssemblyName>bootstrap</AssemblyName>
     <PackageId>bootstrap</PackageId>
     <LangVersion>default</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <ItemGroup >
