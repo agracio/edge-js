@@ -55,7 +55,7 @@ https://github.com/agracio/edge-js-quick-start
 | 18.x    | Supported           |
 | 20.x    | Supported           |
 | 21.x    | Supported           |
-| 22.x    | In development      |
+| 22.x    | Supported           |
 
 ## Scripting CLR from Node.js and Node.js from CRL 
 
@@ -83,7 +83,6 @@ https://github.com/agracio/edge-js-quick-start
 
 Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core. 
 Mono tests are excluded from CI.
-
 
 ## Node.js application packaging
 
