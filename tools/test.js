@@ -16,6 +16,10 @@ if(process.argv[3] === 'coreclr'){
     process.env.EDGE_USE_CORECLR = 1
 }
 
+if(runner === 'all' && process.platform === 'win32'){
+    delete process.env.EDGE_USE_CORECLR
+}
+
 if (!process.env.EDGE_USE_CORECLR) {
 	if (process.platform !== 'win32') {
 		buildParameters = buildParameters.concat(['-sdk:4.5']);
