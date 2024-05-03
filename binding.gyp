@@ -55,7 +55,7 @@
       ],
       'xcode_settings': {
         'OTHER_CFLAGS': [
-          '-DHAVE_CORECLR -D_NO_ASYNCRTIMP -Wno-reorder -Wno-sign-compare -Wno-mismatched-tags -Wno-missing-braces -Wno-redundant-move -Wno-deprecated-declarations -Wno-unused-value -Wno-deprecated-copy -Wno-cast-function-type -Wno-class-memaccess -Wno-unused-but-set-variable -Wno-unused-result -Wno-unused-private-field -Wno-unused-variable'
+          '-DHAVE_CORECLR -D_NO_ASYNCRTIMP -Wno-reorder -Wno-sign-compare -Wno-mismatched-tags -Wno-missing-braces -Wno-redundant-move -Wno-deprecated-declarations -Wno-unused-value -Wno-deprecated-copy -Wno-cast-function-type -Wno-unused-but-set-variable -Wno-unused-result -Wno-unused-private-field -Wno-unused-variable'
         ],
         'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
         'GCC_ENABLE_CPP_RTTI': 'YES',

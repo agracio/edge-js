@@ -3,7 +3,7 @@ branches:
     - circleci
 
 image:
-  - Visual Studio 2015
+  - Visual Studio 2022
   - Ubuntu2204
   - macos-monterey
 
@@ -11,25 +11,22 @@ environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   matrix:
     # node.js
-    - nodejs: "21"
+    - nodejs: "22"
     - nodejs: "20"
     - nodejs: "18"
     - nodejs: "16"
 
 install:
   - sh: if [ "$APPVEYOR_BUILD_WORKER_IMAGE" = 'Ubuntu2204' ]; then sudo apt-get -qq update && sudo apt-get -y -qq install build-essential libgconf-2-4 python3 libglib2.0-dev; fi
-  - cmd: powershell .\appveyor.ps1  
+  # - cmd: powershell .\appveyor.ps1  
   - cmd: powershell Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs) x64
   - sh: nvm ls
-  - sh: nvm install $nodejs
-  - sh: nvm use $nodejs
+  - sh: nvm use $nodejs || nvm install $nodejs
   - cmd: node -v && npm -v && dotnet --version
   - sh: node -v && npm -v && dotnet --version
   - npm install -q
-  - cmd: echo npm install finished
 
 test_script:
-  - cmd: echo starting tests
   - cmd: node tools/test.js CI
   - cmd: SET EDGE_USE_CORECLR=1 & node tools/test.js CI
   - sh: EDGE_USE_CORECLR=1 node tools/test.js CI
@@ -70,3 +67,6 @@ skip_commits:
     - '.circleci'
 
 build: off
+
+cache:
+  - node_modules -> package.json

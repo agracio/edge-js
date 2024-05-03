@@ -47,6 +47,19 @@ For use with Electron refer to `electron-edge-js`. https://github.com/agracio/el
 Sample app that shows how to work with .NET Core using inline code and compiled C# libraries.  
 https://github.com/agracio/edge-js-quick-start
 
+## macOS
+
+`edge-js` will fail to build on macOS if Visual Studio for Mac is installed.
+VS installs incomplete Mono runtimes that `edge-js` fails to access during `npm install`. 
+Removing VS does not remove Mono fully and leaves behind an incomplete Mono install.
+To remove Mono from macOS use this script
+
+```bash
+sudo rm -rf /Library/Frameworks/Mono.framework
+sudo pkgutil --forget com.xamarin.mono-MDK.pkg
+sudo rm /etc/paths.d/mono-commands
+```
+
 ## Node.Js Versions
 
 | Version | Status              |
@@ -54,8 +67,7 @@ https://github.com/agracio/edge-js-quick-start
 | 16.x    | Supported           |
 | 18.x    | Supported           |
 | 20.x    | Supported           |
-| 21.x    | Supported           |
-| 22.x    | In development      |
+| 22.x    | Supported           |
 
 ## Scripting CLR from Node.js and Node.js from CRL 
 
@@ -83,7 +95,6 @@ https://github.com/agracio/edge-js-quick-start
 
 Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core. 
 Mono tests are excluded from CI.
-
 
 ## Node.js application packaging
 
@@ -705,7 +716,9 @@ In that case the default typeName of `My.Edge.Samples.Startup` and methodName of
 
 ### How to: specify additional CLR assembly references in C# code
 
-When you provide C# source code and let edge compile it for you at runtime, edge will by default reference only mscorlib.dll and System.dll assemblies.  If you're using .NET Core, we automatically reference the most recent versions of the System.Runtime, System.Threading.Tasks, System.Dynamic.Runtime, and the compiler language packages, like Microsoft.CSharp. In applications that require additional assemblies you can specify them in C# code using a special hash pattern, similar to Roslyn. For example, to use ADO.NET you must reference System.Data.dll:
+When you provide C# source code and let edge compile it for you at runtime, edge will by default reference only mscorlib.dll and System.dll assemblies.  If you're using .NET Core, we automatically reference the most recent versions of the System. Runtime, System.Threading.Tasks, and the compiler language packages, like Microsoft.CSharp. In applications that require additional assemblies you can specify them in C# code using a special hash pattern, similar to Roslyn. For example, to use ADO.NET you must reference System.Data.dll:
+
+#### NOTE: `#r` and `references: [ 'MyDll.dll' ]` references only work when using .NET Framework 4.5
 
 ```javascript
 var add7 = edge.func(function() {/*

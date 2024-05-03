@@ -87,4 +87,5 @@ test-results*.*
 
 test/mochawesome-report
 mochawesome-report
+mochawesome.json
 
