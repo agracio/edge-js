@@ -47,6 +47,19 @@ For use with Electron refer to `electron-edge-js`. https://github.com/agracio/el
 Sample app that shows how to work with .NET Core using inline code and compiled C# libraries.  
 https://github.com/agracio/edge-js-quick-start
 
+## macOS
+
+`edge-js` will fail to build on macOS if Visual Studio for Mac is installed.
+VS installs incomplete Mono runtimes that `edge-js` fails to access during `npm install`. 
+Removing VS does not remove Mono fully and leaves behind an incomplete Mono install.
+To remove Mono from macOS use this script
+
+```bash
+sudo rm -rf /Library/Frameworks/Mono.framework
+sudo pkgutil --forget com.xamarin.mono-MDK.pkg
+sudo rm /etc/paths.d/mono-commands
+```
+
 ## Node.Js Versions
 
 | Version | Status              |
