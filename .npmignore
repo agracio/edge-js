@@ -92,8 +92,11 @@ tools/*.cs
 tools/*.vbs
 tools/nuget
 *.nupkg
-appveyor.*
+appveyor*.*
 .github
 tools/coverage.js
 tools/test*.js
 tools/download*.js
+test/mochawesome-report
+mochawesome-report
+mochawesome.json

@@ -29,31 +29,9 @@ if %ERRORLEVEL% neq 0 exit /b -1
 
 call :clean_nuget_package
 if %ERRORLEVEL% neq 0 exit /b -1
+
 call :copy_nuget_package
 if %ERRORLEVEL% neq 0 exit /b -1
-
-exit /b 0
-
-REM ===========================================================
-:download_node
-echo :download_node %1
-
-if not exist "%SELF%\build\%1.zip" (
-    node "%SELF%\download_double.js" http://github.com/nodejs/node/archive/v%1.zip "%SELF%\build\%1.zip"
-) else (
-    echo "%SELF%\build\%1.zip" already exists.
-)
-
-echo :unzip %1.zip
-if not exist "%SELF%\build\node-%1" (
-	rem "%SELF%\build\unzip.exe" "%SELF%\build\%1.zip" "%SELF%\build"
-	pushd "%SELF%\build\"
-    powershell Expand-Archive -Path %1.zip -DestinationPath "%SELF%\build\"
-	rem cscript //B ..\unzip.vbs %1.zip
-	popd
-) else (
-     echo "%SELF%\build\node-%1" already exists.
-)
 
 exit /b 0
 
@@ -113,6 +91,28 @@ echo Finished building Node shared library %1
 
 popd
 exit /b 0
+
+REM ===========================================================
+:download_node
+echo :download_node %1
+
+if not exist "%SELF%\build\%1.zip" (
+    node "%SELF%\download_double.js" http://github.com/nodejs/node/archive/v%1.zip "%SELF%\build\%1.zip"
+) else (
+    echo "%SELF%\build\%1.zip" already exists.
+)
+
+echo :unzip %1.zip
+if not exist "%SELF%\build\node-%1" (
+    pushd "%SELF%\build\"
+    powershell Expand-Archive -Path %1.zip -DestinationPath "%SELF%\build\"
+    popd
+) else (
+     echo "%SELF%\build\node-%1" already exists.
+)
+
+exit /b 0
+
 
 REM ===========================================================
 :download_node_exe
