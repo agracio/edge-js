@@ -199,7 +199,7 @@ describe('edge-cs', function () {
         var func = edge.func({
             source: process.env.EDGE_USE_CORECLR ?
                 function () {/* 
-                    //#r "System.Data.Common"
+                    #r "System.Data.Common"
 
                     using System.Threading.Tasks;
                     using System.Data;
@@ -213,7 +213,7 @@ describe('edge-cs', function () {
                     }           
                 */} :
                 function () {/* 
-                    //#r "System.Data.dll"
+                    #r "System.Data.dll"
 
                     using System.Threading.Tasks;
                     using System.Data;
@@ -277,7 +277,7 @@ describe('edge-cs', function () {
         var func = edge.func({
             source: process.env.EDGE_USE_CORECLR ?
                 function () {/* 
-                    //#r "System.Data.Common"
+                    #r "System.Data.Common"
                     
                     async (input) => 
                     {
@@ -285,7 +285,7 @@ describe('edge-cs', function () {
                     }
                 */} :
                 function () {/* 
-                    //#r "System.Data.dll"
+                    #r "System.Data.dll"
                     
                     async (input) => 
                     {
