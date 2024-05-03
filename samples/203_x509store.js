@@ -2,34 +2,67 @@
 
 var edge = require('../lib/edge');
 
-var listCertificates = edge.func(function() {/*
-    #r "System.dll"
+// var listCertificates = edge.func(function() {/*
+//     //#r "System.Security.Cryptography"
 
-    using System.Collections.Generic;
-    using System.Security.Cryptography.X509Certificates;
+//     using System.Security.Cryptography;
+//     using System.Collections.Generic;
+//     using System.Security.Cryptography.X509Certificates;
 
-    async (dynamic data) =>
-    {
-        X509Store store = new X509Store(
-            (string)data.storeName, 
-            (StoreLocation)Enum.Parse(typeof(StoreLocation), (string)data.storeLocation));
-        store.Open(OpenFlags.ReadOnly);
-        try
+//     async (dynamic data) =>
+//     {
+//         X509Store store = new X509Store(
+//             (string)data.storeName, 
+//             (StoreLocation)Enum.Parse(typeof(StoreLocation), (string)data.storeLocation));
+//         store.Open(OpenFlags.ReadOnly);
+//         try
+//         {
+//             List<string> result = new List<string>();
+//             foreach (X509Certificate2 certificate in store.Certificates)
+//             {
+//                 result.Add(certificate.Subject);
+//             }
+
+//             return result;
+//         }
+//         finally
+//         {
+//             store.Close();
+//         }
+//     }
+// */});
+
+var listCertificates = edge.func({
+    source: function() {/*
+
+        using System.Security.Cryptography;
+        using System.Collections.Generic;
+        using System.Security.Cryptography.X509Certificates;
+
+        async (dynamic data) =>
         {
-            List<string> result = new List<string>();
-            foreach (X509Certificate2 certificate in store.Certificates)
+            X509Store store = new X509Store(
+                (string)data.storeName, 
+                (StoreLocation)Enum.Parse(typeof(StoreLocation), (string)data.storeLocation));
+            store.Open(OpenFlags.ReadOnly);
+            try
             {
-                result.Add(certificate.Subject);
-            }
+                List<string> result = new List<string>();
+                foreach (X509Certificate2 certificate in store.Certificates)
+                {
+                    result.Add(certificate.Subject);
+                }
 
-            return result;
+                return result;
+            }
+            finally
+            {
+                store.Close();
+            }
         }
-        finally
-        {
-            store.Close();
-        }
-    }
-*/});
+    */},
+    references: [ 'System.Security.Cryptography' ]
+});
 
 var result = listCertificates({ storeName: 'My', storeLocation: 'LocalMachine' }, true);
 console.log(result);
