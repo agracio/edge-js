@@ -54,7 +54,6 @@ https://github.com/agracio/edge-js-quick-start
 | 16.x    | Supported           |
 | 18.x    | Supported           |
 | 20.x    | Supported           |
-| 21.x    | Supported           |
 | 22.x    | Supported           |
 
 ## Scripting CLR from Node.js and Node.js from CRL 
