@@ -144,6 +144,8 @@ Provides simple access to MS SQL without the need to write separate C# code.
 | .NET 4.5      | Windows       | `edge-sql`  | `sql`| <a href="https://github.com/agracio/edge-sql" target="_blank">Script T-SQL in Node.js</a> :link: |
 | .NET Standard | Any           | `edge-sql`  | `sql`| <a href="https://github.com/agracio/edge-sql" target="_blank">Script T-SQL in Node.js</a> :link: |
 
+---------
+
 ## How to use
 
 #### [Scripting CLR from Node.js](#scripting-clr-from-nodejs) - full documentation
