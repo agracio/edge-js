@@ -146,8 +146,8 @@ Provides simple access to MS SQL without the need to write separate C# code.
 
 ## How to use
 
-#### Full documentation [Scripting CLR from Node.js](#scripting-clr-from-nodejs)
-#### Full documentation [Scripting Node.Js from CLR](#how-to-integrate-nodejs-code-into-clr-code)
+#### [Scripting CLR from Node.js](#scripting-clr-from-nodejs) - full documentation
+#### [Scripting Node.js from CLR](#how-to-integrate-nodejs-code-into-clr-code) - full documentation
 
 #### Scripting CLR from Node.js sample app https://github.com/agracio/edge-js-quick-start
 ----
