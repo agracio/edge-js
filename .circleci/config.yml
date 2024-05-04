@@ -2,6 +2,20 @@ version: 2.1
 orbs:
   node: circleci/node@5
   win: circleci/windows@5.0
+  macos: circleci/macos@5.0
+
+executors:
+  node: 
+    docker:
+      - image: node/default
+  windows: 
+    machine:
+      image: windows-server-2022-gui:current
+    resource_class: windows.medium
+  macos: 
+    macos:
+      xcode: 15.2.0
+    resource_class: macos.m1.medium.gen1
 
 refs:
   steps:
@@ -37,10 +51,10 @@ refs:
         name: Test
         command: |
           if [[ $OSTYPE == darwin* || $OSTYPE == linux* ]]; then
-              EDGE_USE_CORECLR=1 node tools/test.js circleci --passWithNoTests
+              EDGE_USE_CORECLR=1 node tools/test.js circleci
           else
-            node tools/test.js circleci --passWithNoTests
-            node tools/test.js circleci coreclr --passWithNoTests
+            node tools/test.js circleci
+            node tools/test.js circleci coreclr
           fi
 
 jobs:
@@ -54,6 +68,7 @@ jobs:
       # - node/install-packages:
       #     cache-path: ~/project/node_modules
       #     override-ci-command: npm install
+      - *Versions
       - run: npm install 
       - *Test
       # - run:
@@ -68,5 +83,9 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - test-node
+      - test-node:
+          matrix:
+            parameters:
+              os: ['node', 'windows', 'macos']
+
 
