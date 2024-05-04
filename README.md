@@ -40,7 +40,7 @@ The CLR code can be pre-compiled or specified as C#, F#, Python (IronPython), or
 
 ## Electron
 
-For use with Electron refer to `electron-edge-js`. https://github.com/agracio/electron-edge-js
+For use with Electron refer to `electron-edge-js` https://github.com/agracio/electron-edge-js
 
 ## Quick start
 
