@@ -60,8 +60,11 @@ refs:
 jobs:
   test-node:
     # Install node dependencies and run tests
-    executor: win/default
-    
+    # executor: win/default
+    parameters:
+      os:
+        type: executor
+    executor: << parameters.os >>
     steps:
       - checkout
       - *InstallDotnet
