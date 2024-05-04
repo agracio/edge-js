@@ -7,7 +7,7 @@ orbs:
 executors:
   node: 
     docker:
-      - image: node/default
+      - image: cimg/node:20.12.2
     resource_class: medium
   windows: 
     machine:
