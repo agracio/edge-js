@@ -40,7 +40,7 @@ The CLR code can be pre-compiled or specified as C#, F#, Python (IronPython), or
 
 ## Electron
 
-For use with Electron refer to `electron-edge-js`. https://github.com/agracio/electron-edge-js
+For use with Electron refer to `electron-edge-js` https://github.com/agracio/electron-edge-js
 
 ## Quick start
 
@@ -144,10 +144,12 @@ Provides simple access to MS SQL without the need to write separate C# code.
 | .NET 4.5      | Windows       | `edge-sql`  | `sql`| <a href="https://github.com/agracio/edge-sql" target="_blank">Script T-SQL in Node.js</a> :link: |
 | .NET Standard | Any           | `edge-sql`  | `sql`| <a href="https://github.com/agracio/edge-sql" target="_blank">Script T-SQL in Node.js</a> :link: |
 
+---------
+
 ## How to use
 
-#### Full documentation [Scripting CLR from Node.js](#scripting-clr-from-nodejs)
-#### Full documentation [Scripting Node.Js from CLR](#how-to-integrate-nodejs-code-into-clr-code)
+#### [Scripting CLR from Node.js](#scripting-clr-from-nodejs) - full documentation
+#### [Scripting Node.js from CLR](#how-to-integrate-nodejs-code-into-clr-code) - full documentation
 
 #### Scripting CLR from Node.js sample app https://github.com/agracio/edge-js-quick-start
 ----

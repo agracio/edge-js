@@ -287,7 +287,7 @@ public class CoreCLREmbedding
                     }
                     string libraryNameFromPath = Path.GetFileNameWithoutExtension(assemblyPath);
 
-                    if (!File.Exists(assemblyPath))
+                    if (!File.Exists(assemblyPath) && !string.IsNullOrEmpty(runtimePath))
                     {
                         assemblyPath = Path.Combine(runtimePath, Path.GetFileName(assemblyPath));
                     }
@@ -391,7 +391,7 @@ public class CoreCLREmbedding
                 foreach (var nativeAssembly in nativeAssemblies)
                 {
                     var nativeAssemblyPath = Path.Combine(_packagesPath, runtimeLibrary.Name, runtimeLibrary.Version, nativeAssembly.Replace('/', Path.DirectorySeparatorChar));
-                    if (!File.Exists(nativeAssemblyPath))
+                    if (!File.Exists(nativeAssemblyPath) && !string.IsNullOrEmpty(runtimePath))
                     {
                         nativeAssemblyPath = Path.Combine(runtimePath, nativeAssembly.Replace('/', Path.DirectorySeparatorChar));
                     }
@@ -415,6 +415,11 @@ public class CoreCLREmbedding
         {
             var runtimePath = Path.GetDirectoryName(RuntimeEnvironment.RuntimePath);
             DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing compile dependency {1} {0} using runtime path {2}", runtimeLibrary.Name, runtimeLibrary.Type, runtimePath);
+            if (string.IsNullOrEmpty(runtimePath))
+            {
+                DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - runtime path could not be resolved, skipping");
+                return;
+            }
             
             if (!CompileAssemblies.ContainsKey(runtimeLibrary.Name))
             {
@@ -469,7 +474,7 @@ public class CoreCLREmbedding
                         assemblyPath = Path.Combine(_packagesPath, compileLibrary.Name.ToLower(), compileLibrary.Version, compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar));
                 }
                 
-                if (!File.Exists(assemblyPath))
+                if (!File.Exists(assemblyPath) && !string.IsNullOrEmpty(runtimePath))
                 {
                     assemblyPath = Path.Combine(runtimePath, Path.GetFileName(assemblyPath));
                 }
