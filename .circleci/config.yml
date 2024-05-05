@@ -67,12 +67,18 @@ jobs:
     executor: << parameters.os >>
     steps:
       - checkout
+      - restore_cache:
+          key: v1-deps-{{ arch }}-{{ checksum "package-lock.json" }}
       - *InstallDotnet
       # - node/install-packages:
       #     cache-path: ~/project/node_modules
       #     override-ci-command: npm install
       - *Versions
       - run: npm install 
+      - save_cache:
+          key: v1-deps-{{ arch }}-{{ checksum "package-lock.json" }}
+          paths: 
+            - node_modules
       - *Test
       # - run:
       #     name: Run tests
