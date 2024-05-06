@@ -14,7 +14,7 @@
 
 ## Introduction
 
-**Edge.js allows you to run Node.js and .NET code in one process on Windows, macOS, and Linux.**
+**Edge.js allows you to run Node.js and .NET code in one process on Windows, macOS, and Linux**
 
 You can call .NET functions from Node.js and Node.js functions from .NET.  
 Edge.js takes care of marshaling data between CLR and V8. Edge.js also reconciles threading models of single-threaded V8 and multi-threaded CLR.  
@@ -116,7 +116,7 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 
 | Framework   | Platform      | NPM Package | Language code | Documentation |
 | ----------- | ------------  | ----------- |-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](#how-to-script-f-in-a-nodejs-application) |
+| ~~.NET 4.5~~   | ~~Windows~~       | ~~`edge-fs`~~   | ~~`fs`~~          | ~~[Script F# in Node.js](#how-to-script-f-in-a-nodejs-application)~~ |
 | CoreCLR     | Any           | In development | N/A| N/A |
 
 ### Python (IronPython) scripting
@@ -321,7 +321,14 @@ getPerson({name: 'John Smith', email: 'john.smith@myemailprovider', age: 35}, fu
 
 ```
 
-### :exclamation: `edge.func()` only supports `public async Task<object> MyMethod(dynamic input)` C# methods.
+### Edge.js C# method must have the following signature
+
+```cs
+public async Task<object> MyMethod(dynamic input)
+{
+    //return results sync/async;
+}
+```
 
 ### Executing synchronously without function callback
 
