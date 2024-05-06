@@ -113,7 +113,7 @@ describe('edge.func', function () {
 					methodName: 'idontexist'
 				});
 			},
-			/Unable to access the CLR method idontexist to wrap through reflection/
+			/Unable to access the CLR method to wrap through reflection/
 		);
 	});
 });
