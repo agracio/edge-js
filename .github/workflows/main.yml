@@ -56,8 +56,11 @@ jobs:
         with:
           dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
 
+      - name: Versions
+        run: node -v && npm -v && dotnet --version && node -p process.platform && node -p process.arch
+
       - if: runner.os == 'macOS'
-        name: Remove Mono from macOS # Mono interferes with Core CLR gyp compile
+        name: Remove Mono from macOS # Incomplete Mono install interferes with gyp compile
         run: |
           sudo rm -rf /Library/Frameworks/Mono.framework
           sudo pkgutil --forget com.xamarin.mono-MDK.pkg
