@@ -30,7 +30,7 @@ env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
 
 jobs:
-  main:
+  build-test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
