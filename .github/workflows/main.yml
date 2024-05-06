@@ -84,9 +84,11 @@ jobs:
           EDGE_USE_CORECLR: 1
 
       - name: Test Report
-        uses: dorny/test-reporter@v1
+        uses: phoenix-actions/test-reporting@v8
+        if: success()
         with:
-          name: Test results (${{ matrix.os }}, ${{ matrix.node }})  # Name of the check run which will be created
-          path: test-results.xml   # Path to test results
-          reporter: jest-junit     # Format of test results          
+          name: Tests (${{ matrix.os }}, ${{ matrix.node }})  # Name of the check run which will be created
+          path: mochawesome.json   # Path to test results
+          reporter: mochawesome-json
+          fail-on-error: false        
 
