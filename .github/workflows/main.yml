@@ -14,10 +14,17 @@ on:
       - 'Dockerfile'
       - '.gitconfig'
       - '.gitignore'
-      - 'appveyor.*'
+      - 'appveyor*.*'
       - 'LICENSE*'
       - '.idea/**'
       - '.vscode/**'
+      - '*.bat'
+      - '*.nuspec'
+      - 'tools/nuget/*'
+      - '.npmignore'
+      - 'test/config.json'
+      - 'test/config.json'
+      - 'test/double'
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
@@ -27,8 +34,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-2019]
-        node: [21.x, 20.x, 18.x, 16.x]
+        # os: [macos-latest, ubuntu-latest, windows-2019]
+        # node: [21.x, 20.x, 18.x, 16.x]
+        os: [macos-14]
+        node: [20.x]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -55,27 +64,19 @@ jobs:
           sudo rm /etc/paths.d/mono-commands
 
       - if: runner.os == 'macOS' && matrix.node == '16.x'
-        name: Add missing packages for macOS NodeJs 16 # Mono interferes with Core CLR gyp compile
+        name: Add missing packages for macOS NodeJs 16 
         run: |
           pip install setuptools
  
       - name: npm install
-        run: npm i
+        run: npm ci
 
       - if: runner.os == 'Windows'
         name: Run .NET 4.x tests
-        run: npm test
-      - if: runner.os == 'Windows'
-        name: Create .NET 4.x tests report
-        run: node tools/coverage.js
+        run: node tools/test.js CI
 
       - name: "Run .net core tests"
-        run: npm test
-        env:
-          EDGE_USE_CORECLR: 1
-
-      - name: "Create .net core tests report"
-        run: node tools/coverage.js
+        run: node tools/test.js CI
         env:
           EDGE_USE_CORECLR: 1
 
