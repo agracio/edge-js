@@ -84,7 +84,7 @@ jobs:
           EDGE_USE_CORECLR: 1
 
       - name: Test Report
-        uses: phoenix-actions/test-reporting@v9
+        uses: phoenix-actions/test-reporting@v15
         if: success()
         with:
           name: Tests (${{ matrix.os }}, ${{ matrix.node }})  # Name of the check run which will be created
