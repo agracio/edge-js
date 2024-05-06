@@ -2008,7 +2008,7 @@ The edge module is intended to remain a very small component with core functiona
 
 ## More
 
-Issues? Feedback? You [know what to do](https://github.com/tjanczuk/edge/issues/new). Pull requests welcome.
+Issues? Feedback? You [know what to do](https://github.com/agracio/edge-js/issues/new). Pull requests welcome.
 
 [dependencies-url]: https://www.npmjs.com/package/edge-js?activeTab=dependencies
 [dependencies-img]: https://img.shields.io/librariesio/release/npm/edge-js.svg?style=flat-square
