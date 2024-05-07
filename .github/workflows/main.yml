@@ -59,12 +59,12 @@ jobs:
       - name: Versions
         run: node -v && npm -v && dotnet --version && node -p process.platform && node -p process.arch
 
-      - if: runner.os == 'macOS'
-        name: Remove Mono from macOS # Incomplete Mono install interferes with gyp compile
-        run: |
-          sudo rm -rf /Library/Frameworks/Mono.framework
-          sudo pkgutil --forget com.xamarin.mono-MDK.pkg
-          sudo rm /etc/paths.d/mono-commands
+      # - if: runner.os == 'macOS'
+      #   name: Remove Mono from macOS # Incomplete Mono install interferes with gyp compile
+      #   run: |
+      #     sudo rm -rf /Library/Frameworks/Mono.framework
+      #     sudo pkgutil --forget com.xamarin.mono-MDK.pkg
+      #     sudo rm /etc/paths.d/mono-commands
 
       - if: runner.os == 'macOS' && matrix.node == '16.x'
         name: Add missing packages for macOS NodeJs 16 
