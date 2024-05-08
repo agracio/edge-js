@@ -59,7 +59,12 @@ jobs:
       - name: Versions
         run: node -v && npm -v && dotnet --version && node -p process.platform && node -p process.arch
 
-      # - if: runner.os == 'macOS'
+      - if: runner.os == 'macOS'
+        name: Mono
+        run: |
+          which mono
+          ls /Library/Frameworks
+
       #   name: Remove Mono from macOS # Incomplete Mono install interferes with gyp compile
       #   run: |
       #     sudo rm -rf /Library/Frameworks/Mono.framework
