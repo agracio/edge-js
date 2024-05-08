@@ -233,18 +233,6 @@
                                 '<!@(pkg-config mono-2 --libs)'
                               ]
                             }
-                      },
-                      '"<!(((DFLT_PKG_CONFIG_PATH) pkg-config mono-2 --libs 2>/dev/null) || echo not_found)"!="not_found"',
-                      {
-                            'include_dirs': [
-                              '<!@(<(DFLT_PKG_CONFIG_PATH) pkg-config mono-2 --cflags-only-I | sed s/-I//g)',
-                              '<!@(pkg-config glib-2.0 --cflags-only-I | sed s/-I//g)',
-                            ],
-                            'link_settings': {
-                              'libraries': [
-                                '<!@(<(DFLT_PKG_CONFIG_PATH) pkg-config mono-2 --libs)'
-                              ]
-                            }
                       }
                     ]
                   ],
