@@ -12,9 +12,9 @@
 ### This library is based on https://github.com/tjanczuk/edge all credit for original work goes to Tomasz Janczuk. 
 ------
 
-## Introduction
+## Overview
 
-**Edge.js allows you to run Node.js and .NET code in one process on Windows, macOS, and Linux.**
+**Edge.js allows you to run Node.js and .NET code in one process on Windows, macOS, and Linux**
 
 You can call .NET functions from Node.js and Node.js functions from .NET.  
 Edge.js takes care of marshaling data between CLR and V8. Edge.js also reconciles threading models of single-threaded V8 and multi-threaded CLR.  
@@ -46,19 +46,6 @@ For use with Electron refer to `electron-edge-js` https://github.com/agracio/ele
 
 Sample app that shows how to work with .NET Core using inline code and compiled C# libraries.  
 https://github.com/agracio/edge-js-quick-start
-
-## macOS
-
-`edge-js` will fail to build on macOS if Visual Studio for Mac is installed.
-VS installs incomplete Mono runtimes that `edge-js` fails to access during `npm install`. 
-Removing VS does not remove Mono fully and leaves behind an incomplete Mono install.
-To remove Mono from macOS use this script
-
-```bash
-sudo rm -rf /Library/Frameworks/Mono.framework
-sudo pkgutil --forget com.xamarin.mono-MDK.pkg
-sudo rm /etc/paths.d/mono-commands
-```
 
 ## Node.Js Versions
 
@@ -116,7 +103,7 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 
 | Framework   | Platform      | NPM Package | Language code | Documentation |
 | ----------- | ------------  | ----------- |-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](#how-to-script-f-in-a-nodejs-application) |
+| ~~.NET 4.5~~   | ~~Windows~~       | ~~`edge-fs`~~   | ~~`fs`~~          | ~~[Script F# in Node.js](#how-to-script-f-in-a-nodejs-application)~~ |
 | CoreCLR     | Any           | In development | N/A| N/A |
 
 ### Python (IronPython) scripting
@@ -321,7 +308,14 @@ getPerson({name: 'John Smith', email: 'john.smith@myemailprovider', age: 35}, fu
 
 ```
 
-### :exclamation: `edge.func()` only supports `public async Task<object> MyMethod(dynamic input)` C# methods.
+### Edge.js C# method must have the following signature
+
+```cs
+public async Task<object> MyMethod(dynamic input)
+{
+    //return results sync/async;
+}
+```
 
 ### Executing synchronously without function callback
 
@@ -2001,7 +1995,7 @@ The edge module is intended to remain a very small component with core functiona
 
 ## More
 
-Issues? Feedback? You [know what to do](https://github.com/tjanczuk/edge/issues/new). Pull requests welcome.
+Issues? Feedback? You [know what to do](https://github.com/agracio/edge-js/issues/new). Pull requests welcome.
 
 [dependencies-url]: https://www.npmjs.com/package/edge-js?activeTab=dependencies
 [dependencies-img]: https://img.shields.io/librariesio/release/npm/edge-js.svg?style=flat-square

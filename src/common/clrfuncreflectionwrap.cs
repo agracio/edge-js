@@ -22,7 +22,7 @@ public class ClrFuncReflectionWrap
         if (wrap.invokeMethod == null)
         {
             throw new System.InvalidOperationException(
-                "Unable to access the CLR method to wrap through reflection. Make sure it is a public instance method.");
+                $"Unable to access the CLR method to wrap through reflection. Make sure it is a public instance method.\r\nType: {typeName}, Method: {methodName}, Assembly: {assembly.GetName().FullName}");
         }
 
         return wrap;

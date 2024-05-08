@@ -204,50 +204,38 @@
               [
                 '"<!((which mono 2>/dev/null) || echo not_found)"!="not_found"',
                 {
-                  'sources+': [
-                    'src/mono/clractioncontext.cpp',
-                    'src/mono/clrfunc.cpp',
-                    'src/mono/clrfuncinvokecontext.cpp',
-                    'src/mono/monoembedding.cpp',
-                    'src/mono/task.cpp',
-                    'src/mono/dictionary.cpp',
-                    'src/mono/nodejsfunc.cpp',
-                    'src/mono/nodejsfuncinvokecontext.cpp',
-                    'src/mono/utils.cpp',
-                    'src/common/utils.cpp',
-                    'src/common/v8synchronizationcontext.cpp',
-                    'src/common/callbackhelper.cpp',
-                    'src/common/edge.cpp'
-                  ],
-                  'conditions': 
-                  [
-                    [
-                      '"<!((pkg-config mono-2 --libs 2>/dev/null) || echo not_found)"!="not_found"',
-                      {
-                            'include_dirs': [
-                               '<!@(pkg-config mono-2 --cflags-only-I | sed s/-I//g)',
-                               '<!@(pkg-config glib-2.0 --cflags-only-I | sed s/-I//g)',
-                            ],
-                            'link_settings': {
-                              'libraries': [
-                                '<!@(pkg-config mono-2 --libs)'
-                              ]
-                            }
-                      },
-                      '"<!((pkg-config mono-2 --libs 2>/dev/null) || echo not_found)"=="not_found"',
-                      {
-                            'include_dirs': [
-                              '<!@(<(DFLT_PKG_CONFIG_PATH) pkg-config mono-2 --cflags-only-I | sed s/-I//g)',
-                              '<!@(pkg-config glib-2.0 --cflags-only-I | sed s/-I//g)',
-                            ],
-                            'link_settings': {
-                              'libraries': [
-                                '<!@(<(DFLT_PKG_CONFIG_PATH) pkg-config mono-2 --libs)'
-                              ]
-                            }
-                      }
-                    ]
-                  ],
+                    'conditions': [
+                        [
+                        '"<!((pkg-config mono-2 --libs 2>/dev/null) || echo not_found)"!="not_found"',
+                          {                  
+                              'sources+': [
+                                'src/mono/clractioncontext.cpp',
+                                'src/mono/clrfunc.cpp',
+                                'src/mono/clrfuncinvokecontext.cpp',
+                                'src/mono/monoembedding.cpp',
+                                'src/mono/task.cpp',
+                                'src/mono/dictionary.cpp',
+                                'src/mono/nodejsfunc.cpp',
+                                'src/mono/nodejsfuncinvokecontext.cpp',
+                                'src/mono/utils.cpp',
+                                'src/common/utils.cpp',
+                                'src/common/v8synchronizationcontext.cpp',
+                                'src/common/callbackhelper.cpp',
+                                'src/common/edge.cpp'
+                              ],
+
+                                'include_dirs': [
+                                  '<!@(pkg-config mono-2 --cflags-only-I | sed s/-I//g)',
+                                  '<!@(pkg-config glib-2.0 --cflags-only-I | sed s/-I//g)',
+                                ],
+                                'link_settings': {
+                                  'libraries': [
+                                    '<!@(pkg-config mono-2 --libs)'
+                                  ]
+                                }
+                          }
+                      ]
+                    ],
                 },
                 {
                   'type': 'none'
