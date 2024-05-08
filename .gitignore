@@ -64,8 +64,6 @@ tools/build
 /test/Properties/
 /test/test.nuget.cache
 
-package-lock.json
-
 tools/nuget/content
 tools/nuget/lib
 tools/nuget/*.nupkg
