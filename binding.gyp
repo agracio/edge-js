@@ -234,7 +234,7 @@
                               ]
                             }
                       },
-                      '"<!((pkg-config mono-2 --libs 2>/dev/null) || echo not_found)"=="not_found"',
+                      '"<!(((DFLT_PKG_CONFIG_PATH)pkg-config mono-2 --libs 2>/dev/null) || echo not_found)"!="not_found"',
                       {
                             'include_dirs': [
                               '<!@(<(DFLT_PKG_CONFIG_PATH) pkg-config mono-2 --cflags-only-I | sed s/-I//g)',
