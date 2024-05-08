@@ -12,7 +12,7 @@
 ### This library is based on https://github.com/tjanczuk/edge all credit for original work goes to Tomasz Janczuk. 
 ------
 
-## Introduction
+## Overview
 
 **Edge.js allows you to run Node.js and .NET code in one process on Windows, macOS, and Linux**
 
