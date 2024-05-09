@@ -112,15 +112,17 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 
 | Framework   | Platform      | NPM Package  | Language code | Documentation |
 | ----------- | ------------  | ------------ |-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-py`    | `py`| <a href="https://github.com/agracio/edge-py" target="_blank">Script Python in a Node.js</a> :link: |
-| CoreCLR     | Any?          | `edge-py`    | `py`| <a href="https://github.com/agracio/edge-py" target="_blank">Script Python in a Node.js</a> :link: |
+| .NET 4.5    | Windows       | `edge-py`    | `py` | [Script Python in Node.js](https://github.com/agracio/edge-py) :link: |
+| CoreCLR     | Any           | `edge-py`    | `py` | [Script Python in Node.js](https://github.com/agracio/edge-py) :link: |
 
 ### PowerShell scripting
 
 | Framework   | Platform      | NPM Package | Language code | Documentation |
 | ----------- | ------------  | ----------- |-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-ps`   | `ps` | [Script PowerShell in Node.js](#how-to-script-powershell-in-a-nodejs-application) |
-| CoreCLR     | Any           | In development | N/A| N/A |
+| .NET 4.5    | Windows       | `edge-ps`   | `ps` | [Script PowerShell in Node.js](https://github.com/agracio/edge-ps) :link: |
+| CoreCLR     | Windows       | `edge-ps`   | `ps` | [Script PowerShell in Node.js](https://github.com/agracio/edge-ps) :link: |
+
+***CoreCLR requires dotnet 8***
 
 ### MS SQL scripting
 
@@ -128,8 +130,8 @@ Provides simple access to MS SQL without the need to write separate C# code.
 
 | Framework     | Platform      | NPM Package | Language code | Documentation |
 | ------------- | ------------  | ----------- |-------------- | ------------- |
-| .NET 4.5      | Windows       | `edge-sql`  | `sql`| <a href="https://github.com/agracio/edge-sql" target="_blank">Script T-SQL in Node.js</a> :link: |
-| .NET Standard | Any           | `edge-sql`  | `sql`| <a href="https://github.com/agracio/edge-sql" target="_blank">Script T-SQL in Node.js</a> :link: |
+| .NET 4.5      | Windows       | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
+| .NET Standard | Any           | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
 
 ---------
 
