@@ -103,8 +103,10 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 
 | Framework   | Platform      | NPM Package | Language code | Documentation |
 | ----------- | ------------  | ----------- |-------------- | ------------- |
-| ~~.NET 4.5~~   | ~~Windows~~       | ~~`edge-fs`~~   | ~~`fs`~~          | ~~[Script F# in Node.js](#how-to-script-f-in-a-nodejs-application)~~ |
-| CoreCLR     | Any           | In development | N/A| N/A |
+| .NET 4.5    | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link: |
+| CoreCLR     | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link:  |
+
+***Requires .NET Framework 4.6.2***
 
 ### Python (IronPython) scripting
 
@@ -131,7 +133,7 @@ Provides simple access to MS SQL without the need to write separate C# code.
 | Framework     | Platform      | NPM Package | Language code | Documentation |
 | ------------- | ------------  | ----------- |-------------- | ------------- |
 | .NET 4.5      | Windows       | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
-| .NET Standard | Any           | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
+| CoreCLR       | Any           | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
 
 ---------
 
