@@ -11,9 +11,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Threading.Tasks;
 using System.IO;
-using System.Diagnostics;
 using Microsoft.Extensions.DependencyModel;
-using Semver;
 
 [StructLayout(LayoutKind.Sequential)]
 // ReSharper disable once CheckNamespace
@@ -172,16 +170,16 @@ public class CoreCLREmbedding
                     }
                 }
             }
-
+            DebugMessage("EdgeAssemblyLoadContext::Load (CLR) - Assembly {0} was not found in EdgeAssemblyResolver", assemblyName.Name);
             return null;
         }
     }
 
     private class EdgeAssemblyResolver
     {
-        internal readonly Dictionary<string, string> CompileAssemblies = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        private readonly Dictionary<string, string> _libraries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        private readonly Dictionary<string, string> _nativeLibraries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        internal readonly Dictionary<string, string> CompileAssemblies = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, string> _libraries = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, string> _nativeLibraries = new(StringComparer.OrdinalIgnoreCase);
         private readonly IList<string> _knownPaths = new List<string>();
         
         private readonly string _packagesPath;
@@ -201,8 +199,11 @@ public class CoreCLREmbedding
                 {
                     profileDirectory = Environment.GetEnvironmentVariable("HOME");
                 }
-
-                _packagesPath = Path.Combine(profileDirectory, ".nuget", "packages");
+                
+                if (!String.IsNullOrEmpty(profileDirectory))
+                {
+                    _packagesPath = Path.Combine(profileDirectory, ".nuget", "packages");
+                }
             }
 
             DebugMessage("EdgeAssemblyResolver::ctor (CLR) - Packages path is {0}", _packagesPath);
@@ -249,8 +250,11 @@ public class CoreCLREmbedding
 
             foreach (RuntimeLibrary runtimeLibrary in dependencyContext.RuntimeLibraries)
             {
+                DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing runtime dependency {1} {0}", runtimeLibrary.Name, runtimeLibrary.Type);
+                
                 if (!_libraries.ContainsKey(runtimeLibrary.Name) && CompileAssemblies.ContainsKey(runtimeLibrary.Name))
                 {
+                    DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Added runtime assembly {1} from {0}", CompileAssemblies[runtimeLibrary.Name], runtimeLibrary.Name);
                     _libraries[runtimeLibrary.Name] = CompileAssemblies[runtimeLibrary.Name];
                 }
                 
@@ -261,7 +265,6 @@ public class CoreCLREmbedding
                     continue;
                 }
                 
-                DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing runtime dependency {1} {0}", runtimeLibrary.Name, runtimeLibrary.Type);
 
                 List<string> assets = runtimeLibrary.RuntimeAssemblyGroups.GetRuntimeAssets(RuntimeInformation.RuntimeIdentifier).ToList();
 
@@ -582,12 +585,14 @@ public class CoreCLREmbedding
 
     private static readonly bool DebugMode = Environment.GetEnvironmentVariable("EDGE_DEBUG") == "1";
     private static readonly long MinDateTimeTicks = 621355968000000000;
-    private static readonly ConcurrentDictionary<Type, List<Tuple<string, Func<object, object>>>> TypePropertyAccessors = new ConcurrentDictionary<Type, List<Tuple<string, Func<object, object>>>>();
+    private static readonly ConcurrentDictionary<Type, List<Tuple<string, Func<object, object>>>> TypePropertyAccessors = new();
     private static readonly int PointerSize = Marshal.SizeOf<IntPtr>();
     private static readonly int V8BufferDataSize = Marshal.SizeOf<V8BufferData>();
     private static readonly int V8ObjectDataSize = Marshal.SizeOf<V8ObjectData>();
     private static readonly int V8ArrayDataSize = Marshal.SizeOf<V8ArrayData>();
-    private static readonly ConcurrentDictionary<string, Tuple<Type, MethodInfo>> Compilers = new ConcurrentDictionary<string, Tuple<Type, MethodInfo>>();
+    private static readonly ConcurrentDictionary<string, Tuple<Type, MethodInfo>> Compilers = new();
+    private static readonly IList<string> _failedAssemblyResolver = new List<string>();
+
 
     public static void Initialize(IntPtr context, IntPtr exception)
     {
@@ -597,7 +602,7 @@ public class CoreCLREmbedding
 
             // The call to Marshal.PtrToStructure should be working
             // This appears to be a .Net Core issue - https://github.com/dotnet/coreclr/issues/22394
-            // Manually marshaling as a work around
+            // Manually marshaling as a workaround
             //EdgeBootstrapperContext bootstrapperContext = Marshal.PtrToStructure<EdgeBootstrapperContext>(context);
             EdgeBootstrapperContext bootstrapperContext = new EdgeBootstrapperContext
             {
@@ -630,7 +635,7 @@ public class CoreCLREmbedding
 
     private static Assembly Assembly_Resolving(AssemblyLoadContext arg1, AssemblyName arg2)
     {
-        if (arg2.Name == "System.Core")
+        if (arg2.Name == "System.Core" || _failedAssemblyResolver.Contains(arg2.Name))
         {
             return null;
         }
@@ -641,7 +646,7 @@ public class CoreCLREmbedding
         {
             return LoadContext.LoadFromAssemblyName(arg2);
         }
-        
+        _failedAssemblyResolver.Add(arg2.Name);
         DebugMessage("CoreCLREmbedding::Assembly_Resolving (CLR) - Unable to resolve the assembly using the manifest list, returning null");
         
         return null;
