@@ -39,7 +39,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "edge-cs": "npm:@agracio/edge-cs@^1.3.5",
+    "edge-cs": "npm:@agracio/edge-cs@^1.3.6",
     "nan": "^2.19.0"
   },
   "devDependencies": {
