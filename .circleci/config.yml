@@ -40,7 +40,7 @@ refs:
     - &Versions
       run:
         name: Versions
-        command: node -v && npm -v && dotnet --version
+        command: node -v && npm -v && dotnet --version && node -p process.platform && node -p process.arch
     - &NpmInstall
       run:
         name: NPM Install
