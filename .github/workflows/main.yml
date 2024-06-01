@@ -2,6 +2,8 @@ name: CI
 
 on: 
   push:
+    branches-ignore:
+      - 'circleci'
     paths-ignore:
       - 'samples/*'
       - 'stress/*'
@@ -37,7 +39,7 @@ jobs:
         # os: [macos-latest, ubuntu-latest, windows-2019]
         # node: [21.x, 20.x, 18.x, 16.x]
         os: [macos-14]
-        node: [16.x, 18.x, 20.x, 22.x]
+        node: [18.x, 20.x, 22.x]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
