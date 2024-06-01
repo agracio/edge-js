@@ -37,7 +37,7 @@ jobs:
         # os: [macos-latest, ubuntu-latest, windows-2019]
         # node: [21.x, 20.x, 18.x, 16.x]
         os: [macos-14]
-        node: [20.x]
+        node: [12.x, 14.x, 16.x, 18.x, 20.x, 22.x]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
