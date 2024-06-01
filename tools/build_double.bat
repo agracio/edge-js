@@ -141,14 +141,9 @@ echo :build_edge %1 %2 %3
 rem takes 3 parameters: 1 - node version, 2 - x86 or x64, 3 - ia32 or x64
 
 if exist "%SELF%\build\nuget\content\edge\%2\edge_nativeclr.node" (
-    if exist "%SELF%\build\nuget\content\edge\%2\edge_coreclr.node" (
-        echo "%SELF%\build\nuget\content\edge\%2\edge_nativeclr.node"  already built.
-        echo "%SELF%\build\nuget\content\edge\%2\edge_coreclr.node"  already built.
-        exit /b 0
-    )
+ echo "%SELF%\build\nuget\content\edge\%2\edge_nativeclr.node" already built.
+ exit /b 0
 )
-
-
 FOR /F "tokens=* USEBACKQ" %%F IN (`npm config get prefix`) DO (SET NODEBASE=%%F)
 
 set NODEEXE=%SELF%\build\node-%1-%2\node.exe
@@ -172,7 +167,6 @@ FOR %%F IN (build\*.vcxproj) DO (
 "%NODEEXE%" "%GYP%" build
 mkdir "%SELF%\build\nuget\content\edge\%2" > nul 2>&1
 copy /y build\release\edge_nativeclr.node "%SELF%\build\nuget\content\edge\%2"
-copy /y build\release\edge_coreclr.node "%SELF%\build\nuget\content\edge\%2"
 copy /y "%SELF%\build\node-%1-%2\libnode.dll" "%SELF%\build\nuget\content\edge\%2"
 
 popd

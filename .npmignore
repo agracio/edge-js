@@ -81,11 +81,6 @@ test-results*.*
 /lib/native/win32/x64/*/vccorlib140.dll
 /lib/native/win32/x64/*/vcruntime140.dll
 
-/lib/native/win32/arm64/*/concrt140.dll
-/lib/native/win32/arm64/*/msvcp140.dll
-/lib/native/win32/arm64/*/vccorlib140.dll
-/lib/native/win32/arm64/*/vcruntime140.dll
-
 test
 stress
 samples

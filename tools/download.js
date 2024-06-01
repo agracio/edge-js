@@ -3,17 +3,14 @@ var {http} = require('follow-redirects');
 var urls;
 if (process.argv[2] === 'x86') {
 	urls = [
+		'http://nodejs.org/dist/v' + process.argv[3] + '/node.exe',
 		'http://nodejs.org/dist/v' + process.argv[3] + '/win-x86/node.exe'
 	];
 }
-else if (process.argv[2] === 'x64')  {
+else {
 	urls = [
+		'http://nodejs.org/dist/v' + process.argv[3] + '/x64/node.exe',
 		'http://nodejs.org/dist/v' + process.argv[3] + '/win-x64/node.exe'
-	];
-}
-else if (process.argv[2] === 'arm64')  {
-	urls = [
-		'http://nodejs.org/dist/v' + process.argv[3] + '/win-arm64/node.exe'
 	];
 }
 
