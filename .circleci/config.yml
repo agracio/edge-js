@@ -103,6 +103,6 @@ workflows:
       - test-node:
           matrix:
             parameters:
-              os: ['linux', 'macos']
-              node-version: ['12', '14']
+              os: ['macos']
+              node-version: ['16', '18', '20', '22']
 
