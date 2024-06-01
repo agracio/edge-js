@@ -5,8 +5,6 @@ if "%1" equ "" (
     echo e.g. build.bat release "20.12.2"
     exit /b -1
 )
-echo %1
-
 
 SET FLAVOR=%1
 shift
@@ -26,11 +24,10 @@ if "%1" neq "" (
     shift
     goto :harvestVersions
 )
-if "%VERSIONS%" equ "" set VERSIONS=20.14.0
+if "%VERSIONS%" equ "" set VERSIONS=0.10.0
 pushd %SELF%\..
 for %%V in (%VERSIONS%) do call :build ia32 x86 %%V 
 for %%V in (%VERSIONS%) do call :build x64 x64 %%V 
-@REM for %%V in (%VERSIONS%) do call :build arm64 arm64 %%V 
 popd
 
 exit /b 0
@@ -38,7 +35,6 @@ exit /b 0
 :build
 
 set DESTDIR=%DESTDIRROOT%\%1\%3
-
 if exist "%DESTDIR%\node.exe" goto gyp
 if not exist "%DESTDIR%\NUL" mkdir "%DESTDIR%"
 echo Downloading node.exe %2 %3...
@@ -60,7 +56,7 @@ if not exist "%GYP%" (
     exit /b -1
 )
 
-"%NODEEXE%" "%GYP%" configure build --msvs_version=2022 -%FLAVOR%
+"%NODEEXE%" "%GYP%" configure build --msvs_version=2019 -%FLAVOR%
 if %ERRORLEVEL% neq 0 (
     echo Error building edge.node %FLAVOR% for node.js %2 v%3
     exit /b -1
