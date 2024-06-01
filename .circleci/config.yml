@@ -1,21 +1,25 @@
 version: 2.1
-orbs:
-  node: circleci/node@5
-  win: circleci/windows@5.0
-  macos: circleci/macos@2.4.1
+# orbs:
+#   node: circleci/node@5
+#   win: circleci/windows@5.0
+#   macos: circleci/macos@2.4.1
 
 executors:
-  node: 
+  # node: 
+  #   docker:
+  #     - image: cimg/node:20.12.2
+  #   resource_class: arm.medium
+  # windows: 
+  #   machine:
+  #     image: windows-server-2022-gui:current
+  #   resource_class: windows.medium
+  # macos: 
+  #   macos:
+  #     xcode: 15.2.0
+  linux:
     docker:
-      - image: cimg/node:20.12.2
-    resource_class: arm.medium
-  windows: 
-    machine:
-      image: windows-server-2022-gui:current
-    resource_class: windows.medium
-  macos: 
-    macos:
-      xcode: 15.2.0
+      - image: cimg/base:current
+    resource_class: arm.medium    
 
 refs:
   steps:
@@ -96,6 +100,6 @@ workflows:
       - test-node:
           matrix:
             parameters:
-              os: ['node']
+              os: ['linux']
               node-version: ["14.17.6", "16.9.0"]
 
