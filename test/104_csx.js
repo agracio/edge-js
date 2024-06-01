@@ -507,21 +507,21 @@ describe('edge-cs', function () {
             this.skip();
         }
         var func = edge.func(function () {/*
-        #r "Newtonsoft.Json"
-        using Newtonsoft.Json;
-        using System.Threading.Tasks;
-        public class MyObject
-        {
-            public string Message { get; set; }
-        }
-        public class Startup
-        {
-            public async Task<object> Invoke(object input)
+            #r "Newtonsoft.Json"
+            using Newtonsoft.Json;
+            using System.Threading.Tasks;
+            public class MyObject
             {
-                return JsonConvert.DeserializeObject<MyObject>("{ 'message': 'Hello from .NET' }");
+                public string Message { get; set; }
             }
-        }
-    */
+            public class Startup
+            {
+                public async Task<object> Invoke(object input)
+                {
+                    return JsonConvert.DeserializeObject<MyObject>("{ 'message': 'Hello from .NET' }");
+                }
+            }
+        */
         });
 
         func("JavaScript", function (error, result) {
