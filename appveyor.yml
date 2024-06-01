@@ -1,7 +1,7 @@
 branches:
   except:
     - circleci
-
+    
 image:
   - Visual Studio 2022
   - Ubuntu2204
@@ -64,7 +64,6 @@ skip_commits:
     - 'test/config.json'
     - 'test/double'
     - 'appveyor_double.yml'
-    - '.circleci'
 
 build: off
 
