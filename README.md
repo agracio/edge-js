@@ -49,12 +49,35 @@ https://github.com/agracio/edge-js-quick-start
 
 ## Node.Js Versions
 
-| Version | Status              |
-| ------- | ------------------- |
-| 16.x    | Supported           |
-| 18.x    | Supported           |
-| 20.x    | Supported           |
-| 22.x    | Supported           |
+<table>
+<tr><th>Windows </th><th>macOS</th><th>Linux</th></tr>
+<tr><td>
+
+| Version | x86/x64            | arm64              |
+| ------- | ------------------ | ------------------ |
+| 16.x    | :heavy_check_mark: | :x:                |
+| 18.x    | :heavy_check_mark: | :x:                |
+| 20.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 22.x    | :heavy_check_mark: | :heavy_check_mark: |
+
+</td><td>
+
+| Version | x64                | arm64              |
+| ------- | ------------------ | ------------------ |
+| 16.x    | :heavy_check_mark: | :x:                |
+| 18.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 20.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 22.x    | :heavy_check_mark: | :heavy_check_mark: |
+</td><td>
+
+| Version | x64                | arm64              |
+| ------- | ------------------ | ------------------ |
+| 16.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 18.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 20.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 22.x    | :heavy_check_mark: | :heavy_check_mark: |
+
+</td></tr> </table>
 
 ## Scripting CLR from Node.js and Node.js from CRL 
 
