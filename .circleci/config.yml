@@ -97,5 +97,5 @@ workflows:
           matrix:
             parameters:
               os: ['node']
-              node-version: ['14', '16', '18', '20', '22']
+              node-version: ['14.12.3', '16.20.2', '18.20.3', '20.14.0', '22.2.0']
 
