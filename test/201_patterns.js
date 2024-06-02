@@ -190,7 +190,7 @@ describe('call patterns', function () {
         assert.throws(
             function () { callout(null, true); }, 
             function (error) {
-                if ((error instanceof Error) && error.message.match(/I have no name/)) {
+                if ((error instanceof Error) && error.message.match(/I have no name1/)) {
                     return true;
                 }
                 return false;
