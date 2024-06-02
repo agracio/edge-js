@@ -5,6 +5,7 @@ on:
     branches-ignore:
       - 'circleci'
     paths-ignore:
+      - '.circleci'
       - 'samples/*'
       - 'stress/*'
       - 'performance/*'
@@ -25,7 +26,6 @@ on:
       - 'tools/nuget/*'
       - '.npmignore'
       - 'test/config.json'
-      - 'test/config.json'
       - 'test/double'
 
 env:
@@ -38,8 +38,8 @@ jobs:
       matrix:
         # os: [macos-latest, ubuntu-latest, windows-2019]
         # node: [21.x, 20.x, 18.x, 16.x]
-        os: [macos-14]
-        node: [18.x, 20.x, 22.x]
+        os: [macos]
+        node: [14.x, 16.x]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -77,6 +77,11 @@ jobs:
         run: |
           pip install setuptools
  
+      - if: runner.os == 'macOS' && matrix.node == '14.x'
+        name: Add missing packages for macOS NodeJs 16 
+        run: |
+          pip install setuptools
+
       - name: npm install
         run: npm ci
 
