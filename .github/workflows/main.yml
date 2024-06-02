@@ -38,7 +38,6 @@ jobs:
     strategy:
       matrix:
         # os: [macos-latest, ubuntu-latest, windows-2019]
-        # node: [21.x, 20.x, 18.x, 16.x]
         os: [macos-14]
         node: [20, 22]
     steps:
@@ -59,7 +58,7 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('package.json') }}
+          key: ${{ matrix.os }}-${{ matrix.node }}-${{ hashFiles('package.json') }}
 
       # - if: runner.os == 'Windows'  
       #   name: Setup CSC for Windows
@@ -84,19 +83,19 @@ jobs:
       #     sudo pkgutil --forget com.xamarin.mono-MDK.pkg
       #     sudo rm /etc/paths.d/mono-commands
 
-      - if: runner.os == 'macOS' && matrix.node == '16.x'
-        name: Add missing packages for macOS NodeJs 16 
-        run: |
-          pip install setuptools
+      # - if: runner.os == 'macOS' && matrix.node == '16.x'
+      #   name: Add missing packages for macOS NodeJs 16 
+      #   run: |
+      #     pip install setuptools
 
       - name: npm install
         run: npm i
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
-      - if: runner.os == 'Windows'
-        name: Run .NET 4.5 tests
-        run: node tools/test.js CI
+      # - if: runner.os == 'Windows'
+      #   name: Run .NET 4.5 tests
+      #   run: node tools/test.js CI
 
       - name: "Run .net core tests"
         run: node tools/test.js CI
@@ -116,7 +115,7 @@ jobs:
         uses: phoenix-actions/test-reporting@v15
         if: success()
         with:
-          name: build-test-${{ matrix.os }}-node-${{ matrix.node }}
+          name: test-results-${{ matrix.os }}-node-${{ matrix.node }}
           fail-on-error: false
           path: mochawesome.json   # Path to test results
           reporter: mochawesome-json 
