@@ -38,7 +38,7 @@ jobs:
       matrix:
         # os: [macos-latest, ubuntu-latest, windows-2019]
         # node: [21.x, 20.x, 18.x, 16.x]
-        os: [macos]
+        os: [macos-13]
         node: [14.x, 16.x]
     steps:
       - name: Checkout code
@@ -49,9 +49,9 @@ jobs:
         with:
           node-version: '${{ matrix.node }}'
 
-      - if: runner.os == 'Windows'  
-        name: Setup CSC for Windows
-        uses: yoavain/Setup-CSC@v5
+      # - if: runner.os == 'Windows'  
+      #   name: Setup CSC for Windows
+      #   uses: yoavain/Setup-CSC@v5
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
