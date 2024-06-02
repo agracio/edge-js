@@ -89,7 +89,7 @@ jobs:
           pip install setuptools
 
       - name: npm install
-        run: npm ci
+        run: npm i
 
       - if: runner.os == 'Windows'
         name: Run .NET 4.x tests
@@ -100,12 +100,20 @@ jobs:
         env:
           EDGE_USE_CORECLR: 1
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4.3.3
+        if: success()
+        with:
+          path: |
+            test-results.xml
+            mochawesome.json
+
       - name: Test Report
         uses: phoenix-actions/test-reporting@v15
         if: success()
         with:
-          name: test-results (${{ matrix.os }}, ${{ matrix.node }})  # Name of the check run which will be created
+          name: test-results (${{ matrix.os }}, ${{ matrix.node }})  
           path: mochawesome.json   # Path to test results
           reporter: mochawesome-json 
-          fail-on-error: false        
+          fail-on-error: false
 
