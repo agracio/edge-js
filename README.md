@@ -47,14 +47,32 @@ For use with Electron refer to `electron-edge-js` https://github.com/agracio/ele
 Sample app that shows how to work with .NET Core using inline code and compiled C# libraries.  
 https://github.com/agracio/edge-js-quick-start
 
-## Node.Js Versions
+## Node.Js Support
 
-| Version | Status              |
-| ------- | ------------------- |
-| 16.x    | Supported           |
-| 18.x    | Supported           |
-| 20.x    | Supported           |
-| 22.x    | Supported           |
+### Windows
+
+
+| Version | x86/x64            | arm64              |
+| ------- | ------------------ | ------------------ |
+| 16.x    | :heavy_check_mark: | :x:                |
+| 18.x    | :heavy_check_mark: | :x:                |
+| 20.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 22.x    | :heavy_check_mark: | :heavy_check_mark: |
+
+
+
+### macOS
+
+| Version        | x64                | arm64              |
+| -------------- | ------------------ | ------------------ |
+| 16.x           | :heavy_check_mark: | :x:                |
+| 18.x - 22.x    | :heavy_check_mark: | :heavy_check_mark: |
+
+### Linux
+
+| Version        | x64                | arm64              |
+| -------------- | ------------------ | ------------------ |
+| 14.x - 22.x    | :heavy_check_mark: | :heavy_check_mark: |
 
 ## Scripting CLR from Node.js and Node.js from CRL 
 

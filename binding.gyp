@@ -122,8 +122,7 @@
                 '/DHAVE_CORECLR',
                 '/EHsc',
                 '/D_NO_ASYNCRTIMP',
-                '/D_HAS_EXCEPTIONS',
-                "-std:c++20"
+                '/D_HAS_EXCEPTIONS'
               ]
             },
             'VCLinkerTool': {
@@ -258,8 +257,7 @@
               'AdditionalOptions': [
                 '/clr',
                 '/wd4506',
-                '/DHAVE_NATIVECLR',
-                "-std:c++20"
+                '/DHAVE_NATIVECLR'
               ]
             },
             'VCLinkerTool': {
