@@ -34,12 +34,13 @@ env:
 jobs:
   build-test:
     runs-on: ${{ matrix.os }}
+    name: build-test-${{ matrix.os }}-node-${{ matrix.node }}
     strategy:
       matrix:
         # os: [macos-latest, ubuntu-latest, windows-2019]
         # node: [21.x, 20.x, 18.x, 16.x]
         os: [macos-14]
-        node: [20.x, 22.x]
+        node: [20, 22]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -90,9 +91,11 @@ jobs:
 
       - name: npm install
         run: npm i
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
       - if: runner.os == 'Windows'
-        name: Run .NET 4.x tests
+        name: Run .NET 4.5 tests
         run: node tools/test.js CI
 
       - name: "Run .net core tests"
@@ -104,6 +107,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.3
         if: success()
         with:
+          name: ${{ matrix.os }}-${{ matrix.node }}
           path: |
             test-results.xml
             mochawesome.json
@@ -112,8 +116,8 @@ jobs:
         uses: phoenix-actions/test-reporting@v15
         if: success()
         with:
-          name: test-results (${{ matrix.os }}, ${{ matrix.node }})  
+          name: build-test-${{ matrix.os }}-node-${{ matrix.node }}
+          fail-on-error: false
           path: mochawesome.json   # Path to test results
           reporter: mochawesome-json 
-          fail-on-error: false
 
