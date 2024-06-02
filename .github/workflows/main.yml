@@ -48,6 +48,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '${{ matrix.node }}'
+          cache: 'npm'
+          cache-dependency-path: ${{ runner.os }}-${{ matrix.node }}-package.json
+      
+      - name: Cache node modules
+        id: cache-nodemodules
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('package.json') }}
 
       # - if: runner.os == 'Windows'  
       #   name: Setup CSC for Windows
@@ -76,11 +87,6 @@ jobs:
         name: Add missing packages for macOS NodeJs 16 
         run: |
           pip install setuptools
- 
-      - if: runner.os == 'macOS' && matrix.node == '14.x'
-        name: Add missing packages for macOS NodeJs 16 
-        run: |
-          pip install setuptools
 
       - name: npm install
         run: npm ci
@@ -98,7 +104,7 @@ jobs:
         uses: phoenix-actions/test-reporting@v15
         if: success()
         with:
-          name: Tests (${{ matrix.os }}, ${{ matrix.node }})  # Name of the check run which will be created
+          name: test-results (${{ matrix.os }}, ${{ matrix.node }})  # Name of the check run which will be created
           path: mochawesome.json   # Path to test results
           reporter: mochawesome-json 
           fail-on-error: false        
