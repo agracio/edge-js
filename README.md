@@ -288,7 +288,7 @@ getPerson({name: 'John Smith', email: 'john.smith@myemailprovider', age: 35}, fu
 ```cs
 public class Startup
 {
-    public async Task<object> Invoke(dynamic input)
+    public async Task<object> Invoke(object|dynamic input)
     {
         // code
         // return results
@@ -358,7 +358,7 @@ getPerson({name: 'John Smith', email: 'john.smith@myemailprovider', age: 35}, fu
 ### Edge.js C# method must have the following signature
 
 ```cs
-public async Task<object> MyMethod(dynamic input)
+public async Task<object> MyMethod(object|dynamic input)
 {
     //return results sync/async;
 }
