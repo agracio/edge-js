@@ -1,7 +1,7 @@
 branches:
   except:
     - circleci
-
+    
 image:
   - Visual Studio 2022
   - Ubuntu2204

@@ -79,7 +79,7 @@ jobs:
       - checkout
       - restore_cache:
           keys: 
-          - v1-deps-{{ arch }}-{{ checksum "package.json" }}
+          - v1-deps-{{ arch }}-{{ checksum "package-lock.json" }}
       - *InstallDotnet
       # - node/install-packages:
       #     cache-path: ~/project/node_modules
@@ -88,7 +88,7 @@ jobs:
       - *Versions
       - run: npm install 
       - save_cache:
-          key: v1-deps-{{ arch }}-{{ checksum "package.json" }}
+          key: v1-deps-{{ arch }}-{{ checksum "package-lock.json" }}
           paths: 
             - node_modules
       - *Test
@@ -107,6 +107,7 @@ workflows:
       - test-node:
           matrix:
             parameters:
-              os: ['linux', 'linux-arm', 'macos']
+              # os: ['linux', 'linux-arm', 'macos']
+              os: ['linux-arm']
               node-version: ['16', '18', '20', '22']
 

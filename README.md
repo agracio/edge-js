@@ -47,14 +47,32 @@ For use with Electron refer to `electron-edge-js` https://github.com/agracio/ele
 Sample app that shows how to work with .NET Core using inline code and compiled C# libraries.  
 https://github.com/agracio/edge-js-quick-start
 
-## Node.Js Versions
+## Node.Js Support
 
-| Version | Status              |
-| ------- | ------------------- |
-| 16.x    | Supported           |
-| 18.x    | Supported           |
-| 20.x    | Supported           |
-| 22.x    | Supported           |
+### Windows
+
+
+| Version | x86/x64            | arm64              |
+| ------- | ------------------ | ------------------ |
+| 16.x    | :heavy_check_mark: | :x:                |
+| 18.x    | :heavy_check_mark: | :x:                |
+| 20.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 22.x    | :heavy_check_mark: | :heavy_check_mark: |
+
+
+
+### macOS
+
+| Version        | x64                | arm64 (M1+)        |
+| -------------- | ------------------ | ------------------ |
+| 16.x           | :heavy_check_mark: | :x:                |
+| 18.x - 22.x    | :heavy_check_mark: | :heavy_check_mark: |
+
+### Linux
+
+| Version        | x64                | arm64              |
+| -------------- | ------------------ | ------------------ |
+| 14.x - 22.x    | :heavy_check_mark: | :heavy_check_mark: |
 
 ## Scripting CLR from Node.js and Node.js from CRL 
 
@@ -62,7 +80,7 @@ https://github.com/agracio/edge-js-quick-start
 <tr><th>Script CLR from Node.js </th><th>Script Node.js from CLR</th></tr>
 <tr><td>
 
-|         | .NET 4.5           | Mono 4.x           | CoreCLR            |
+|         | .NET 4.5           | Mono 5.x           | CoreCLR            |
 | ------- | ------------------ | ------------------ | ------------------ |
 | Windows | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | Linux   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
@@ -70,7 +88,7 @@ https://github.com/agracio/edge-js-quick-start
 
 </td><td>
 
-|         | .NET 4.5           | Mono 4.x   | CoreCLR       |
+|         | .NET 4.5           | Mono 5.x   | CoreCLR       |
 | ------- | ------------------ | ---------- | ------------- |
 | Windows | :heavy_check_mark: | :x:        | :x:           |
 | Linux   | :x:                | :x:        | :x:           |
@@ -80,7 +98,7 @@ https://github.com/agracio/edge-js-quick-start
 
 ## Mono
 
-Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core. 
+Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core.  
 Mono tests are excluded from CI.
 
 ## Node.js application packaging
@@ -104,7 +122,7 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 | Framework   | Platform      | NPM Package | Language code | Documentation |
 | ----------- | ------------  | ----------- |-------------- | ------------- |
 | .NET 4.5    | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link: |
-| CoreCLR     | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link:  |
+| CoreCLR     | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link: |
 
 ***Requires .NET Framework 4.6.2***
 
@@ -183,6 +201,32 @@ helloWorld('JavaScript', function (error, result) {
 });
 ```
 
+#### CoreCLR
+* If not set Edge.js will run as .NET 4.5 on Windows and as Mono on macOS/Linux
+* Can be set using `js` code below or as an environment variable `SET EDGE_USE_CORECLR=1`
+* Check [appveyor.yml](https://github.com/agracio/edge-js/blob/master/appveyor.yml) `test_script` for reference on setting env variables
+* Must be set before `var edge = require('edge-js');`
+
+```js
+// set this variable before 
+// var edge = require('edge-js');
+
+process.env.EDGE_USE_CORECLR=1
+
+var edge = require('edge-js');
+
+var helloWorld = edge.func(function () {/*
+    async (input) => { 
+        return ".NET Welcomes " + input.ToString(); 
+    }
+*/});
+
+helloWorld('JavaScript', function (error, result) {
+    if (error) throw error;
+    console.log(result);
+});
+```
+
 ### Passing parameters
 
 ```js
@@ -236,16 +280,15 @@ var getPerson = edge.func({
 getPerson({name: 'John Smith', email: 'john.smith@myemailprovider', age: 35}, function(error, result) {
     if (error) throw error;
     console.log(result);
-    console.log();
 });
 ```
 
-When using inline C# class code must include
+**When using inline C# class code must include**
 
 ```cs
 public class Startup
 {
-    public async Task<object> Invoke(dynamic input)
+    public async Task<object> Invoke(object|dynamic input)
     {
         // code
         // return results
@@ -315,7 +358,7 @@ getPerson({name: 'John Smith', email: 'john.smith@myemailprovider', age: 35}, fu
 ### Edge.js C# method must have the following signature
 
 ```cs
-public async Task<object> MyMethod(dynamic input)
+public async Task<object> MyMethod(object|dynamic input)
 {
     //return results sync/async;
 }
@@ -323,7 +366,7 @@ public async Task<object> MyMethod(dynamic input)
 
 ### Executing synchronously without function callback
 
-If your C# implementation will complete synchronously, you can call this function as any synchronous JavaScript function as follows:
+If your C# implementation will complete synchronously you can call this function as any synchronous JavaScript function as follows:
 
 ```js
 var edge = require('edge-js');
@@ -352,6 +395,19 @@ var helloWorld = edge.func(function () {/*
 var result = helloWorld('JavaScript', true);
 ```
 
+### Docker
+
+**Dockerfile: [Dockerfile](https://github.com/agracio/edge-js/blob/master/Dockerfile)**  
+**Docker Hub image: [agracio/ubuntu-node-netcore](https://hub.docker.com/repository/docker/agracio/ubuntu-node-netcore)**
+
+#### Pre-installed packages
+
+* Node.js 20
+* dotnet 8
+* git
+* build tools
+* sudo, curl, wget
+
 
 ----  
 
@@ -359,7 +415,7 @@ var result = helloWorld('JavaScript', true);
 ==============================
 ### :exclamation: Some of the documentation is outdated :exclamation:  
  
-An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, MacOS, and Linux. 
+An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, macOS, and Linux. 
 
 You can script C# from a Node.js process:
 
@@ -507,16 +563,16 @@ If you are writing a Node.js application, this section explains how you include 
 
 ### What you need
 
-Edge.js runs on Windows, Linux, and OSX and requires suppoeted version of Node.js 8.x, 7.x, 6.x, as well as .NET Framework 4.5 (Windows), Mono 4.2.4 (OSX, Linux), or .NET Core 1.0.0 Preview 2 (Windows, OSX, Linux). 
+Edge.js runs on Windows, Linux, and OSX and requires supported version of Node.js 8.x, 7.x, 6.x, as well as .NET Framework 4.5 (Windows), Mono 4.2.4 (OSX, Linux), or .NET Core 1.0.0 Preview 2 (Windows, OSX, Linux). 
 
 **NOTE** there is a known issue with Mono after 4.2.4 that will be addressed in Mono 4.6.
 
 #### Windows
 
 * Node.js 8.x, 7.x, or 6.x 
-* [.NET 4.5](http://www.microsoft.com/en-us/download/details.aspx?id=30653) and/or [.NET Core](https://www.microsoft.com/net/core)
-* to use Python, you also need [IronPython 2.7.3 or later](http://ironpython.codeplex.com/releases/view/81726)  
-* to use F#, read [Dave Thomas blog post](http://7sharpnine.com/blog/2013-05-05-i-node-something/)
+* [.NET 6.6.2](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net462) and/or [.NET Core](https://www.microsoft.com/net/core)
+* to use Python, you also need [IronPython 3.4 or later](https://ironpython.net/download/)  
+* to use F#, read [Dave Thomas blog post](https://web.archive.org/web/20160323224525/http://7sharpnine.com/posts/i-node-something/)
 
 If you have both desktop CLR and .NET Core installed, read [using .NET Core](#using-net-core) for how to configure Edge to use one or the other. 
 
@@ -1277,7 +1333,7 @@ lisp([], function(err, answer){
 
 ### How to: script T-SQL in a Node.js application
 
-**Full documentation available here https://github.com/agracio/edge-sql**
+**Full documentation available at https://github.com/agracio/edge-sql**
 
 
 ### How to: support for other CLR languages
