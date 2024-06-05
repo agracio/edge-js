@@ -25,11 +25,14 @@ on:
       - 'tools/nuget/*'
       - '.npmignore'
       - 'test/config.json'
-      - 'test/config.json'
       - 'test/double'
+      - '.circleci'
+      - 'README.md'
+
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1 
 
 jobs:
   build-test:
