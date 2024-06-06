@@ -155,6 +155,23 @@ Provides simple access to MS SQL without the need to write separate C# code.
 
 ---------
 
+### Docker
+
+**Dockerfile: [Dockerfile](https://github.com/agracio/edge-js/blob/master/Dockerfile)**  
+**Docker Hub image: [agracio/ubuntu-node-netcore](https://hub.docker.com/repository/docker/agracio/ubuntu-node-netcore)**
+
+* Baseed on Ununtu 22.04
+* User directory **`devvol`**
+
+#### Pre-installed packages
+
+* Node.js 20
+* dotnet 8
+* git
+* build tools
+* sudo, curl, wget
+* node-gyp
+
 ## How to use
 
 #### [Scripting CLR from Node.js](#scripting-clr-from-nodejs) - full documentation
@@ -394,20 +411,6 @@ var helloWorld = edge.func(function () {/*
 // sync call will throw exception
 var result = helloWorld('JavaScript', true);
 ```
-
-### Docker
-
-**Dockerfile: [Dockerfile](https://github.com/agracio/edge-js/blob/master/Dockerfile)**  
-**Docker Hub image: [agracio/ubuntu-node-netcore](https://hub.docker.com/repository/docker/agracio/ubuntu-node-netcore)**
-
-#### Pre-installed packages
-
-* Node.js 20
-* dotnet 8
-* git
-* build tools
-* sudo, curl, wget
-
 
 ----  
 
