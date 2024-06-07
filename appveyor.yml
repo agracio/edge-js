@@ -1,7 +1,7 @@
 image:
-  - Visual Studio 2022
+  # - Visual Studio 2022
   - Ubuntu2204
-  # - macos-monterey
+  - macos-monterey
 
 environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
@@ -16,12 +16,13 @@ install:
   - sh: nvm ls
   - sh: nvm use $nodejs || nvm install $nodejs
   - cmd: node -v && npm -v && dotnet --version
-  - sh: node -v && npm -v && dotnet --version
+  - sh: node -v && npm -v && dotnet --version && mono --version
   - npm install -q
 
 test_script:
   - cmd: node tools/test.js CI
   - cmd: SET EDGE_USE_CORECLR=1 & node tools/test.js CI
+  - sh: node tools/test.js CI
   - sh: EDGE_USE_CORECLR=1 node tools/test.js CI
 
 after_test:
@@ -54,9 +55,9 @@ skip_commits:
     - 'tools/nuget/*'
     - '.npmignore'
     - 'test/config.json'
-    - 'test/config.json'
     - 'test/double'
     - 'appveyor_double.yml'
+    - '.circleci'
 
 build: off
 

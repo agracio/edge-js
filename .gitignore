@@ -72,7 +72,8 @@ tools/*.nupkg
 tools/*.zip
 tools/nuget.exe
 
-test-results*.*
+*test-results*.*
+TemporaryGeneratedFile*.*
 /lib/native/win32/ia32/*/concrt140.dll
 /lib/native/win32/ia32/*/msvcp140.dll
 /lib/native/win32/ia32/*/vccorlib140.dll
@@ -82,6 +83,11 @@ test-results*.*
 /lib/native/win32/x64/*/msvcp140.dll
 /lib/native/win32/x64/*/vccorlib140.dll
 /lib/native/win32/x64/*/vcruntime140.dll
+
+/lib/native/win32/arm64/*/concrt140.dll
+/lib/native/win32/arm64/*/msvcp140.dll
+/lib/native/win32/arm64/*/vccorlib140.dll
+/lib/native/win32/arm64/*/vcruntime140.dll
 
 test/mochawesome-report
 mochawesome-report
