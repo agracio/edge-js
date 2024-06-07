@@ -593,7 +593,6 @@ public class CoreCLREmbedding
     private static readonly ConcurrentDictionary<string, Tuple<Type, MethodInfo>> Compilers = new();
     private static readonly IList<string> _failedAssemblyResolver = new List<string>();
 
-
     public static void Initialize(IntPtr context, IntPtr exception)
     {
         try
