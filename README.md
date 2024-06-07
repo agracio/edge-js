@@ -19,7 +19,24 @@
 You can call .NET functions from Node.js and Node.js functions from .NET.  
 Edge.js takes care of marshaling data between CLR and V8. Edge.js also reconciles threading models of single-threaded V8 and multi-threaded CLR.  
 Edge.js ensures correct lifetime of objects on V8 and CLR heaps.  
-The CLR code can be pre-compiled or specified as C#, F#, Python (IronPython), or PowerShell source: Edge.js can compile CLR scripts at runtime.
+The CLR code can be pre-compiled or specified as C#, F#, Python (IronPython), or PowerShell source: Edge.js can compile CLR scripts at runtime.  
+Edge can be extended to support other CLR languages or DSLs.
+
+![Edge.js interop model](https://f.cloud.github.com/assets/822369/234085/b305625c-8768-11e2-8de0-e03ae98e7249.PNG)
+
+Edge.js provides an asynchronous, in-process mechanism for interoperability between Node.js and .NET. You can use this mechanism to:
+
+* script Node.js from a .NET application on Windows using .NET Framework
+* script C# from a Node.js application on Windows, macOS, and Linux using .NET Framework/.NET Core
+* use CLR multi-threading from Node.js for CPU intensive work [more...](http://tomasz.janczuk.org/2013/02/cpu-bound-workers-for-nodejs.html)  
+* write native extensions to Node.js in C# instead of C/C++  
+* integrate existing .NET components into Node.js applications
+* access MS SQL from Node.js using ADO.NET 
+* script F# from Node.js
+* script Powershel from Node.js
+* script Python (IronPython) from Node.js
+
+Read more about the background and motivations of the project [here](http://tomasz.janczuk.org/2013/02/hosting-net-code-in-nodejs-applications.html). 
 
 ## Updates
 * Support for new versions of Node.Js.
@@ -28,19 +45,17 @@ The CLR code can be pre-compiled or specified as C#, F#, Python (IronPython), or
 * Fixes StackOverflowException [PR #566](https://github.com/tjanczuk/edge/pull/566) that occurs when underlying C# code throws complex exception.
 * Fixes issues [#469](https://github.com/tjanczuk/edge/issues/469), [#713](https://github.com/tjanczuk/edge/issues/713)
 * Other PRs: [PR #725](https://github.com/tjanczuk/edge/pull/725), [PR #640](https://github.com/tjanczuk/edge/pull/640)
-* Support for Mono runtime 4.8.x - 5.x.
 * Multiple bug fixes and improvements to the original code.
 
 ----
 ### NPM package [`edge-js`](https://www.npmjs.com/package/edge-js)
 
-### NuGet package [EdgeJs](https://www.nuget.org/packages/EdgeJs)
+### NuGet package [`EdgeJs`](https://www.nuget.org/packages/EdgeJs)
 ----
-
 
 ## Electron
 
-For use with Electron refer to `electron-edge-js` https://github.com/agracio/electron-edge-js
+For use with Electron **[`electron-edge-js`](https://github.com/agracio/electron-edge-js)**
 
 ## Quick start
 
@@ -51,14 +66,12 @@ https://github.com/agracio/edge-js-quick-start
 
 ### Windows
 
-
 | Version | x86/x64            | arm64              |
 | ------- | ------------------ | ------------------ |
 | 16.x    | :heavy_check_mark: | :x:                |
 | 18.x    | :heavy_check_mark: | :x:                |
 | 20.x    | :heavy_check_mark: | :heavy_check_mark: |
 | 22.x    | :heavy_check_mark: | :heavy_check_mark: |
-
 
 
 ### macOS
@@ -79,15 +92,15 @@ https://github.com/agracio/edge-js-quick-start
 <tr><th>Script CLR from Node.js </th><th>Script Node.js from CLR</th></tr>
 <tr><td>
 
-|         | .NET 4.5           | Mono 5.x           | CoreCLR            |
+|         | .NET 4.5           | Mono 6.x           | CoreCLR            |
 | ------- | ------------------ | ------------------ | ------------------ |
 | Windows | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Linux   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+| Linux   | :x:                | :x:                | :heavy_check_mark: |
 | macOS   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
 
 </td><td>
 
-|         | .NET 4.5           | Mono 5.x   | CoreCLR       |
+|         | .NET 4.5           | Mono       | CoreCLR       |
 | ------- | ------------------ | ---------- | ------------- |
 | Windows | :heavy_check_mark: | :x:        | :x:           |
 | Linux   | :x:                | :x:        | :x:           |
@@ -116,15 +129,6 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 
 ## Additional languages support
 
-### F# scripting
-
-| Framework   | Platform      | NPM Package | Language code | Documentation |
-| ----------- | ------------  | ----------- |-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link: |
-| CoreCLR     | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link: |
-
-***Requires .NET Framework 4.6.2***
-
 ### Python (IronPython) scripting
 
 **NOTE** This functionality requires IronPython 3.4
@@ -136,12 +140,12 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 
 ### PowerShell scripting
 
+**NOTE** CoreCLR requires dotnet 8
+
 | Framework   | Platform      | NPM Package | Language code | Documentation |
 | ----------- | ------------  | ----------- |-------------- | ------------- |
 | .NET 4.5    | Windows       | `edge-ps`   | `ps` | [Script PowerShell in Node.js](https://github.com/agracio/edge-ps) :link: |
 | CoreCLR     | Windows       | `edge-ps`   | `ps` | [Script PowerShell in Node.js](https://github.com/agracio/edge-ps) :link: |
-
-***CoreCLR requires dotnet 8***
 
 ### MS SQL scripting
 
@@ -152,24 +156,14 @@ Provides simple access to MS SQL without the need to write separate C# code.
 | .NET 4.5      | Windows       | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
 | CoreCLR       | Any           | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
 
+### F# scripting
+
+| Framework   | Platform      | NPM Package | Language code | Documentation |
+| ----------- | ------------  | ----------- |-------------- | ------------- |
+| .NET 4.5    | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link: |
+| CoreCLR     | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link: |
+
 ---------
-
-### Docker
-
-**Dockerfile: [Dockerfile](https://github.com/agracio/edge-js/blob/master/Dockerfile)**  
-**Docker Hub image: [agracio/ubuntu-node-netcore](https://hub.docker.com/repository/docker/agracio/ubuntu-node-netcore)**
-
-* Baseed on Ununtu 22.04
-* User directory **`devvol`**
-
-#### Pre-installed packages
-
-* Node.js 20
-* dotnet 8
-* git
-* build tools
-* sudo, curl, wget
-* node-gyp
 
 ## How to use
 
@@ -410,50 +404,9 @@ var helloWorld = edge.func(function () {/*
 // sync call will throw exception
 var result = helloWorld('JavaScript', true);
 ```
+----
 
-----  
-
-<br/>Edge.js readme
-==============================
-### :exclamation: Some of the documentation is outdated :exclamation:  
- 
-An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/.NET Core/Mono - in process. On Windows, macOS, and Linux. 
-
-You can script C# from a Node.js process:
-
-**ES5**
-```javascript
-var edge = require('edge-js');
-
-var helloWorld = edge.func(function () {/*
-    async (input) => { 
-        return ".NET Welcomes " + input.ToString(); 
-    }
-*/});
-
-helloWorld('JavaScript', function (error, result) {
-    if (error) throw error;
-    console.log(result);
-});
-```
-**ES6**
-
-In ES6 you can use [template strings](https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/template_strings) to write multiline C# code.
-```javascript
-var edge = require('edge-js');
-
-var helloWorld = edge.func(`
-    async (input) => { 
-        return ".NET Welcomes " + input.ToString(); 
-    }
-`);
-
-helloWorld('JavaScript', function (error, result) {
-    if (error) throw error;
-    console.log(result);
-});
-```
-You can also script Node.js from C#:
+### Scripting Node.js from CLR example
 
 ```cs
 using System; 
@@ -479,7 +432,46 @@ class Program
     }
 }
 ```
+### More examples in tests [DoubleEdge.cs](https://github.com/agracio/edge-js/blob/master/test/double/double_test/DoubleEdge.cs) 
+----  
 
+### Docker
+
+**Dockerfile: [Dockerfile](https://github.com/agracio/edge-js/blob/master/Dockerfile)**  
+**Docker Hub image: [agracio/ubuntu-node-netcore](https://hub.docker.com/repository/docker/agracio/ubuntu-node-netcore)**
+
+* Baseed on Ununtu 22.04
+* User directory **`devvol`**
+
+#### Pre-installed packages
+
+* Node.js 20
+* dotnet 8
+* git
+* build tools
+* sudo, curl, wget
+* node-gyp
+
+#### Using container
+
+* Run interactive starting in `devvol`, set `EDGE_USE_CORECLR=1` at container level
+* Git clone `edge-js` and enter cloned repo directory
+* `npm install`
+* Run tests
+
+```
+> docker run -w /devvol -e EDGE_USE_CORECLR=1 -it agracio/ubuntu-node-netcore:latest
+> git clone https://github.com/agracio/edge-js.git && cd edge-js
+> npm i
+> npm test
+```
+
+---------
+
+<br/>Edge.js readme
+==============================
+### :exclamation: Some of the documentation is outdated :exclamation:  
+ 
 ## What problems does Edge.js solve?
 
 > Ah, whatever problem you have. If you have this problem, this solves it.
@@ -488,15 +480,11 @@ class Program
 
 ## Before you dive in
 
-See the [Edge.js overview](http://tjanczuk.github.com/edge).  
 Read the [Edge.js introduction on InfoQ](http://www.infoq.com/articles/the_edge_of_net_and_node).  
 Listen to the [Edge.js podcast on Herdingcode](http://herdingcode.com/herding-code-166-tomasz-janczuk-on-edge-js/). 
 
-![image](https://cloud.githubusercontent.com/assets/822369/2808101/87f73a5c-cd0f-11e3-9f7a-f53be86641be.png)
-
 ## Contents
 
-[Introduction](#introduction)  
 [Scripting CLR from Node.js](#scripting-clr-from-nodejs)  
 &nbsp;&nbsp;&nbsp;&nbsp;[What you need](#what-you-need)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Windows](#windows)  
@@ -538,27 +526,6 @@ Listen to the [Edge.js podcast on Herdingcode](http://herdingcode.com/herding-co
 [Use cases and other resources](#use-cases-and-other-resources)  
 [Contribution and derived work](#contribution-and-derived-work)  
 
-## Introduction 
-
-Edge.js allows you to run Node.js and .NET code in one process on Windows, MacOS, and Linux. 
-
-You can call .NET functions from Node.js and Node.js functions from .NET. Edge.js takes care of marshalling data between CLR and V8. Edge.js also reconciles threading models of single threaded V8 and multi-threaded CLR. Edge.js ensures correct lifetime of objects on V8 and CLR heaps. The CLR code can be pre-compiled or specified as C#, F#, Python, or PowerShell source: Edge.js can compile CLR scripts at runtime. Edge can be extended to support other CLR languages or DSLs.
-
-![Edge.js interop model](https://f.cloud.github.com/assets/822369/234085/b305625c-8768-11e2-8de0-e03ae98e7249.PNG)
-
-Edge.js provides an asynchronous, in-process mechanism for interoperability between Node.js and .NET. You can use this mechanism to:
-
-* script Node.js from a .NET application (console app, ASP.NET, etc.)
-* script C# from a Node.js application on Windows, MacOS, and Linux
-* access MS SQL from Node.js using ADO.NET [more...](http://blog.codeship.io/2014/04/22/leverage-sql-server-with-node-js-using-edge-js.html)  
-* use CLR multi-threading from Node.js for CPU intensive work [more...](http://tomasz.janczuk.org/2013/02/cpu-bound-workers-for-nodejs.html)  
-* write native extensions to Node.js in C# instead of C/C++  
-* integrate existing .NET components into Node.js applications
-
-Read more about the background and motivations of the project [here](http://tomasz.janczuk.org/2013/02/hosting-net-code-in-nodejs-applications.html). 
-
-[Follow @tjanczuk](https://twitter.com/tjanczuk) for updates related to the module. 
-
 ## Scripting CLR from Node.js
 
 If you are writing a Node.js application, this section explains how you include and run CLR code in your app. It works on Windows, MacOS, and Linux.
@@ -571,58 +538,24 @@ Edge.js runs on Windows, Linux, and OSX and requires supported version of Node.j
 
 #### Windows
 
-* Node.js 8.x, 7.x, or 6.x 
-* [.NET 6.6.2](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net462) and/or [.NET Core](https://www.microsoft.com/net/core)
+* Supported Node.js version
+* [.NET 4.6.2](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net462) and/or [.NET Core](https://www.microsoft.com/net/core)
 * to use Python, you also need [IronPython 3.4 or later](https://ironpython.net/download/)  
 * to use F#, read [Dave Thomas blog post](https://web.archive.org/web/20160323224525/http://7sharpnine.com/posts/i-node-something/)
 
 If you have both desktop CLR and .NET Core installed, read [using .NET Core](#using-net-core) for how to configure Edge to use one or the other. 
 
-![image](https://cloud.githubusercontent.com/assets/822369/2808066/3707f37c-cd0d-11e3-9b4e-7257ffc27c9c.png)
-
 #### Linux
 
-* Node.js 9.x, 8.x, 7.x, 6.x  
-* Mono 4.2.4, 5.x x64 and/or .NET Core
+* Supported Node.js version  
+* .NET Core
 * Follow [Linux setup instructions](#building-on-linux)
-
-![image](https://cloud.githubusercontent.com/assets/822369/2808077/03f92874-cd0e-11e3-88ea-79f67b8b1d49.png)
 
 #### OSX  
 
-* Node.js 9.x, 8.x, 7.x, 6.x  
-* Mono 4.2.4, 5.x x64 and/or .NET Core
+* Supported Node.js version  
+* Mono 4.x - 6.x and/or .NET Core
 * Follow [OSX setup instructions](#building-on-osx)  
-
-![image](https://cloud.githubusercontent.com/assets/822369/2808046/8f4ce378-cd0b-11e3-95dc-ef0842c28821.png)
-
-#### Docker
-
-Edge.js is available as a Docker image on the [tjanczuk/edgejs repository on Docker Hub](https://registry.hub.docker.com/u/tjanczuk/edgejs/). The image is based on Debian Trusty, and contains Node.js 6.3.0 x64, Mono 4.2.4 x64, .NET Core 1.0.0 Preview 2 x64 (dotnet-dev-1.0.0-preview2-003121), and Edge.js 6.5.1:
-
-By default Edge uses Mono to execute CLR code: 
-
-```
-> docker run -it tjanczuk/edgejs:6.5.1
-> cd samples
-> node 101_hello_lambda.js
-.NET welcomes Node.js
-```
-
-Specify the `EDGE_USE_CORECLR=1` environment variable to use .NET Core instead: 
-
-```
-> docker run -it tjanczuk/edgejs:6.5.1
-> cd samples
-> EDGE_USE_CORECLR=1 node 101_hello_lambda.js
-.NET welcomes Node.js
-```
-
-Alternatively, you can also specify `EDGE_USE_CORECLR` when starting the container: 
-
-```
-> docker run -it -e EDGE_USE_CORECLR=1 tjanczuk/edgejs:6.5.1
-```
 
 ### How to: C# hello, world
 
@@ -1604,17 +1537,17 @@ Would run tests against Node.js 0.8.22 on x64 architecture.
 Prerequisities:
 
 * [Homebrew](http://brew.sh/)  
-* [Mono x64](http://www.mono-project.com/download/#download-mac) and/or [.NET Core](https://dotnet.github.io/getting-started/) - see below  
-* [Node.js x64](http://nodejs.org/) (tested with v4.1.1)  
+* Mono and/or .NET Core - see below  
+* Node.js
 
 You can use Edge.js on OSX with either Mono or .NET Core installed, or both.
 
-If you choose to [install Mono](http://www.mono-project.com/download/#download-mac), select the universal installer to make sure you get the x64 version. Edge.js requires Mono x64.  If you choose to install .NET Core, follow the steps [here](https://www.microsoft.com/net/core#macosx)
+If you choose to follow steps here [install Mono](https://www.mono-project.com/download/stable/#download-mac) or install using Homebrew.  If you choose to install .NET Core, follow the steps [here](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 
 Then install and build Edge.js:
 
 ```bash
-brew install pkg-config
+brew install pkg-config # Only needed if using Mono
 npm install edge-js
 ```
 
@@ -1648,7 +1581,7 @@ export EDGE_NATIVE=/Users/tomek/edge/build/Debug/edge_nativeclr.node
 
 ### Building on Linux 
 
-For a normative set of steps to set up Edge.js on Linux with both Mono and CoreCLR please refer to the [Dockerfile](https://github.com/tjanczuk/edge/blob/master/Dockerfile). You can also use the ready-made [Docker image](#docker). 
+For a normative set of steps to set up Edge.js on Linux with CoreCLR please refer to the [Dockerfile](https://github.com/agracio/edge-js/blob/master/Dockerfile). You can also use the ready-made [Docker image](#docker). 
 
 ### Using .NET Core
 
