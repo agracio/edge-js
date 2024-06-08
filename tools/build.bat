@@ -6,6 +6,8 @@ if "%1" equ "" (
     exit /b -1
 )
 FOR /F "tokens=* USEBACKQ" %%F IN (`node -p process.arch`) DO (SET ARCH=%%F)
+for /F "delims=." %%a in ("%2") do set MAJORVERSION=%%a
+set MAJORVERSION=%MAJORVERSION: =%
 
 SET FLAVOR=%1
 shift
@@ -18,22 +20,14 @@ if not exist "%NODEEXE%" (
 )
 for %%i in ("%NODEEXE%") do set NODEDIR=%%~dpi
 SET DESTDIRROOT=%SELF%\..\lib\native\win32
-set VERSIONS=
-:harvestVersions
-if "%1" neq "" (
-    set VERSIONS=%VERSIONS% %1
-    shift
-    goto :harvestVersions
-)
-if "%VERSIONS%" equ "" set VERSIONS=20.14.0
+set VERSION=%1
 pushd %SELF%\..
 
 if "%ARCH%" == "arm64" (
-    for %%V in (%VERSIONS%) do call :build arm64 arm64 %%V 
+    call :build arm64 arm64 %VERSION%
 ) else (
-    for %%V in (%VERSIONS%) do call :build ia32 x86 %%V 
-    for %%V in (%VERSIONS%) do call :build x64 x64 %%V 
-
+    call :build ia32 x86 %VERSION%
+    call :build x64 x64 %VERSION%
 )
 popd
 
@@ -41,10 +35,11 @@ exit /b 0
 
 :build
 
-set DESTDIR=%DESTDIRROOT%\%1\%3
+set DESTDIR=%DESTDIRROOT%\%1\%MAJORVERSION%
+if not exist "%DESTDIR%" mkdir "%DESTDIR%"
+type NUL > %DESTDIR%\v%VERSION%
 
 if exist "%DESTDIR%\node.exe" goto gyp
-if not exist "%DESTDIR%\NUL" mkdir "%DESTDIR%"
 echo Downloading node.exe %2 %3...
 node "%SELF%\download.js" %2 %3 "%DESTDIR%"
 if %ERRORLEVEL% neq 0 (
