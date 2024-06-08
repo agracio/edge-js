@@ -27,6 +27,7 @@ on:
       - 'test/config.json'
       - 'test/double'
       - '.circleci'
+      - '.circleci/*'
       - 'README.md'
 
 

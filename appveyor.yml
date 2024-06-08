@@ -64,6 +64,7 @@ skip_commits:
     - 'test/double'
     - 'appveyor_double.yml'
     - '.circleci'
+    - '.circleci/*'
 
 build: off
 
