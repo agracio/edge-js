@@ -5,6 +5,7 @@
 [![Codacy Badge][codacy-img]][codacy-url]
 [![Git Issues][issues-img]][issues-url]
 [![Closed Issues][closed-issues-img]][closed-issues-url]
+<!-- ![Node version](https://img.shields.io/node/v/edge-js.svg) -->
 <!-- [![deps status][dependencies-img]][dependencies-url] -->
 <!--[![MIT license][license-img]][license-url] -->
 
@@ -440,7 +441,7 @@ class Program
 **Dockerfile: [Dockerfile](https://github.com/agracio/edge-js/blob/master/Dockerfile)**  
 **Docker Hub image: [agracio/ubuntu-node-netcore](https://hub.docker.com/repository/docker/agracio/ubuntu-node-netcore)**
 
-* Baseed on Ununtu 22.04
+* Based on Ununtu 22.04
 * User directory **`devvol`**
 
 #### Pre-installed packages
