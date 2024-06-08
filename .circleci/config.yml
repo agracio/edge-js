@@ -1,0 +1,113 @@
+version: 2.1
+orbs:
+  node: circleci/node@5
+  win: circleci/windows@5.0
+  macos: circleci/macos@2.4.1
+
+executors:
+  node: 
+    docker:
+      - image: cimg/node:20.12.2
+    resource_class: medium
+  windows: 
+    machine:
+      image: windows-server-2022-gui:current
+    resource_class: windows.medium
+  macos: 
+    macos:
+      xcode: 15.2.0
+  linux-arm: 
+    docker:
+      - image: cimg/base:current
+    resource_class: arm.medium
+  linux: 
+    docker:
+      - image: cimg/base:current
+    resource_class: medium
+
+refs:
+  steps:
+    - &InstallNode
+      node/install:
+        node-version: << parameters.node-version >>
+    - &InstallDotnet
+      run:
+        shell: bash
+        name: Install dotnet
+        command: |
+          if [[ $OSTYPE == darwin* ]]; then
+              /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+              brew install --cask dotnet-sdk
+          elif [[ $OSTYPE == linux* ]]; then
+            wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+            sudo dpkg -i packages-microsoft-prod.deb
+            sudo apt-get update
+            sudo apt-get install -y dotnet-sdk-8.0
+            sudo rm packages-microsoft-prod.deb
+          fi
+    - &Versions
+      run:
+        name: Versions
+        command: node -v && npm -v && dotnet --version && node -p process.platform && node -p process.arch
+    - &NpmInstall
+      run:
+        name: NPM Install
+        command: npm install
+    - &Test
+      run:
+        shell: bash
+        name: Test
+        command: |
+          if [[ $OSTYPE == darwin* || $OSTYPE == linux* ]]; then
+              EDGE_USE_CORECLR=1 node tools/test.js circleci
+          else
+            node tools/test.js circleci
+            node tools/test.js circleci coreclr
+          fi
+
+jobs:
+  test-node:
+    # Install node dependencies and run tests
+    # executor: win/default
+    parameters:
+      os:
+        type: executor
+      node-version:
+        type: string
+    executor: << parameters.os >>
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+          - v1-deps-{{ arch }}-{{ checksum "package-lock.json" }}
+      - *InstallDotnet
+      # - node/install-packages:
+      #     cache-path: ~/project/node_modules
+      #     override-ci-command: npm install
+      - *InstallNode
+      - *Versions
+      - run: npm install 
+      - save_cache:
+          key: v1-deps-{{ arch }}-{{ checksum "package-lock.json" }}
+          paths: 
+            - node_modules
+      - *Test
+      # - run:
+      #     name: Run tests
+      #     command: EDGE_USE_CORECLR=1 node tools/test.js circleci --passWithNoTests
+      - store_test_results:
+          path: ./junit
+      - store_artifacts:
+          path: ./mochawesome.json
+          destination: mochawesome.json
+
+workflows:
+  build-and-test:
+    jobs:
+      - test-node:
+          matrix:
+            parameters:
+              # os: ['linux', 'linux-arm', 'macos']
+              os: ['linux-arm']
+              node-version: ['18', '20', '22']
+
