@@ -103,3 +103,4 @@ tools/download*.js
 test/mochawesome-report
 mochawesome-report
 mochawesome.json
+.circleci
