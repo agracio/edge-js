@@ -52,7 +52,7 @@ jobs:
         with:
           node-version: '${{ matrix.node }}'
           cache: 'npm'
-          cache-dependency-path: package.json
+          cache-dependency-path: package-lock.json
       
       - name: Cache node modules
         id: cache-nodemodules
@@ -61,7 +61,7 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: node_modules
-          key: ${{ matrix.os }}-${{ matrix.node }}-${{ hashFiles('package.json') }}
+          key: ${{ matrix.os }}-${{ matrix.node }}-${{ hashFiles('package-lock.json') }}
 
       # - if: runner.os == 'Windows'  
       #   name: Setup CSC for Windows
