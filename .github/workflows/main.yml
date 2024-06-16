@@ -93,7 +93,7 @@ jobs:
       #     pip install setuptools
 
       - name: npm install
-        run: npm i
+        run: npm i --no-audit
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
