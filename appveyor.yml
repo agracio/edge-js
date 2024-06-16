@@ -24,7 +24,7 @@ install:
   - sh: nvm use $nodejs || nvm install $nodejs
   - cmd: node -v && npm -v && dotnet --version
   - sh: node -v && npm -v && dotnet --version
-  - npm install -q
+  - npm ci
 
 test_script:
   - cmd: node tools/test.js CI
