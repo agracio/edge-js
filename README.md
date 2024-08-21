@@ -461,17 +461,18 @@ class Program
 * Run tests
 
 ```
-> docker run -w /devvol -e EDGE_USE_CORECLR=1 -it agracio/ubuntu-node-netcore:latest
-> git clone https://github.com/agracio/edge-js.git && cd edge-js
-> npm i
-> npm test
+docker run -w /devvol -e EDGE_USE_CORECLR=1 -it agracio/ubuntu-node-netcore:latest
+git clone https://github.com/agracio/edge-js.git && cd edge-js
+npm i
+npm test
 ```
 
 ---------
 
 <br/>Edge.js readme
 ==============================
-### :exclamation: Some of the documentation is outdated :exclamation:  
+
+### :exclamation: Some of the original Edge.js documentation is outdated :exclamation:  
  
 ## What problems does Edge.js solve?
 
