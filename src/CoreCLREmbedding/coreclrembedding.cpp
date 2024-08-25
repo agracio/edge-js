@@ -520,7 +520,7 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 		property_values.push_back(clrjit_path_cstr.data());
 	}
 
-	for (int i = 0; i < g_init.cfg_keys.size(); ++i)
+	for (size_t i = 0; i < g_init.cfg_keys.size(); ++i)
 	{
 		property_keys.push_back(g_init.cfg_keys[i].data());
 		property_values.push_back(g_init.cfg_values[i].data());
