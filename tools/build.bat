@@ -37,7 +37,8 @@ exit /b 0
 
 set DESTDIR=%DESTDIRROOT%\%1\%MAJORVERSION%
 if not exist "%DESTDIR%" mkdir "%DESTDIR%"
-type NUL > %DESTDIR%\v%VERSION%
+type NUL > %DESTDIR%\node.version
+echo %VERSION%> %DESTDIR%\node.version
 
 if exist "%DESTDIR%\node.exe" goto gyp
 echo Downloading node.exe %2 %3...
@@ -81,7 +82,7 @@ if %ERRORLEVEL% neq 0 (
     echo Error copying edge.node %FLAVOR% for node.js %2 v%3
     exit /b -1
 )
-
+rmdir /S /Q .\build\
 copy /y "%DESTDIR%\..\*.dll" "%DESTDIR%"
 if %ERRORLEVEL% neq 0 (
     echo Error copying VC redist %FLAVOR% to %DESTDIR%

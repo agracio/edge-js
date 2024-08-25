@@ -14,7 +14,6 @@ environment:
     - nodejs: "22"
     - nodejs: "20"
     - nodejs: "18"
-    - nodejs: "16"
 
 install:
   # - sh: if [ "$APPVEYOR_BUILD_WORKER_IMAGE" = 'Ubuntu2204' ]; then sudo apt-get -qq update && sudo apt-get -y -qq install build-essential libgconf-2-4 python3 libglib2.0-dev; fi

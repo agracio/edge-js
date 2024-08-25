@@ -45,7 +45,7 @@
   "devDependencies": {
     "follow-redirects": "^1.15.6",
     "junit-report-merger": "7.0.0",
-    "mocha": "10.4.0",
+    "mocha": "10.7.3",
     "mocha-junit-reporter": "^2.2.1",
     "mocha-multi-reporters": "^1.5.1",
     "mochawesome": "^7.1.3",
