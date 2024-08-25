@@ -30,7 +30,7 @@ void clrFuncProxyNearDeath(const Nan::WeakCallbackInfo<T> &data)
 #pragma managed(push, off)
 static Nan::Persistent<v8::Function> proxyFactory;
 static Nan::Persistent<v8::Function> proxyFunction;
-#pragma managed(push, pop)
+#pragma managed(pop)
 
 v8::Local<v8::Function> ClrFunc::Initialize(System::Func<System::Object^,System::Threading::Tasks::Task<System::Object^>^>^ func)
 {
