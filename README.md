@@ -120,6 +120,7 @@ Mono tests are excluded from CI.
 
 When packaging your application using Webpack make sure that `edge-js` is specified as external module.
 
+### Webpack
 ```js
   externals: {
     'edge-js': 'commonjs2 edge-js',
@@ -127,6 +128,15 @@ When packaging your application using Webpack make sure that `edge-js` is specif
   node: {
     __dirname: true,
     __filename: true,
+  },
+```
+
+### Next.js
+
+`next.config.mjs`
+```js
+  experimental: {
+    serverComponentsExternalPackages: ['edge-js'],
   },
 ```
 
