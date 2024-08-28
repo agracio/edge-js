@@ -120,7 +120,7 @@ jobs:
         if: success()
         with:
           name: test-results-${{ matrix.os }}-node-${{ matrix.node }}
-          fail-on-error: false
+          fail-on-error: true
           path: mochawesome.json   # Path to test results
           reporter: mochawesome-json 
 
