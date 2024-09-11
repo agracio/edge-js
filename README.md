@@ -1795,7 +1795,7 @@ class Program
                 var wss = new WebSocketServer({ port: port });
                 wss.on('connection', function (ws) {
                     ws.on('message', function (message) {
-                        ws.send(message.toUpperCase());
+                        ws.send(message.toString().toUpperCase());
                     });
                     ws.send('Hello!');
                 });
