@@ -1814,10 +1814,10 @@ class Program
 }
 ```
 
-This WebSocket server sends a *Hello* message to the client when a new connection is established, and then echos a capitalized version of every message it receives back to the client. You can test this webserver with the `wscat` tool included with the `ws` module. To make it convenient to use, first install the `ws` module globally:
+This WebSocket server sends a *Hello* message to the client when a new connection is established, and then echos a capitalized version of every message it receives back to the client. You can test this webserver with the `wscat` tool, first install the `wscat` module globally:
 
 ```
-npm install ws -g
+npm install -g wscat
 ```
 
 Then start the .NET application containing the WebSocket server and establish a connection to it with `wscat`:
