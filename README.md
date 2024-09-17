@@ -2,7 +2,7 @@
 <!---[![Build Status](https://app.travis-ci.com/agracio/edge-js.svg?branch=master)](https://app.travis-ci.com/github/agracio/edge-js)--->
 [![Build status][appveyor-image]][appveyor-url]
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/agracio/edge-js.svg?style=shield )](https://dl.circleci.com/status-badge/redirect/gh/agracio/edge-js/tree/master)
-[![Actions Status](https://github.com/agracio/edge-js/workflows/Build%20and%20Test/badge.svg)](https://github.com/agracio/edge-js/actions)
+[![Actions Status](https://github.com/agracio/edge-js/workflows/Test/badge.svg)](https://github.com/agracio/edge-js/actions)
 [![NPM Downloads][downloads-image]][downloads-url]
 <!-- [![Codacy Badge][codacy-img]][codacy-url] -->
 [![Git Issues][issues-img]][issues-url]

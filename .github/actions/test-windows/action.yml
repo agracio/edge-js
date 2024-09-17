@@ -1,0 +1,27 @@
+name: 'Test Windows'
+description: 'Runs Windows tests'
+inputs:
+  node:
+    description: 'Node.js version'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: agracio/github-substring-action@v1.0.0
+      id: node_version
+      with:
+        value: "${{ inputs.node }}"
+        length_from_start: 2
+
+    - name: Check edge-js Windows pre-built files
+      uses: andstor/file-existence-action@v3
+      with:
+        files: "lib/native/win32/${{ runner.arch }}/${{ steps.node_version.outputs.substring }}/edge_coreclr.node, lib/native/win32/${{ runner.arch }}/${{ steps.node_version.outputs.substring }}/edge_nativeclr.node"
+        fail: true
+        ignore_case: true
+
+    - name: Run .NET 4.5 tests
+      shell: bash
+      run: node tools/test.js CI
+

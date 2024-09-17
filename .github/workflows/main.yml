@@ -1,4 +1,4 @@
-name: Build and Test
+name: Test
 
 on: 
   push:
@@ -9,6 +9,7 @@ on:
       - 'stress/*'
       - 'performance/*'
       - '.github/FUNDING.YML'
+      - '.github/workflows/build.yml'
       - '**/*.md'
       - '**/*.d.ts'
       - '**/*.bat'
@@ -34,93 +35,49 @@ on:
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
   DOTNET_CLI_TELEMETRY_OPTOUT: 1 
+  DOTNET_NOLOGO: 1 
 
 jobs:
-  build-test:
+  test:
     runs-on: ${{ matrix.os }}
-    name: build-test-${{ matrix.os }}-node-${{ matrix.node }}
+    name: test-${{ matrix.os }}-node-${{ matrix.node }}
     strategy:
+      fail-fast: false
       matrix:
-        # os: [macos-latest, ubuntu-latest, windows-2019]
-        os: [macos-14]
-        node: [20, 22]
+        # os: [macos-13, macos-14, ubuntu-22.04, windows-2022]
+        os: [macos-14, windows-2022]
+        node: [18, 20, 22]
+
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v4
+      - name: Setup env
+        uses: ./.github/actions/setup-env
         with:
-          node-version: '${{ matrix.node }}'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-      
-      - name: Cache node modules
-        id: cache-nodemodules
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-${{ matrix.node }}-${{ hashFiles('package-lock.json') }}
-
-      # - if: runner.os == 'Windows'  
-      #   name: Setup CSC for Windows
-      #   uses: yoavain/Setup-CSC@v5
-
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
-
-      - name: Versions
-        run: node -v && npm -v && dotnet --version && node -p process.platform && node -p process.arch
-
-      # - if: runner.os == 'macOS'
-      #   name: Mono
-      #   run: |
-      #     which mono
-      #     export PKG_CONFIG_PATH="/Library/Frameworks/Mono.framework/Versions/Current/lib/pkgconfig":$PKG_CONFIG_PATH
-      #   name: Remove Mono from macOS # Incomplete Mono install interferes with gyp compile
-      #   run: |
-      #     sudo rm -rf /Library/Frameworks/Mono.framework
-      #     sudo pkgutil --forget com.xamarin.mono-MDK.pkg
-      #     sudo rm /etc/paths.d/mono-commands
+          node: ${{ matrix.node }}
+          os: ${{ matrix.os }}
 
       # - if: runner.os == 'macOS' && matrix.node == '16.x'
       #   name: Add missing packages for macOS NodeJs 16 
       #   run: |
       #     pip install setuptools
 
-      - name: npm install
-        run: npm i --no-audit
-        env:
-          DOTNET_CLI_TELEMETRY_OPTOUT: 1
-
-      # - if: runner.os == 'Windows'
-      #   name: Run .NET 4.5 tests
-      #   run: node tools/test.js CI
+      - if: runner.os == 'Windows'
+        name: Run Windows tests
+        uses: ./.github/actions/test-windows
+        with:
+          node: ${{ matrix.node }}
 
       - name: "Run .net core tests"
         run: node tools/test.js CI
         env:
           EDGE_USE_CORECLR: 1
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4.3.3
-        if: success()
+      - name: Test report
+        uses: ./.github/actions/create-test-report
         with:
-          name: ${{ matrix.os }}-${{ matrix.node }}
-          path: |
-            test-results.xml
-            mochawesome.json
-
-      - name: Test Report
-        uses: phoenix-actions/test-reporting@v15
-        if: success()
-        with:
-          name: test-results-${{ matrix.os }}-node-${{ matrix.node }}
-          fail-on-error: true
-          path: mochawesome.json   # Path to test results
-          reporter: mochawesome-json 
+          node: ${{ matrix.node }}
+          os: ${{ matrix.os }}
 

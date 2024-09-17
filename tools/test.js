@@ -12,6 +12,10 @@ const marge = require('mochawesome-report-generator')
 
 var runner = process.argv[2];
 
+if (process.platform !== 'win32') {
+    process.env.EDGE_USE_CORECLR = 1
+}
+
 if(process.argv[3] === 'coreclr'){
     process.env.EDGE_USE_CORECLR = 1
 }
