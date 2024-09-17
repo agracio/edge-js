@@ -49,7 +49,7 @@ runs:
       uses: phoenix-actions/test-reporting@v15
       if: success()
       with:
-        name: ${{ inputs.name }}-${{ inputs.os }}-v${{ inputs.node }}
+        name: ${{ inputs.name }}-${{ inputs.os }}-node-${{ inputs.node }}
         fail-on-error: true
         path: mochawesome.json   # Path to test results
         reporter: mochawesome-json 
