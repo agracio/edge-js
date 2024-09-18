@@ -26,7 +26,7 @@ set VERSION=%1
 
 if %MAJORVERSION% equ %VERSION% (
     echo Getting latest version of Node.js v%1
-    FOR /F "tokens=* USEBACKQ" %%F IN (`node "%SELF%\get_version.js" "%VERSION%"`) DO (SET VERSION=%%F)
+    FOR /F "tokens=* USEBACKQ" %%F IN (`node "%SELF%\getVersion.js" "%VERSION%"`) DO (SET VERSION=%%F)
 ) 
 
 if %MAJORVERSION% equ %VERSION% (
