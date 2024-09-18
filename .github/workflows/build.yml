@@ -50,6 +50,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup env
+        uses: ./.github/actions/setup-env
+        with:
+          electron: ${{ inputs.build-version }}
+          os: ${{ matrix.os }}
 
       - name: Get latest Node.js version
         id: node-version
@@ -57,7 +62,7 @@ jobs:
           node tools/getVersionAction.js
           echo "version=$(cat node.txt)" >> $GITHUB_OUTPUT
 
-      - name: Get latest Node.js version
+      - name: Print latest Node.js version 
         run: |
           core.setFailed("${{steps.node-version.outputs.version}}")
     
@@ -76,11 +81,6 @@ jobs:
           #   core.setFailed("Unable to resolve Electron version for testing")
           #  fi
 
-      - name: Setup env
-        uses: ./.github/actions/setup-env
-        with:
-          electron: ${{ inputs.build-version }}
-          os: ${{ matrix.os }}
    
       - name: install node-gyp
         run: npm i -g node-gyp
