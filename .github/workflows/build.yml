@@ -47,25 +47,27 @@ jobs:
       #     echo ${{ steps.myRequest.outputs.headers }}
       #     echo ${{ steps.myRequest.outputs.status }}
       #     echo ${{ fromJson(steps.myRequest.outputs.response).field_you_want_to_access }}
+
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup env
         uses: ./.github/actions/setup-env
         with:
-          electron: ${{ inputs.build-version }}
+          node: ${{ inputs.build-version }}
           os: ${{ matrix.os }}
 
       - name: Get latest Node.js version
         id: node-version
         run: |
-          node tools/getVersionAction.js
+          node tools/getVersionAction.js ${{ inputs.build-version }}
           echo "version=$(cat node.txt)" >> $GITHUB_OUTPUT
-
+   
       - name: Print latest Node.js version 
         run: |
           core.setFailed("${{steps.node-version.outputs.version}}")
-    
+
+
       - name: Resolve Electron version for test
         id: electron-test-version
         shell: bash
