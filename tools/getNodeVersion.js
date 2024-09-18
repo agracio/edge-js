@@ -1,6 +1,6 @@
 var {http} = require('follow-redirects');
 
-module.exports = async ({majorVersion, core}) => {
+module.exports = async ({github, context, core}) => {
     let url = 'http://nodejs.org/dist/index.json';
 
 	http.get(url,(res) => {
@@ -20,7 +20,7 @@ module.exports = async ({majorVersion, core}) => {
 
 				for (const el of json.sort()) {
 					let version = el.version.substring(1, el.version.length) ;
-					if(version.startsWith(majorVersion)){
+					if(version.startsWith('20')){
 						console.log(version)
 						core.setOutput("version", version);
 					}
