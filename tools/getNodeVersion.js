@@ -1,6 +1,5 @@
-var {http} = require('follow-redirects');
-
 module.exports = async ({github, context, core}) => {
+	const {http} = require('follow-redirects');
     let url = 'http://nodejs.org/dist/index.json';
 
 	http.get(url,(res) => {
