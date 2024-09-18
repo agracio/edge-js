@@ -67,7 +67,7 @@ jobs:
               //    core.setFailed(version);
               //    //return version;
               //  }
-              }
+              //}
             } catch(err) {
               core.error("Error while reading or parsing mochawesome.json")
               core.setFailed(err)
