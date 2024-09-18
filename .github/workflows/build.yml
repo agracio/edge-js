@@ -34,16 +34,29 @@ jobs:
     name: build ${{ matrix.os }}-v${{ inputs.build-version }}
     steps:
 
-      - name: Read mochawesome.json
-        uses: actions/github-script@v7
-        id: node-version
+      - name: Make Request
+        id: node-version-request
+        uses: fjogeleit/http-request-action@v1
         with:
+          url: 'https://nodejs.org/dist/index.json'
+
+      # - name: Show Response
+      #   run: |
+      #     echo ${{ steps.myRequest.outputs.response }}
+      #     echo ${{ steps.myRequest.outputs.headers }}
+      #     echo ${{ steps.myRequest.outputs.status }}
+      #     echo ${{ fromJson(steps.myRequest.outputs.response).field_you_want_to_access }}    
+
+      - name: HTTP Request Action
+        id: node-version
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
           script: |
             try {
               const url = 'https://nodejs.org/dist/index.json';
               const result = await github.request(url);
-              let json = JSON.parse(result);
-              console.log(json.data);
+              let json = JSON.parse( ${{ steps.node-version-request.outputs.response }});
               for (const el of json.data.sort()) {
                 let version = el.version.substring(1, el.version.length) ;
                 if(version.startsWith(${{ inputs.build-version }})){
