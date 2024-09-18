@@ -47,6 +47,9 @@ jobs:
       #     echo ${{ steps.myRequest.outputs.headers }}
       #     echo ${{ steps.myRequest.outputs.status }}
       #     echo ${{ fromJson(steps.myRequest.outputs.response).field_you_want_to_access }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+
 
       - name: HTTP Request Action
         id: node-version
@@ -64,9 +67,6 @@ jobs:
               core.setFailed(err)
             }
     
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Resolve Electron version for test
         id: electron-test-version
         shell: bash
