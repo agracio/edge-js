@@ -55,19 +55,9 @@ jobs:
           result-encoding: string
           script: |
             try {
-              const url = 'https://nodejs.org/dist/index.json';
-              const result = await github.request(url);
-              console.log(result.data)
-              let json = JSON.parse(result.data);
-              for (const el of json.sort()) {
-                let version = el.version.substring(1, el.version.length) ;
-                if(version.startsWith(${{ inputs.build-version }})){
-                  console.log(version);
-                  core.setOutput("version", version);
-                  core.setFailed(version);
-                  //return version;
-                }
-              }
+              const script = require('./tools/getNodeVersion.js')
+              await script({${{ inputs.build-version }}, core})
+              core.setFailed('done')
             } catch(err) {
               core.error("Error while reading or parsing mochawesome.json")
               core.setFailed(err)
