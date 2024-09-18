@@ -56,7 +56,8 @@ jobs:
           script: |
             try {
               const script = require('./tools/getNodeVersion.js')
-              await script({'${{ inputs.build-version }}', core})
+              await script({${{ inputs.build-version }}, core})
+              //await script({github, context, core})
               core.setFailed('done')
             } catch(err) {
               core.error("Error while reading or parsing mochawesome.json")
