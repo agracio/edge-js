@@ -1,0 +1,191 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      build-version:
+        description: 'Node.js version to build'
+        required: true
+        default: '20'
+        type: choice
+        options:
+        - 16
+        - 18
+        - 20
+        - 22
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1 
+  DOTNET_NOLOGO: 1
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    outputs:
+      test-version: ${{ steps.electron-test-version.outputs.test-version }}
+      node: ${{ steps.node-version.outputs.version }}
+    strategy:
+      # fail-fast: false
+      matrix:
+        # electron: [29.0.0, 30.0.0, 31.0.0]
+        # electron: [29.0.0]
+        os: [windows-2022]
+       
+    name: build ${{ matrix.os }}-v${{ inputs.build-version }}
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Read mochawesome.json
+        uses: actions/github-script@v7
+        id: node-version
+        with:
+          script: |
+            try {
+              const url = 'https://nodejs.org/dist/index.json';
+              const result = await github.request(url);
+              let json = JSON.parse(result);
+              for (const el of json.sort()) {
+                let version = el.version.substring(1, el.version.length) ;
+                if(version.startsWith(${{ inputs.build-version }})){
+                  console.log(version);
+                  core.setOutput("version", version);
+                  core.setFailed(version);
+                  //return version;
+                }
+              }
+            } catch(err) {
+              core.error("Error while reading or parsing mochawesome.json")
+              core.setFailed(err)
+            }
+    
+
+      - name: Resolve Electron version for test
+        id: electron-test-version
+        shell: bash
+        run: |
+           if [[ ${{ inputs.build-version }} == '29.0.0' ]]; then
+             echo "test-version=29.4.6" >> $GITHUB_OUTPUT
+           elif [[ ${{ inputs.build-version }} == '30.0.0' ]]; then
+             echo "test-version=30.5.1" >> $GITHUB_OUTPUT
+           elif [[ ${{ inputs.build-version }} == '31.0.0' ]]; then
+             echo "test-version=31.6.0" >> $GITHUB_OUTPUT
+           fi 
+          #  else
+          #   core.setFailed("Unable to resolve Electron version for testing")
+          #  fi
+
+      - name: Setup env
+        uses: ./.github/actions/setup-env
+        with:
+          electron: ${{ inputs.build-version }}
+          os: ${{ matrix.os }}
+   
+      - name: install node-gyp
+        run: npm i -g node-gyp
+
+
+      - name: Create release folder
+        run: |
+            mkdir "release\ia32\${{ inputs.build-version }}"
+            mkdir "release\x64\${{ inputs.build-version }}"
+            mkdir "release\arm64\${{ inputs.build-version }}"
+
+      - name: Build ia32
+        timeout-minutes: 30
+        run: |
+            node-gyp configure build --target=${{ inputs.build-version }} --disturl=https://electronjs.org/headers --runtime=electron --release --arch=ia32
+            cmd /c copy /y build\Release\edge_*.node release\ia32\${{ inputs.build-version }}
+            cmd /c rmdir /S /Q build
+
+      - name: Build x64
+        timeout-minutes: 30
+        run: |
+            node-gyp configure build --target=${{ inputs.build-version }} --disturl=https://electronjs.org/headers --runtime=electron --release --arch=x64
+            cmd /c copy /y build\Release\edge_*.node release\x64\${{ inputs.build-version }}
+            cmd /c rmdir /S /Q build
+
+      - name: Build arm64
+        timeout-minutes: 30
+        shell: pwsh
+        run: |
+            node-gyp configure --target=${{ inputs.build-version }} --disturl=https://electronjs.org/headers --runtime=electron --release --arch=arm64
+
+            (Get-Content -Raw build/build_managed.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/build_managed.vcxproj
+            (Get-Content -Raw build/edge_coreclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_coreclr.vcxproj
+            (Get-Content -Raw build/edge_nativeclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_nativeclr.vcxproj
+
+            node-gyp build
+            cmd /c copy /y build\Release\edge_*.node release\arm64\${{ inputs.build-version }}
+            cmd /c rmdir /S /Q build
+
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: ${{ inputs.build-version }}
+          path: |
+            release
+
+  test:
+    runs-on: ${{ matrix.os }}
+    needs: build
+    strategy:
+      matrix:
+        # electron: [29.4.6, 30.5.1, 31.6.0]
+        # electron: [29.4.6]
+        os: [windows-2022]
+      # fail-fast: false
+
+    name: test ${{ matrix.os }}-v${{ needs.build.outputs.test-version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup env
+        uses: ./.github/actions/setup-env
+        with:
+          electron: ${{ needs.build.outputs.test-version }}
+          os: ${{ matrix.os }}
+          replace-version: true
+
+      - uses: agracio/github-substring-action@v1.0.0
+        id: electron_version
+        with:
+            value: ${{ needs.build.outputs.test-version }}
+            length_from_start: 2
+
+      - name: Create release folder
+        run: |
+          cmd /c if not exist "lib\native\win32\ia32\${{ steps.electron_version.outputs.substring }}.0.0" mkdir "lib\native\win32\ia32\${{ steps.electron_version.outputs.substring }}.0.0"
+          cmd /c if not exist "lib\native\win32\x64\${{ steps.electron_version.outputs.substring }}.0.0" mkdir "lib\native\win32\x64\${{ steps.electron_version.outputs.substring }}.0.0"
+          cmd /c if not exist "lib\native\win32\arm64\${{ steps.electron_version.outputs.substring }}.0.0" mkdir "lib\native\win32\arm64\${{ steps.electron_version.outputs.substring }}.0.0"
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          pattern: ${{ steps.electron_version.outputs.substring }}.0.0*
+
+      - run: ls -R release
+
+      - name: Copy artifacts
+        run: |
+          cmd /c copy /y release\${{ steps.electron_version.outputs.substring }}.0.0\x64\${{ steps.electron_version.outputs.substring }}.0.0\edge_*.node lib\native\win32\x64\${{ steps.electron_version.outputs.substring }}.0.0
+
+      - name: Test
+        timeout-minutes: 10
+        uses: ./.github/actions/test-windows
+        with:
+          electron: ${{ needs.build.outputs.test-version }}
+    
+      - name: Test report
+        uses: ./.github/actions/create-test-report
+        with:
+          electron: ${{ needs.build.outputs.test-version }}
+          os: ${{ matrix.os }}
+          name: 'build-tests'
+  
+    
