@@ -34,9 +34,6 @@ jobs:
     name: build ${{ matrix.os }}-v${{ inputs.build-version }}
     steps:
 
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Read mochawesome.json
         uses: actions/github-script@v7
         id: node-version
@@ -45,9 +42,9 @@ jobs:
             try {
               const url = 'https://nodejs.org/dist/index.json';
               const result = await github.request(url);
-              console.log(result)
               let json = JSON.parse(result);
-              for (const el of json.sort()) {
+              console.log(json.data);
+              for (const el of json.data.sort()) {
                 let version = el.version.substring(1, el.version.length) ;
                 if(version.startsWith(${{ inputs.build-version }})){
                   console.log(version);
@@ -61,6 +58,8 @@ jobs:
               core.setFailed(err)
             }
     
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Resolve Electron version for test
         id: electron-test-version
