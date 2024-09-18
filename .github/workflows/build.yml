@@ -58,16 +58,16 @@ jobs:
               const url = 'https://nodejs.org/dist/index.json';
               const result = await github.request(url);
               console.log(result.data)
-              //let json = JSON.parse( ${{ steps.node-version-request.outputs.response }});
-              //for (const el of json.data.sort()) {
-              //  let version = el.version.substring(1, el.version.length) ;
-              //  if(version.startsWith(${{ inputs.build-version }})){
-              //    console.log(version);
-              //    core.setOutput("version", version);
-              //    core.setFailed(version);
-              //    //return version;
-              //  }
-              //}
+              let json = JSON.parse(result.data);
+              for (const el of json.sort()) {
+                let version = el.version.substring(1, el.version.length) ;
+                if(version.startsWith(${{ inputs.build-version }})){
+                  console.log(version);
+                  core.setOutput("version", version);
+                  core.setFailed(version);
+                  //return version;
+                }
+              }
             } catch(err) {
               core.error("Error while reading or parsing mochawesome.json")
               core.setFailed(err)
