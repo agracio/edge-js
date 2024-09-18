@@ -60,6 +60,11 @@ Read more about the background and motivations of the project [here](http://toma
 
 For use with Electron **[`electron-edge-js`](https://github.com/agracio/electron-edge-js)**
 
+## VS Code extensions
+
+VS Code uses Electron shell, to write extensions for it using Edge.js use 
+**[`electron-edge-js`](https://github.com/agracio/electron-edge-js)**
+
 ## Quick start
 
 Sample app that shows how to work with .NET Core using inline code and compiled C# libraries.  
