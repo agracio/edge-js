@@ -45,6 +45,7 @@ jobs:
             try {
               const url = 'https://nodejs.org/dist/index.json';
               const result = await github.request(url);
+              console.log(result)
               let json = JSON.parse(result);
               for (const el of json.sort()) {
                 let version = el.version.substring(1, el.version.length) ;
