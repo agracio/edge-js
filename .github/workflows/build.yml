@@ -49,9 +49,9 @@ jobs:
           node tools/getVersionAction.js ${{ inputs.build-version }}
           echo "node-version=$(cat node.txt)" >> $GITHUB_OUTPUT
    
-      # - name: Print latest Node.js version 
-      #   run: |
-      #     core.setFailed("${{steps.node-test-version.outputs.node-version}}")
+      - name: Print latest Node.js version 
+        run: |
+          echo "node-version: ${{ steps.node-test-version.outputs.node-version }}"
 
 
       # - name: Resolve Electron version for test
