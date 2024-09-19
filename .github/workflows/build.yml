@@ -26,8 +26,6 @@ jobs:
     strategy:
       # fail-fast: false
       matrix:
-        # electron: [29.0.0, 30.0.0, 31.0.0]
-        # electron: [29.0.0]
         os: [windows-2022]
        
     name: build ${{ matrix.os }}-node-${{ inputs.build-version }}
@@ -49,9 +47,9 @@ jobs:
           node tools/getVersionAction.js ${{ inputs.build-version }}
           echo "node-version=$(cat node.txt)" >> $GITHUB_OUTPUT
    
-      - name: Print latest Node.js version 
-        run: |
-          echo "node-version: ${{ steps.node-test-version.outputs.node-version }}"
+      # - name: Print latest Node.js version 
+      #   run: |
+      #     echo "node-version: ${{ steps.node-test-version.outputs.node-version }}"
 
 
       # - name: Resolve Electron version for test
@@ -67,52 +65,70 @@ jobs:
       #      fi 
 
    
-      # - name: install node-gyp
-      #   run: npm i -g node-gyp
+      - name: install node-gyp
+        run: npm i -g node-gyp
 
 
-      # - name: Create release folder
-      #   run: |
-      #       mkdir "release\ia32\${{ inputs.build-version }}"
-      #       mkdir "release\x64\${{ inputs.build-version }}"
-      #       mkdir "release\arm64\${{ inputs.build-version }}"
+      - name: Create release folder
+        run: |
+            mkdir "release\ia32\${{ inputs.build-version }}"
+            mkdir "release\x64\${{ inputs.build-version }}"
+            mkdir "release\arm64\${{ inputs.build-version }}"
 
-      # - name: Build ia32
-      #   timeout-minutes: 30
-      #   run: |
-      #       node-gyp configure build --target=${{ inputs.build-version }} --disturl=https://electronjs.org/headers --runtime=electron --release --arch=ia32
-      #       cmd /c copy /y build\Release\edge_*.node release\ia32\${{ inputs.build-version }}
-      #       cmd /c rmdir /S /Q build
+      - name: Create node.version file
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            try {
+              fs.writeFileSync('release\ia32\${{ inputs.build-version }}\node.version', ${{ steps.node-test-version.outputs.node-version }});
+              fs.writeFileSync('release\x64\${{ inputs.build-version }}\node.version', ${{ steps.node-test-version.outputs.node-version }});
+              if(${{ inputs.build-version }} >=20){
+                fs.writeFileSync('release\arm64\${{ inputs.build-version }}\node.version', ${{ steps.node-test-version.outputs.node-version }});
+              }
+            } catch(err) {
+              core.error("Error writing node.version file")
+              core.setFailed(err)
+            }
 
-      # - name: Build x64
-      #   timeout-minutes: 30
-      #   run: |
-      #       node-gyp configure build --target=${{ inputs.build-version }} --disturl=https://electronjs.org/headers --runtime=electron --release --arch=x64
-      #       cmd /c copy /y build\Release\edge_*.node release\x64\${{ inputs.build-version }}
-      #       cmd /c rmdir /S /Q build
+      - name: Build ia32
+        timeout-minutes: 30
+        run: |
+            node-gyp configure build --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=ia32
+            cmd /c copy /y build\Release\edge_*.node release\ia32\${{ inputs.build-version }}
+            cmd /c rmdir /S /Q build
 
-      # - name: Build arm64
-      #   timeout-minutes: 30
-      #   shell: pwsh
-      #   run: |
-      #       node-gyp configure --target=${{ inputs.build-version }} --disturl=https://electronjs.org/headers --runtime=electron --release --arch=arm64
+      - name: Build x64
+        timeout-minutes: 30
+        run: |
+            node-gyp configure build --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=x64
+            node-gyp configure build --target=20.17.0 --runtime=node --release --arch=x64
+            cmd /c copy /y build\Release\edge_*.node release\x64\${{ inputs.build-version }}
+            cmd /c rmdir /S /Q build
 
-      #       (Get-Content -Raw build/build_managed.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/build_managed.vcxproj
-      #       (Get-Content -Raw build/edge_coreclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_coreclr.vcxproj
-      #       (Get-Content -Raw build/edge_nativeclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_nativeclr.vcxproj
+      - name: Build arm64
+        timeout-minutes: 30
+        if: ${{ inputs.build-version }} >=20
+        shell: pwsh
+        run: |
+            node-gyp configure --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=arm64
 
-      #       node-gyp build
-      #       cmd /c copy /y build\Release\edge_*.node release\arm64\${{ inputs.build-version }}
-      #       cmd /c rmdir /S /Q build
+            (Get-Content -Raw build/build_managed.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/build_managed.vcxproj
+            (Get-Content -Raw build/edge_coreclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_coreclr.vcxproj
+            (Get-Content -Raw build/edge_nativeclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_nativeclr.vcxproj
+
+            node-gyp build
+            cmd /c copy /y build\Release\edge_*.node release\arm64\${{ inputs.build-version }}
+            cmd /c rmdir /S /Q build
 
 
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@v4
-      #   if: success()
-      #   with:
-      #     name: ${{ inputs.build-version }}
-      #     path: |
-      #       release
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: edge-js-${{ inputs.build-version }}
+          path: |
+            release
 
   test:
     runs-on: ${{ matrix.os }}
@@ -126,21 +142,31 @@ jobs:
 
     name: test ${{ matrix.os }}-node-${{ needs.build.outputs.node-version }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+
+      - uses: agracio/github-substring-action@v1.0.0
+        id: node_version
+        with:
+            value: ${{ needs.build.outputs.node-version }}
+            length_from_start: 2
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          pattern: edge-js-${{ steps.node_version.outputs.substring }}*
+
+      - run: ls -R release
+
+      # - name: Checkout code
+      #   uses: actions/checkout@v4
 
       # - name: Setup env
       #   uses: ./.github/actions/setup-env
       #   with:
-      #     electron: ${{ needs.build.outputs.test-version }}
+      #     node: ${{ needs.build.outputs.node-version }}
       #     os: ${{ matrix.os }}
-      #     replace-version: true
 
-      # - uses: agracio/github-substring-action@v1.0.0
-      #   id: electron_version
-      #   with:
-      #       value: ${{ needs.build.outputs.test-version }}
-      #       length_from_start: 2
+
 
       # - name: Create release folder
       #   run: |
@@ -148,13 +174,6 @@ jobs:
       #     cmd /c if not exist "lib\native\win32\x64\${{ steps.electron_version.outputs.substring }}.0.0" mkdir "lib\native\win32\x64\${{ steps.electron_version.outputs.substring }}.0.0"
       #     cmd /c if not exist "lib\native\win32\arm64\${{ steps.electron_version.outputs.substring }}.0.0" mkdir "lib\native\win32\arm64\${{ steps.electron_version.outputs.substring }}.0.0"
 
-      # - name: Download artifacts
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     path: release
-      #     pattern: ${{ steps.electron_version.outputs.substring }}.0.0*
-
-      # - run: ls -R release
 
       # - name: Copy artifacts
       #   run: |
