@@ -94,4 +94,5 @@ mochawesome-report
 mochawesome.json
 
 release
+*.zip
 

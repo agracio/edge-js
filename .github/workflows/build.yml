@@ -40,7 +40,7 @@ jobs:
           node: ${{ inputs.build-version }}
           os: ${{ matrix.os }}
 
-      - name: Get latest Node.js version
+      - name: Get latest Node.js version for v${{ inputs.build-version }}
         id: node-test-version
         shell: bash
         run: |
@@ -81,10 +81,10 @@ jobs:
           result-encoding: string
           script: |
             try {
-              fs.writeFileSync('release\ia32\${{ inputs.build-version }}\node.version', ${{ steps.node-test-version.outputs.node-version }});
-              fs.writeFileSync('release\x64\${{ inputs.build-version }}\node.version', ${{ steps.node-test-version.outputs.node-version }});
+              fs.writeFileSync('release/ia32/${{ inputs.build-version }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
+              fs.writeFileSync('release/x64/${{ inputs.build-version }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
               if(${{ inputs.build-version }} >=20){
-                fs.writeFileSync('release\arm64\${{ inputs.build-version }}\node.version', ${{ steps.node-test-version.outputs.node-version }});
+                fs.writeFileSync('release/arm64/${{ inputs.build-version }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
               }
             } catch(err) {
               core.error("Error writing node.version file")
