@@ -81,6 +81,7 @@ jobs:
           result-encoding: string
           script: |
             try {
+              const fs = require('fs')
               fs.writeFileSync('release/ia32/${{ inputs.build-version }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
               fs.writeFileSync('release/x64/${{ inputs.build-version }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
               if(${{ inputs.build-version }} >=20){
