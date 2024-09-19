@@ -30,7 +30,7 @@ jobs:
         # electron: [29.0.0]
         os: [windows-2022]
        
-    name: build ${{ matrix.os }}-v${{ inputs.build-version }}
+    name: build ${{ matrix.os }}-node-${{ inputs.build-version }}
     steps:
 
       - name: Checkout code
@@ -44,6 +44,7 @@ jobs:
 
       - name: Get latest Node.js version
         id: node-test-version
+        shell: bash
         run: |
           node tools/getVersionAction.js ${{ inputs.build-version }}
           echo "node-version=$(cat node.txt)" >> $GITHUB_OUTPUT
@@ -123,7 +124,7 @@ jobs:
         os: [windows-2022]
       # fail-fast: false
 
-    name: test ${{ matrix.os }}-v${{ needs.build.outputs.node-version }}
+    name: test ${{ matrix.os }}-node-${{ needs.build.outputs.node-version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
