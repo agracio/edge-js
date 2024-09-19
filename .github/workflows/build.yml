@@ -103,13 +103,12 @@ jobs:
         timeout-minutes: 30
         run: |
             node-gyp configure build --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=x64
-            node-gyp configure build --target=20.17.0 --runtime=node --release --arch=x64
             cmd /c copy /y build\Release\edge_*.node release\x64\${{ inputs.build-version }}
             cmd /c rmdir /S /Q build
 
       - name: Build arm64
         timeout-minutes: 30
-        if: ${{ inputs.build-version }} >=20
+        if: ${{ inputs.build-version >=20 }}
         shell: pwsh
         run: |
             node-gyp configure --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=arm64
