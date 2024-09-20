@@ -9,7 +9,6 @@ on:
         default: '20'
         type: choice
         options:
-        - 16
         - 18
         - 20
         - 22
@@ -20,15 +19,13 @@ env:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-2022
     outputs:
       node-version: ${{ steps.node-test-version.outputs.node-version }}
     strategy:
-      # fail-fast: false
-      matrix:
-        os: [windows-2022]
+      fail-fast: true
        
-    name: build ${{ matrix.os }}-node-${{ inputs.build-version }}
+    name: build windows-2022-node-${{ inputs.build-version }}
     steps:
 
       - name: Checkout code
@@ -38,7 +35,7 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           node: ${{ inputs.build-version }}
-          os: ${{ matrix.os }}
+          os: windows-2022
 
       - name: Get latest Node.js version for v${{ inputs.build-version }}
         id: node-test-version
@@ -46,28 +43,9 @@ jobs:
         run: |
           node tools/getVersionAction.js ${{ inputs.build-version }}
           echo "node-version=$(cat node.txt)" >> $GITHUB_OUTPUT
-   
-      # - name: Print latest Node.js version 
-      #   run: |
-      #     echo "node-version: ${{ steps.node-test-version.outputs.node-version }}"
-
-
-      # - name: Resolve Electron version for test
-      #   id: electron-test-version
-      #   shell: bash
-      #   run: |
-      #      if [[ ${{ inputs.build-version }} == '29.0.0' ]]; then
-      #        echo "test-version=29.4.6" >> $GITHUB_OUTPUT
-      #      elif [[ ${{ inputs.build-version }} == '30.0.0' ]]; then
-      #        echo "test-version=30.5.1" >> $GITHUB_OUTPUT
-      #      elif [[ ${{ inputs.build-version }} == '31.0.0' ]]; then
-      #        echo "test-version=31.6.0" >> $GITHUB_OUTPUT
-      #      fi 
-
-   
+    
       - name: install node-gyp
         run: npm i -g node-gyp
-
 
       - name: Create release folder
         run: |
@@ -135,61 +113,69 @@ jobs:
     needs: build
     strategy:
       matrix:
-        # electron: [29.4.6, 30.5.1, 31.6.0]
-        # electron: [29.4.6]
         os: [windows-2022]
       # fail-fast: false
 
     name: test ${{ matrix.os }}-node-${{ needs.build.outputs.node-version }}
     steps:
 
-      - uses: agracio/github-substring-action@v1.0.0
-        id: node_version
+      # - uses: agracio/github-substring-action@v1.0.0
+      #   id: node-version
+      #   with:
+      #       value: ${{ needs.build.outputs.node-version }}
+      #       length_from_start: 2
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup env
+        uses: ./.github/actions/setup-env
         with:
-            value: ${{ needs.build.outputs.node-version }}
-            length_from_start: 2
+          node: ${{ inputs.build-version }}
+          os: ${{ matrix.os }}
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           path: release
-          pattern: edge-js-${{ steps.node_version.outputs.substring }}*
+          pattern: edge-js-${{ inputs.build-version }}*
 
       - run: ls -R release
 
-      # - name: Checkout code
-      #   uses: actions/checkout@v4
+      - name: Create release folder
+        run: |
+          cmd /c if not exist "lib\native\win32\ia32\${{ inputs.build-version }}" mkdir "lib\native\win32\ia32\${{ inputs.build-version }}"
+          cmd /c if not exist "lib\native\win32\x64\${{ inputs.build-version }}" mkdir "lib\native\win32\x64\${{ inputs.build-version }}"
+          cmd /c if not exist "lib\native\win32\arm64\${{ inputs.build-version }}" mkdir "lib\native\win32\arm64\${{ inputs.build-version }}"
 
-      # - name: Setup env
-      #   uses: ./.github/actions/setup-env
-      #   with:
-      #     node: ${{ needs.build.outputs.node-version }}
-      #     os: ${{ matrix.os }}
+      - name: runner.arch to lowercase
+        uses: actions/github-script@v7
+        id: arch-tolower
+        with:
+          result-encoding: string
+          script: |
+            try {
+              var arch = ${{ runner.arch }}
+              return arch.toLowerCase();
+            } catch(err) {
+              core.setFailed(err)
+            }
 
+      - name: Copy artifacts
+        run: |
+          cmd /c copy /y release\edge-js-${{ inputs.build-version }}\${{ steps.arch-tolower.outputs.result }}\${{ inputs.build-version }}\edge_*.node lib\native\win32\${{ steps.arch-tolower.outputs.result }}\${{ inputs.build-version }}
 
-
-      # - name: Create release folder
-      #   run: |
-      #     cmd /c if not exist "lib\native\win32\ia32\${{ steps.electron_version.outputs.substring }}.0.0" mkdir "lib\native\win32\ia32\${{ steps.electron_version.outputs.substring }}.0.0"
-      #     cmd /c if not exist "lib\native\win32\x64\${{ steps.electron_version.outputs.substring }}.0.0" mkdir "lib\native\win32\x64\${{ steps.electron_version.outputs.substring }}.0.0"
-      #     cmd /c if not exist "lib\native\win32\arm64\${{ steps.electron_version.outputs.substring }}.0.0" mkdir "lib\native\win32\arm64\${{ steps.electron_version.outputs.substring }}.0.0"
-
-
-      # - name: Copy artifacts
-      #   run: |
-      #     cmd /c copy /y release\${{ steps.electron_version.outputs.substring }}.0.0\x64\${{ steps.electron_version.outputs.substring }}.0.0\edge_*.node lib\native\win32\x64\${{ steps.electron_version.outputs.substring }}.0.0
-
-      # - name: Test
-      #   timeout-minutes: 10
-      #   uses: ./.github/actions/test-windows
-      #   with:
-      #     electron: ${{ needs.build.outputs.test-version }}
+      - name: Test
+        timeout-minutes: 10
+        uses: ./.github/actions/test-windows
+        with:
+          node: ${{ needs.build.outputs.node-version }}
     
-      # - name: Test report
-      #   uses: ./.github/actions/create-test-report
-      #   with:
-      #     electron: ${{ needs.build.outputs.test-version }}
-      #     os: ${{ matrix.os }}
-      #     name: 'build-tests'
+      - name: Test report
+        uses: ./.github/actions/create-test-report
+        with:
+          node: ${{ needs.build.outputs.node-version }}
+          os: ${{ matrix.os }}
+          name: 'build-tests'
   
     

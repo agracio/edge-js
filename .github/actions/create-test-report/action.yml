@@ -44,6 +44,7 @@ runs:
         path: |
           test-results.xml
           mochawesome.json
+          mochawesome.html
 
     - name: Create test report
       uses: phoenix-actions/test-reporting@v15

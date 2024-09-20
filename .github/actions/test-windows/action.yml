@@ -25,3 +25,9 @@ runs:
       shell: bash
       run: node tools/test.js CI
 
+    - name: "Run .net core tests"
+      shell: bash
+      run: node tools/test.js CI
+      env:
+        EDGE_USE_CORECLR: 1
+

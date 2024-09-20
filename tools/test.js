@@ -157,16 +157,13 @@ function mergeFiles(){
 
     const margeOptions = {
         reportFilename: 'mochawesome.html',
-        reportDir: './test/mochawesome-report'
+        reportDir: runner === 'CI' || runner === 'circleci' ? './' : './test/mochawesome-report'
     }
       
     mochawesomeMerge.merge(options).then(report => {
         var file = runner === 'all' ? './test/mochawesome-report/mochawesome.json' : 'mochawesome.json';
         fs.writeFileSync(file, JSON.stringify(report, null, 2))
         console.log(`Mochawesome json created: ${file}`);
-        if(runner === 'all')
-        {
-            marge.create(report, margeOptions).then(() => console.log(`Mochawesome report created: ${margeOptions.reportDir}/${margeOptions.reportFilename}`))
-        }
+        marge.create(report, margeOptions).then(() => console.log(`Mochawesome report created: ${margeOptions.reportDir}/${margeOptions.reportFilename}`))
     })
 }
