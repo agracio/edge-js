@@ -71,7 +71,7 @@ jobs:
           node: ${{ matrix.node }}
 
       - if: runner.os == 'macOS' || runner.os == 'Linux'
-        name: "Run .net core tests"
+        name: "Run macOS|Linux tests"
         run: node tools/test.js CI
         env:
           EDGE_USE_CORECLR: 1

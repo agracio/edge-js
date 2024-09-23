@@ -74,6 +74,22 @@ function runOnSuccess(code, signal) {
 
 		process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'net6.0');
 
+        if(runner === 'all')
+        {
+            if(fs.existsSync(`./test/mochawesome-report/mochawesome-net.json`) && !process.env.EDGE_USE_CORECLR){
+                fs.unlinkSync(`./test/mochawesome-report/mochawesome-net.json`)
+            }
+            if(fs.existsSync(`./test/mochawesome-report/mochawesome-coreclr.json`) && process.env.EDGE_USE_CORECLR){
+                fs.unlinkSync(`./test/mochawesome-report/mochawesome-coreclr.json`)
+            }
+            if(fs.existsSync(`./test/mochawesome-report/mochawesome.json`)){
+                fs.unlinkSync(`./test/mochawesome-report/mochawesome.json`)
+            }   
+            if(fs.existsSync(`./test/mochawesome-report/mochawesome.html`)){
+                fs.unlinkSync(`./test/mochawesome-report/mochawesome.html`)
+            }   
+        }
+
         if(!runner)
         {
             spawn('node', [mocha, testDir, '-R', 'spec', '-t', '10000', '-n', 'expose-gc'], { 
@@ -106,7 +122,7 @@ function runOnSuccess(code, signal) {
             {
                 if(!process.env.EDGE_USE_CORECLR){
                     process.env.EDGE_USE_CORECLR = 1;
-                    runOnSuccess(code, signal);
+                    runOnSuccess(0, signal);
                 }
                 else{
                     mergeFiles();
@@ -117,7 +133,7 @@ function runOnSuccess(code, signal) {
             }
 		}).on('error', function(err) {
 			console.log(err); 
-		});;
+		});
 	}
 }
 
@@ -164,6 +180,9 @@ function mergeFiles(){
         var file = runner === 'all' ? './test/mochawesome-report/mochawesome.json' : 'mochawesome.json';
         fs.writeFileSync(file, JSON.stringify(report, null, 2))
         console.log(`Mochawesome json created: ${file}`);
-        marge.create(report, margeOptions).then(() => console.log(`Mochawesome report created: ${margeOptions.reportDir}/${margeOptions.reportFilename}`))
+        if(runner === 'all')
+        {
+            marge.create(report, margeOptions).then(() => console.log(`Mochawesome report created: ${margeOptions.reportDir}/${margeOptions.reportFilename}`))
+        }    
     })
 }
