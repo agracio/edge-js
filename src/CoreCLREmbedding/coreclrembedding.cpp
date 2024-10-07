@@ -31,6 +31,12 @@
 #include <libproc.h>
 #endif
 
+// Special entry for coreclr path
+pal::string_t m_coreclr_standalone_path;
+
+// Special entry for JIT path
+pal::string_t m_clrjit_standalone_path;
+
 GetFuncFunction getFunc;
 CallFuncFunction callFunc;
 ContinueTaskFunction continueTask;
@@ -175,6 +181,25 @@ pal::string_t GetOSVersion()
 		return _X("10.0");
 	}
 #endif
+}
+
+void init_known_entry_path(const pal::string_t& edgeAppDir)
+{
+	trace::info(_X("CoreClrEmbedding::Initialize - Resolving CoreCLR and CLRJit for standalone"));
+	pal::string_t coreclr(edgeAppDir);
+	append_path(&coreclr, LIBCORECLR_NAME);
+	if(pal::file_exists(coreclr))
+	{
+		trace::info(_X("CoreClrEmbedding::Initialize - Resolved CoreCLR to %s"), coreclr.c_str());
+		m_coreclr_standalone_path = coreclr;
+	}
+	pal::string_t clrjit(edgeAppDir);
+	append_path(&clrjit, LIBCLRJIT_NAME);
+	if(pal::file_exists(clrjit))
+	{
+		trace::info(_X("CoreClrEmbedding::Initialize - Resolved CLRJit to %s"), clrjit.c_str());
+		m_clrjit_standalone_path = clrjit;
+	}
 }
 
 HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
@@ -338,13 +363,14 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 
 	if (mode != host_mode_t::standalone && dotnetExecutablePath.empty())
 	{
-		throwV8Exception("This is not a published, standalone application and we are unable to locate the .NET Core SDK.  Please make sure that it is installed; see http://microsoft.com/net/core for more details.");
+		throwV8Exception("This is not a published, standalone application and we are unable to locate the .NET Core SDK. Please make sure that it is installed; see https://microsoft.com/net/core for more details.");
 	}
 
 	pal::string_t configFile, devConfigFile, sdkPath;
 
 	if (mode != host_mode_t::standalone)
 	{
+		trace::verbose(_X("CoreClrEmbedding::Initialize - host mode: muxer"));
 		pal::string_t sdkDirectory;
 
 		fx_muxer_t::resolve_sdk_dotnet_path(dotnetDirectory, &sdkDirectory);
@@ -357,6 +383,8 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 
 	else
 	{
+		trace::verbose(_X("CoreClrEmbedding::Initialize - host mode: standalone"));
+		init_known_entry_path(edgeAppDir);
 		get_runtime_config_paths_from_app(entryPointAssembly, &configFile, &devConfigFile);
 	}
 
@@ -446,14 +474,26 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 		return StatusCode::ResolverResolveFailure;
 	}
 
-	pal::string_t clr_path = probe_paths.coreclr;
+	pal::string_t clr_path;
+	pal::string_t clrjit_path;
+
+	if (mode != host_mode_t::standalone)
+	{
+		clr_path = probe_paths.coreclr;
+		clrjit_path = probe_paths.clrjit;
+	}
+	else
+	{
+		clr_path = m_coreclr_standalone_path;
+		clrjit_path = m_clrjit_standalone_path;
+	}
+	
 	if (clr_path.empty() || !pal::realpath(&clr_path))
 	{
-		trace::error(_X("CoreClrEmbedding::Initialize - Could not resolve CoreCLR path. For more details, enable tracing by setting COREHOST_TRACE environment variable to 1"));;
+		trace::error(_X("CoreClrEmbedding::Initialize - Could not resolve CoreCLR path. For more details, enable tracing by setting COREHOST_TRACE environment variable to 1"));
 		return StatusCode::CoreClrResolveFailure;
 	}
 
-	pal::string_t clrjit_path = probe_paths.clrjit;
 	if (clrjit_path.empty())
 	{
 		trace::warning(_X("CoreClrEmbedding::Initialize - Could not resolve CLRJit path"));
