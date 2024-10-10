@@ -459,14 +459,14 @@ public class CoreCLREmbedding
             var runtimePath = Path.GetDirectoryName(RuntimeEnvironment.RuntimePath);
             foreach (CompilationLibrary compileLibrary in dependencyContext.CompileLibraries)
             {
-                if (compileLibrary.Assemblies == null || compileLibrary.Assemblies.Count == 0 || CompileAssemblies.ContainsKey(compileLibrary.Name))
+                if (compileLibrary.Assemblies.Count == 0 || CompileAssemblies.ContainsKey(compileLibrary.Name))
                 {
                     continue;
                 }
 
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing compile assembly {1} {0} {2}", compileLibrary.Name, compileLibrary.Type, compileLibrary.Assemblies[0]);
 
-                var assemblyPath = string.Empty;
+                var assemblyPath = compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar);
 
                 if (standalone)
                 {
