@@ -12,6 +12,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.Extensions.DependencyModel;
+// ReSharper disable InconsistentNaming
 
 [StructLayout(LayoutKind.Sequential)]
 // ReSharper disable once CheckNamespace
@@ -474,7 +475,7 @@ public class CoreCLREmbedding
                     {
                         assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)));
                     }
-                    else if(File.Exists(Path.Combine(runtimePath, Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)))))
+                    else if(!string.IsNullOrEmpty(runtimePath) && File.Exists(Path.Combine(runtimePath, Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)))))
                     {
                         assemblyPath = Path.Combine(runtimePath, Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)));
                     }
@@ -636,8 +637,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::Initialize (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
         }
     }
 
@@ -704,8 +704,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::GetFunc (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
 
             return IntPtr.Zero;
         }
@@ -815,8 +814,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Exception was thrown: {0}\n{1}", e.InnerException.Message, e.InnerException.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
 
             return IntPtr.Zero;
         }
@@ -825,8 +823,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
 
             return IntPtr.Zero;
         }
@@ -863,9 +860,7 @@ public class CoreCLREmbedding
                 {
                     DebugMessage("CoreCLREmbedding::CallFunc (CLR) - .NET method ran synchronously and faulted, marshalling exception data for V8");
 
-                    V8Type taskExceptionType;
-
-                    Marshal.WriteIntPtr(result, MarshalCLRToV8(functionTask.Exception, out taskExceptionType));
+                    Marshal.WriteIntPtr(result, MarshalCLRToV8(functionTask.Exception, out _));
                     Marshal.WriteInt32(resultType, (int)V8Type.Exception);
                     break;
                 }
@@ -978,8 +973,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::ContinueTask (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
         }
     }
 
@@ -996,8 +990,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::SetCallV8FunctionDelegate (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
         }
     }
 
