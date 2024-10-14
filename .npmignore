@@ -104,3 +104,5 @@ test/mochawesome-report
 mochawesome-report
 mochawesome.json
 .circleci
+*.sln
+xunit*.*

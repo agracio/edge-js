@@ -2,14 +2,14 @@
 <!---[![Build Status](https://app.travis-ci.com/agracio/edge-js.svg?branch=master)](https://app.travis-ci.com/github/agracio/edge-js)--->
 [![Build status][appveyor-image]][appveyor-url]
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/agracio/edge-js.svg?style=shield )](https://dl.circleci.com/status-badge/redirect/gh/agracio/edge-js/tree/master)
-[![Actions Status](https://github.com/agracio/edge-js/workflows/Test/badge.svg)](https://github.com/agracio/edge-js/actions)
-[![NPM Downloads][downloads-image]][downloads-url]
-<!-- [![Codacy Badge][codacy-img]][codacy-url] -->
+[![Actions Status][github-img]][github-url]
 [![Git Issues][issues-img]][issues-url]
 [![Closed Issues][closed-issues-img]][closed-issues-url]
+<!-- [![NPM Downloads][downloads-img]][downloads-url] -->
 <!-- ![Node version](https://img.shields.io/node/v/edge-js.svg) -->
 <!-- [![deps status][dependencies-img]][dependencies-url] -->
 <!--[![MIT license][license-img]][license-url] -->
+<!-- [![Codacy Badge][codacy-img]][codacy-url] -->
 
 -----
 ### This library is based on https://github.com/tjanczuk/edge all credit for original work goes to Tomasz Janczuk. 
@@ -2014,7 +2014,7 @@ Issues? Feedback? You [know what to do](https://github.com/agracio/edge-js/issue
 [dependencies-url]: https://www.npmjs.com/package/edge-js?activeTab=dependencies
 [dependencies-img]: https://img.shields.io/librariesio/release/npm/edge-js.svg?style=flat-square
 
-[downloads-image]: https://img.shields.io/npm/dw/edge-js.svg?style=flat-square
+[downloads-img]: https://img.shields.io/npm/dw/edge-js.svg?style=flat-square
 [downloads-url]: https://img.shields.io/npm/dw/edge-js.svg
 
 [appveyor-image]:https://ci.appveyor.com/api/projects/status/3hs8xq7jieufw507/branch/master?svg=true
@@ -2030,5 +2030,8 @@ Issues? Feedback? You [know what to do](https://github.com/agracio/edge-js/issue
 
 [codacy-img]: https://app.codacy.com/project/badge/Grade/3833e15b273d4add8d2030764e8977d9
 [codacy-url]: https://app.codacy.com/gh/agracio/edge-js/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade
+
+[github-img]: https://github.com/agracio/edge-js/workflows/Test/badge.svg
+[github-url]: https://github.com/agracio/edge-js/actions/workflows/main.yml
 
 
