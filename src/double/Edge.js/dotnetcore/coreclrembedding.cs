@@ -12,6 +12,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.Extensions.DependencyModel;
+// ReSharper disable InconsistentNaming
 
 [StructLayout(LayoutKind.Sequential)]
 // ReSharper disable once CheckNamespace
@@ -71,6 +72,8 @@ public struct EdgeBootstrapperContext
 public delegate void CallV8FunctionDelegate(IntPtr payload, int payloadType, IntPtr v8FunctionContext, IntPtr callbackContext, IntPtr callbackDelegate);
 public delegate void TaskCompleteDelegate(IntPtr result, int resultType, int taskState, IntPtr context);
 
+
+
 [SecurityCritical]
 public class CoreCLREmbedding
 {
@@ -93,6 +96,7 @@ public class CoreCLREmbedding
             ApplicationDirectory = bootstrapperContext.ApplicationDirectory;
             RuntimePath = bootstrapperContext.RuntimeDirectory;
             DependencyManifestFile = bootstrapperContext.DependencyManifestFile;
+            StandaloneApplication = Path.GetDirectoryName(RuntimePath) == ApplicationDirectory;
         }
 
         public string RuntimePath
@@ -112,10 +116,7 @@ public class CoreCLREmbedding
 
         public bool StandaloneApplication
         {
-            get
-            {
-                return ApplicationDirectory == RuntimePath;
-            }
+            get;
         }
     }
 
@@ -232,7 +233,7 @@ public class CoreCLREmbedding
                         dependencyContext = dependencyContext.Merge(dependencyContextReader.Read(runtimeDependencyManifestStream));
                     }
                 }
-                
+                DebugMessage("EdgeAssemblyResolver::Runtime - ApplicationDirectory: {0}, RuntimePath: {1}, Standalone: {2}", RuntimeEnvironment.ApplicationDirectory, RuntimeEnvironment.RuntimePath, RuntimeEnvironment.StandaloneApplication);
                 AddDependencies(dependencyContext, RuntimeEnvironment.StandaloneApplication);
             }
 
@@ -241,7 +242,7 @@ public class CoreCLREmbedding
         
         private void AddDependencies(DependencyContext dependencyContext, bool standalone)
         {
-            DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Adding dependencies for {0}", dependencyContext.Target.Framework);
+            DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Adding dependencies for: {0}, standalone: {1}", dependencyContext.Target.Framework, standalone);
 
             AddCompileDependencies(dependencyContext, standalone);
 
@@ -459,17 +460,26 @@ public class CoreCLREmbedding
             var runtimePath = Path.GetDirectoryName(RuntimeEnvironment.RuntimePath);
             foreach (CompilationLibrary compileLibrary in dependencyContext.CompileLibraries)
             {
-                if (compileLibrary.Assemblies == null || compileLibrary.Assemblies.Count == 0 || CompileAssemblies.ContainsKey(compileLibrary.Name))
+                if (compileLibrary.Assemblies.Count == 0 || CompileAssemblies.ContainsKey(compileLibrary.Name))
                 {
                     continue;
                 }
 
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing compile assembly {1} {0} {2}", compileLibrary.Name, compileLibrary.Type, compileLibrary.Assemblies[0]);
 
-                string assemblyPath;
+                var assemblyPath = compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar);
 
-                if (standalone && File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)))))
-                    assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)));
+                if (standalone)
+                {
+                    if (File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)))))
+                    {
+                        assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)));
+                    }
+                    else if(!string.IsNullOrEmpty(runtimePath) && File.Exists(Path.Combine(runtimePath, Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)))))
+                    {
+                        assemblyPath = Path.Combine(runtimePath, Path.GetFileName(compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar)));
+                    }
+                }
                 else 
                 {
                     assemblyPath = Path.Combine(_packagesPath, compileLibrary.Name.ToLower(), compileLibrary.Version, compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar).ToLower());
@@ -627,8 +637,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::Initialize (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
         }
     }
 
@@ -695,8 +704,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::GetFunc (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
 
             return IntPtr.Zero;
         }
@@ -806,8 +814,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Exception was thrown: {0}\n{1}", e.InnerException.Message, e.InnerException.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
 
             return IntPtr.Zero;
         }
@@ -816,8 +823,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
 
             return IntPtr.Zero;
         }
@@ -854,9 +860,7 @@ public class CoreCLREmbedding
                 {
                     DebugMessage("CoreCLREmbedding::CallFunc (CLR) - .NET method ran synchronously and faulted, marshalling exception data for V8");
 
-                    V8Type taskExceptionType;
-
-                    Marshal.WriteIntPtr(result, MarshalCLRToV8(functionTask.Exception, out taskExceptionType));
+                    Marshal.WriteIntPtr(result, MarshalCLRToV8(functionTask.Exception, out _));
                     Marshal.WriteInt32(resultType, (int)V8Type.Exception);
                     break;
                 }
@@ -969,8 +973,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::ContinueTask (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
         }
     }
 
@@ -987,8 +990,7 @@ public class CoreCLREmbedding
         {
             DebugMessage("CoreCLREmbedding::SetCallV8FunctionDelegate (CLR) - Exception was thrown: {0}{1}{2}", e.Message, Environment.NewLine, e.StackTrace);
 
-            V8Type v8Type;
-            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out v8Type));
+            Marshal.WriteIntPtr(exception, MarshalCLRToV8(e, out _));
         }
     }
 
