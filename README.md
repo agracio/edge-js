@@ -74,12 +74,13 @@ https://github.com/agracio/edge-js-quick-start
 
 ### Windows
 
-| Version | x86/x64            | arm64              |
-| ------- | ------------------ | ------------------ |
-| 16.x    | :heavy_check_mark: | :x:                |
-| 18.x    | :heavy_check_mark: | :x:                |
-| 20.x    | :heavy_check_mark: | :heavy_check_mark: |
-| 22.x    | :heavy_check_mark: | :heavy_check_mark: |
+| Version | x86                | x64                | arm64              |
+| ------- | ------------------ | ------------------ | ------------------ |
+| 16.x    | :heavy_check_mark: | :heavy_check_mark: | :x:                |
+| 18.x    | :heavy_check_mark: | :heavy_check_mark: | :x:                |
+| 20.x    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| 22.x    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| 23.x    | :x:                | :heavy_check_mark: | :heavy_check_mark: |
 
 
 ### macOS
