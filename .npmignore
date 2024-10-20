@@ -106,3 +106,4 @@ mochawesome.json
 .circleci
 *.sln
 xunit*.*
+getVersion*.js
