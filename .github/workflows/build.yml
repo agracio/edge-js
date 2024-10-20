@@ -75,6 +75,7 @@ jobs:
 
       - name: Build ia32
         timeout-minutes: 30
+        if: ${{ inputs.build-version <23 }}
         run: |
             node-gyp configure build --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=ia32
             cmd /c copy /y build\Release\edge_*.node release\ia32\${{ inputs.build-version }}
