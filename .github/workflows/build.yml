@@ -12,6 +12,7 @@ on:
         - 18
         - 20
         - 22
+        - 23
 
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1 
