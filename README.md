@@ -87,13 +87,13 @@ https://github.com/agracio/edge-js-quick-start
 
 | Version        | x64                | arm64 (M1+)        |
 | -------------- | ------------------ | ------------------ |
-| 16.x - 22.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 16.x - 23.x    | :heavy_check_mark: | :heavy_check_mark: |
 
 ### Linux
 
 | Version        | x64                | arm64              |
 | -------------- | ------------------ | ------------------ |
-| 14.x - 22.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 14.x - 23.x    | :heavy_check_mark: | :heavy_check_mark: |
 
 ## Scripting CLR from Node.js and Node.js from CRL 
 
