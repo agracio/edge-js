@@ -371,14 +371,44 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 	if (mode != host_mode_t::standalone)
 	{
 		trace::verbose(_X("CoreClrEmbedding::Initialize - host mode: muxer"));
-		pal::string_t sdkDirectory;
 
-		fx_muxer_t::resolve_sdk_dotnet_path(dotnetDirectory, &sdkDirectory);
-		
-		pal::string_t dotnetAssemblyPath(sdkDirectory);
-		append_path(&dotnetAssemblyPath, _X("dotnet.dll"));
+		std::vector<pal::string_t> appConfigFiles;
+		pal::readdir(edgeAppDir, _X("*.runtimeconfig.json"), &appConfigFiles);
+		pal::string_t runtimeconfigfile;
 
-		get_runtime_config_paths_from_app(dotnetAssemblyPath, &configFile, &devConfigFile);
+		if (appConfigFiles.size() > 1)
+		{
+			std::vector<char> edgeAppDirCstr;
+			pal::pal_clrstring(edgeAppDir, &edgeAppDirCstr);
+
+			throwV8Exception("CoreClrEmbedding::Initialize - Multiple app runtimeconfig files (*.runtimeconfig.json) files exist in the Edge.js application directory (%s).", edgeAppDirCstr.data());
+			return E_FAIL;
+		}
+		else if (appConfigFiles.size() == 1)
+		{
+			runtimeconfigfile = pal::string_t(edgeAppDir);
+			append_path(&runtimeconfigfile, appConfigFiles[0].c_str());
+
+			trace::info(_X("CoreClrEmbedding::Initialize - Exactly one (%s) app runtimeconfig file found in the Edge app directory, using it"), runtimeconfigfile.c_str());
+			configFile = pal::string_t(runtimeconfigfile);
+		}
+		else // No app runtimeconfigfile found, using sdk runtimeconfig
+		{
+			pal::string_t sdkDirectory;
+
+			fx_muxer_t::resolve_sdk_dotnet_path(dotnetDirectory, &sdkDirectory);
+			
+
+			if (sdkDirectory.length() == 0)
+			{
+				throwV8Exception("CoreClrEmbedding::Initialize - Could not find any runtimeconfig file ([appname].runtimeconfig.json in app folder nor dotnet.runtimeconfig.json in sdk folder)");
+				return E_FAIL;
+			}
+
+			runtimeconfigfile = pal::string_t(sdkDirectory);
+			append_path(&runtimeconfigfile, _X("dotnet.dll"));
+			get_runtime_config_paths_from_app(runtimeconfigfile, &configFile, &devConfigFile);
+		}
 	}
 
 	else
