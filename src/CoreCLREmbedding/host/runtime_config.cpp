@@ -107,7 +107,7 @@ bool runtime_config_t::parse_opts(const json_value& opts)
     m_fx_name = fx_obj->at(_X("name")).as_string();
     m_fx_ver = fx_obj->at(_X("version")).as_string();
 
-    trace::verbose(_X("Found framework with version [%s] in runtimeconfig.json file"), m_fx_ver);
+    trace::verbose(_X("Found framework [%s] with version [%s] in runtimeconfig.json file"), m_fx_name.c_str(), m_fx_ver.c_str());
 
     return true;
 }
