@@ -75,18 +75,24 @@ bool runtime_config_t::parse_opts(const json_value& opts)
     auto framework = opts_obj.find(_X("framework"));
     const web::json::object* fx_obj = nullptr;
 
-    if (framework == opts_obj.end()) // Found no "framework" section in file, trying "frameworks"
+    if (framework == opts_obj.end()) // Found no "framework" section in file, trying "frameworks" or "includedFrameworks"
     {
         auto frameworks = opts_obj.find(_X("frameworks"));
         if (frameworks == opts_obj.end())
         {
-            trace::verbose(_X("Found neither 'framework' nor 'frameworks' section in runtimeconfig.json file"));
-            return true;
+            frameworks = opts_obj.find(_X("includedFrameworks"));
+
+            if (frameworks == opts_obj.end())
+            {
+                trace::verbose(_X("Found neither 'framework' nor 'frameworks' nor 'includedFrameworks' section in runtimeconfig.json file"));
+                return true;
+            }
         }
         
         const auto& frameworks_array = frameworks->second.as_array();
         if (frameworks_array.size() == 0)
         {
+            trace::verbose(_X("'Frameworks' in runtimeconfig.json file section found but is empty"));
             return true;
         }
         
@@ -100,6 +106,9 @@ bool runtime_config_t::parse_opts(const json_value& opts)
     m_portable = true;
     m_fx_name = fx_obj->at(_X("name")).as_string();
     m_fx_ver = fx_obj->at(_X("version")).as_string();
+
+    trace::verbose(_X("Found framework with version [%s] in runtimeconfig.json file"), m_fx_ver);
+
     return true;
 }
 
