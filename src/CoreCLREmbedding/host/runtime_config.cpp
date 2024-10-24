@@ -19,6 +19,7 @@ runtime_config_t::runtime_config_t(const pal::string_t& path, const pal::string_
     trace::verbose(_X("Runtime config [%s] is valid=[%d]"), path.c_str(), m_valid);
 } 
 
+// Parse runtimeconfig, see documentation here https://github.com/dotnet/sdk/blob/main/documentation/specs/runtime-configuration-file.md
 bool runtime_config_t::parse_opts(const json_value& opts)
 {
     // Note: both runtime_config and dev_runtime_config call into the function.
@@ -71,17 +72,43 @@ bool runtime_config_t::parse_opts(const json_value& opts)
         m_prerelease_roll_fwd = prerelease_roll_fwd->second.as_bool();
     }
 
-    auto framework =  opts_obj.find(_X("framework"));
-    if (framework == opts_obj.end())
+    auto framework = opts_obj.find(_X("framework"));
+    const web::json::object* fx_obj = nullptr;
+
+    if (framework == opts_obj.end()) // Found no "framework" section in file, trying "frameworks" or "includedFrameworks"
     {
-        return true;
+        auto frameworks = opts_obj.find(_X("frameworks"));
+        if (frameworks == opts_obj.end())
+        {
+            frameworks = opts_obj.find(_X("includedFrameworks"));
+
+            if (frameworks == opts_obj.end())
+            {
+                trace::verbose(_X("Found neither 'framework' nor 'frameworks' nor 'includedFrameworks' section in runtimeconfig.json file"));
+                return true;
+            }
+        }
+        
+        const auto& frameworks_array = frameworks->second.as_array();
+        if (frameworks_array.size() == 0)
+        {
+            trace::verbose(_X("'Frameworks' in runtimeconfig.json file section found but is empty"));
+            return true;
+        }
+        
+        fx_obj = &frameworks_array.at(0).as_object(); // Using first element of frameworks array
+    }
+    else
+    {
+        fx_obj = &framework->second.as_object();
     }
 
     m_portable = true;
+    m_fx_name = fx_obj->at(_X("name")).as_string();
+    m_fx_ver = fx_obj->at(_X("version")).as_string();
 
-    const auto& fx_obj = framework->second.as_object();
-    m_fx_name = fx_obj.at(_X("name")).as_string();
-    m_fx_ver = fx_obj.at(_X("version")).as_string();
+    trace::verbose(_X("Found framework [%s] with version [%s] in runtimeconfig.json file"), m_fx_name.c_str(), m_fx_ver.c_str());
+
     return true;
 }
 

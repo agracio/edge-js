@@ -777,7 +777,9 @@ set EDGE_APP_ROOT=c:\DotNet\MyProject\bin\Release\netstandard1.6
 node app.js
 ```
 
-Edge.js also supports running published .NET Core applications on servers that do not have the .NET Core SDK and CLI installed, which is a common scenario in production environments.  To do so, the `.csproj` for your application should meet the following requirements:
+When calling a compiled assembly, Edge.js supports running with only the .NET runtime installed (and not the SDK or CLI). In this case a `appname.runtimeconfig.json` has to be created when building the project an present in your `EDGE_APP_ROOT` directory. `<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>`should be present under `<PropertyGroup>` in your `.csproj`file to create this file.
+
+Edge.js also supports running published .NET Core applications on servers that do not have the .NET Core SDK and CLI or .NET runtime installed, which is a common scenario in production environments.  To do so, the `.csproj` for your application should meet the following requirements:
 
  1. It should target the `netcoreapp2.x` or `netstandard2.0` framework moniker.
  2. It should reference `Microsoft.NETCore.DotNetHost` and `Microsoft.NETCore.DotNetHostPolicy`.  This is required so that the publish process can provide all the native libraries required to create a completely standalone version of your application.
