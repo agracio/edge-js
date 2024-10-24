@@ -2,9 +2,32 @@ name: Test
 
 on: 
   pull_request:
-    types: [opened, reopened, edited]
-    branches-ignore:
-      - 'circleci'
+    paths-ignore:
+      - 'samples/*'
+      - 'stress/*'
+      - 'performance/*'
+      - '.github/FUNDING.YML'
+      - '.github/workflows/build.yml'
+      - '**/*.md'
+      - '**/*.d.ts'
+      - '**/*.bat'
+      - '.travis.yml'
+      - 'Dockerfile'
+      - '.gitconfig'
+      - '.gitignore'
+      - 'appveyor*.*'
+      - 'LICENSE*'
+      - '.idea/**'
+      - '.vscode/**'
+      - '*.bat'
+      - '*.nuspec'
+      - 'tools/nuget/*'
+      - '.npmignore'
+      - 'test/config.json'
+      - 'test/double'
+      - '.circleci'
+      - '.circleci/*'
+      - 'README.md'
   push:
     branches-ignore:
       - 'circleci'
