@@ -6,6 +6,7 @@ if "%1" equ "" (
     echo e.g. build.bat release "20"
     exit /b -1
 )
+rmdir /S /Q ..\build\
 FOR /F "tokens=* USEBACKQ" %%F IN (`node -p process.arch`) DO (SET ARCH=%%F)
 for /F "delims=." %%a in ("%2") do set MAJORVERSION=%%a
 set MAJORVERSION=%MAJORVERSION: =%

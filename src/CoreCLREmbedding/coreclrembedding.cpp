@@ -52,7 +52,7 @@ InitializeFunction initialize;
 			"EdgeJs",\
 			"CoreCLREmbedding",\
 			functionName,\
-			(void**) functionPointer);\
+			(void**) (functionPointer));\
 	pal::clr_palstring(functionName, &functionNameString);\
 	\
 	if (FAILED(result))\
@@ -209,7 +209,7 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 	pal::string_t edgeDebug;
 	pal::getenv(_X("EDGE_DEBUG"), &edgeDebug);
 
-	if (edgeDebug.length() > 0)
+	if (!edgeDebug.empty())
 	{
 		trace::enable();
 	}
@@ -265,9 +265,9 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 	pal::string_t edgeBootstrapDir;
 	pal::getenv(_X("EDGE_BOOTSTRAP_DIR"), &edgeBootstrapDir);
 
-	if (edgeAppDir.length() == 0)
+	if (edgeAppDir.empty())
 	{
-		if (edgeBootstrapDir.length() != 0)
+		if (!edgeBootstrapDir.empty())
 		{
 			trace::info(_X("CoreClrEmbedding::Initialize - No EDGE_APP_ROOT environment variable present, using the Edge bootstrapper directory at %s"), edgeBootstrapDir.c_str());
 			edgeAppDir = edgeBootstrapDir;
@@ -321,7 +321,7 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 	size_t previousIndex = 0;
 	size_t currentIndex = pathEnvironmentVariable.find(PATH_SEPARATOR);
 
-	while (dotnetExecutablePath.length() == 0 && previousIndex != std::string::npos)
+	while (dotnetExecutablePath.empty() && previousIndex != std::string::npos)
 	{
 		if (currentIndex != std::string::npos)
 		{
@@ -371,16 +371,43 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 	if (mode != host_mode_t::standalone)
 	{
 		trace::verbose(_X("CoreClrEmbedding::Initialize - host mode: muxer"));
+
+		std::vector<pal::string_t> appConfigFiles;
+		pal::readdir(edgeAppDir, _X("*.runtimeconfig.json"), &appConfigFiles);
+		pal::string_t runtimeconfigfile;
+
 		pal::string_t sdkDirectory;
 
 		fx_muxer_t::resolve_sdk_dotnet_path(dotnetDirectory, &sdkDirectory);
 		
-		pal::string_t dotnetAssemblyPath(sdkDirectory);
-		append_path(&dotnetAssemblyPath, _X("dotnet.dll"));
+		if (!sdkDirectory.empty()) // Default case: SDK is installed and found - using dotnet.runtimeconfig.json from SDK folder
+		{
+			runtimeconfigfile = pal::string_t(sdkDirectory);
+			append_path(&runtimeconfigfile, _X("dotnet.dll"));
+			get_runtime_config_paths_from_app(runtimeconfigfile, &configFile, &devConfigFile);
+		}
+		else if (appConfigFiles.size() == 1) // Fallback: No SDK directory found (probably only .NET runtime installed), trying to use [appname].runtimeconfig.json instead
+		{
+			runtimeconfigfile = pal::string_t(edgeAppDir);
+			append_path(&runtimeconfigfile, appConfigFiles[0].c_str());
 
-		get_runtime_config_paths_from_app(dotnetAssemblyPath, &configFile, &devConfigFile);
+			trace::info(_X("CoreClrEmbedding::Initialize - No SDK directory found - Exactly one (%s) app runtimeconfig file found in the Edge app directory, using that"), runtimeconfigfile.c_str());
+			configFile = pal::string_t(runtimeconfigfile);
+		}
+		else if (appConfigFiles.size() > 1) // Throw error: No SDK found but more than one runtimeconfig.json found in app folder - Which one is correct?
+		{
+			std::vector<char> edgeAppDirCstr;
+			pal::pal_clrstring(edgeAppDir, &edgeAppDirCstr);
+
+			throwV8Exception("CoreClrEmbedding::Initialize - Multiple app runtimeconfig files (*.runtimeconfig.json) files exist in the Edge.js application directory (%s).", edgeAppDirCstr.data());
+			return E_FAIL;
+		}
+		else // No app runtimeconfigfile found and also no SDK found
+		{
+			throwV8Exception("CoreClrEmbedding::Initialize - Could not find any runtimeconfig file ([appname].runtimeconfig.json in app folder nor dotnet.runtimeconfig.json in sdk folder)");
+			return E_FAIL;
+		}
 	}
-
 	else
 	{
 		trace::verbose(_X("CoreClrEmbedding::Initialize - host mode: standalone"));
@@ -392,12 +419,12 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 	pal::string_t packagesEnvironmentVariable;
 	pal::getenv(_X("NUGET_PACKAGES"), &packagesEnvironmentVariable);
 
-	if (packagesEnvironmentVariable.length() == 0)
+	if (packagesEnvironmentVariable.empty())
 	{
 		pal::string_t profileDirectory;
 		pal::getenv(_X("USERPROFILE"), &profileDirectory);
 
-		if (profileDirectory.length() == 0)
+		if (profileDirectory.empty())
 		{
 			pal::getenv(_X("HOME"), &profileDirectory);
 		}
@@ -638,14 +665,14 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 
     SetCallV8FunctionDelegateFunction setCallV8Function;
 
-    CREATE_DELEGATE("GetFunc", &getFunc);
-    CREATE_DELEGATE("CallFunc", &callFunc);
-    CREATE_DELEGATE("ContinueTask", &continueTask);
-    CREATE_DELEGATE("FreeHandle", &freeHandle);
-    CREATE_DELEGATE("FreeMarshalData", &freeMarshalData);
-    CREATE_DELEGATE("SetCallV8FunctionDelegate", &setCallV8Function);
-    CREATE_DELEGATE("CompileFunc", &compileFunc);
-	CREATE_DELEGATE("Initialize", &initialize);
+	CREATE_DELEGATE("GetFunc", &getFunc)
+	CREATE_DELEGATE("CallFunc", &callFunc)
+    CREATE_DELEGATE("ContinueTask", &continueTask)
+    CREATE_DELEGATE("FreeHandle", &freeHandle)
+    CREATE_DELEGATE("FreeMarshalData", &freeMarshalData)
+    CREATE_DELEGATE("SetCallV8FunctionDelegate", &setCallV8Function)
+    CREATE_DELEGATE("CompileFunc", &compileFunc)
+	CREATE_DELEGATE("Initialize", &initialize)
 
 	trace::info(_X("CoreClrEmbedding::Initialize - Getting runtime info"));
 
