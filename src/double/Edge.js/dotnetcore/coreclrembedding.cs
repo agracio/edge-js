@@ -72,8 +72,6 @@ public struct EdgeBootstrapperContext
 public delegate void CallV8FunctionDelegate(IntPtr payload, int payloadType, IntPtr v8FunctionContext, IntPtr callbackContext, IntPtr callbackDelegate);
 public delegate void TaskCompleteDelegate(IntPtr result, int resultType, int taskState, IntPtr context);
 
-
-
 [SecurityCritical]
 public class CoreCLREmbedding
 {
