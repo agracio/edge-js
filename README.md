@@ -70,7 +70,7 @@ VS Code uses Electron shell, to write extensions for it using Edge.js use
 Sample app that shows how to work with .NET Core using inline code and compiled C# libraries.  
 https://github.com/agracio/edge-js-quick-start
 
-## Node.Js Support
+## Node.js Support
 
 ### Windows
 
