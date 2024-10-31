@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  node: circleci/node@5
+  node: circleci/node@6
   win: circleci/windows@5.0
   macos: circleci/macos@2.4.1
 
@@ -109,5 +109,5 @@ workflows:
             parameters:
               # os: ['linux', 'linux-arm', 'macos']
               os: ['linux-arm']
-              node-version: ['18', '20', '22']
+              node-version: ['14', '16' ,'18', '20', '22', '23']
 
