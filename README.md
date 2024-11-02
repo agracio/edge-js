@@ -2017,8 +2017,8 @@ Issues? Feedback? You [know what to do](https://github.com/agracio/edge-js/issue
 [dependencies-url]: https://www.npmjs.com/package/edge-js?activeTab=dependencies
 [dependencies-img]: https://img.shields.io/librariesio/release/npm/edge-js.svg?style=flat-square
 
-[downloads-img]: https://img.shields.io/npm/dw/edge-js.svg?style=flat-square
-[downloads-url]: https://img.shields.io/npm/dw/edge-js.svg
+[downloads-img]: https://img.shields.io/npm/d18m/edge-js.svg?style=flat-square
+[downloads-url]: https://img.shields.io/npm/d18m/edge-js.svg
 
 [appveyor-image]:https://ci.appveyor.com/api/projects/status/3hs8xq7jieufw507/branch/master?svg=true
 [appveyor-url]:https://ci.appveyor.com/project/agracio/edge-js/branch/master
@@ -2026,7 +2026,7 @@ Issues? Feedback? You [know what to do](https://github.com/agracio/edge-js/issue
 [license-url]: https://github.com/agracio/edge-js/blob/master/LICENSE
 [license-img]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 
-[issues-img]: https://img.shields.io/github/issues/agracio/edge-js.svg?style=flat-square
+[issues-img]: https://img.shields.io/github/issues-raw/agracio/edge-js.svg?style=flat-square
 [issues-url]: https://github.com/agracio/edge-js/issues
 [closed-issues-img]: https://img.shields.io/github/issues-closed-raw/agracio/edge-js.svg?style=flat-square&color=brightgreen
 [closed-issues-url]: https://github.com/agracio/edge-js/issues?q=is%3Aissue+is%3Aclosed
