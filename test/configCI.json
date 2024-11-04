@@ -9,6 +9,7 @@
     },
     "mochaJunitReporterReporterOptions": {
         "mochaFile": "test-results-{id}.xml",
-        "includePending": true
+        "includePending": true,
+        "jenkinsMode": true
     }
 }
