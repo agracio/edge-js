@@ -1,8 +1,8 @@
 # Edge.js: .NET and Node.js in-process
 <!---[![Build Status](https://app.travis-ci.com/agracio/edge-js.svg?branch=master)](https://app.travis-ci.com/github/agracio/edge-js)--->
 [![Build status][appveyor-image]][appveyor-url]
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/agracio/edge-js.svg?style=shield )](https://dl.circleci.com/status-badge/redirect/gh/agracio/edge-js/tree/master)
 [![Actions Status][github-img]][github-url]
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/agracio/edge-js.svg?style=shield )](https://dl.circleci.com/status-badge/redirect/gh/agracio/edge-js/tree/master)
 [![Git Issues][issues-img]][issues-url]
 [![Closed Issues][closed-issues-img]][closed-issues-url]
 <!-- [![NPM Downloads][downloads-img]][downloads-url] -->
