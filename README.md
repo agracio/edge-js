@@ -1480,20 +1480,19 @@ Read more about [performance of Edge.js on the wiki](https://github.com/tjanczuk
 
 ### Building on Windows
 
-You must have Visual Studio 2019* toolset, Python 3.6.x, and node-gyp installed for building.
+You must have Visual Studio 2022* toolset, Python 3.6.x, and node-gyp installed for building.
 
 To build and test the project against all supported versions of Node.js in x86 and x64 flavors, run the following:
 
 ```
 tools\buildall.bat
-test\testall.bat
 ```
 
 To build one of the versions of Node.js officially released by [Node.js](http://nodejs.org/dist), do the following:
 
 ```
 cd tools
-build.bat release 8.10.0
+build.bat release 20.10.0
 ```
 
 Note: the Node.js version number you provide must be version number corresponding to one of the subdirectories of http://nodejs.org/dist. The command will build both x32 and x64 architectures (assuming you use x64 machine). The command will also copy the edge\_\*.node executables to appropriate locations under lib\native directory where they are looked up from at runtime. The `npm install` step copies the C standard library shared DLL to the location of the edge\_\*.node files for the component to be ready to go.
@@ -1502,7 +1501,7 @@ To build the C++\CLI native extension using the version of Node.js installed on 
 
 ```
 npm install -g node-gyp
-node-gyp configure --msvs_version=2015
+node-gyp configure --msvs_version=2022
 node-gyp build -debug
 ```
 

@@ -1,9 +1,9 @@
 @echo off
 set SELF=%~dp0
 if "%1" equ "" (
-    echo Usage: build.bat debug^|release "{version}"
-    echo e.g. build.bat release "20.12.2"
-    echo e.g. build.bat release "20"
+    echo Usage: build.bat debug^|release {version}
+    echo e.g. build.bat release 20.12.2
+    echo e.g. build.bat release 20
     exit /b -1
 )
 rmdir /S /Q ..\build\
