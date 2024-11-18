@@ -191,7 +191,6 @@ ROBOCOPY build/nuget/content/edge/x86 nuget/content/edge/x86 *.* /NFL /NDL /NJH 
 ROBOCOPY build/nuget/content/edge/x64 nuget/content/edge/x64 *.* /NFL /NDL /NJH /NJS /nc /ns /np
 
 ROBOCOPY build/nuget/lib/net462 nuget/lib/net462 edge*.dll /NFL /NDL /NJH /NJS /nc /ns /np
-ROBOCOPY build/nuget/lib/net45 nuget/lib/net45 edge*.dll /NFL /NDL /NJH /NJS /nc /ns /np
 
 rem nuget pack
 exit /b 0

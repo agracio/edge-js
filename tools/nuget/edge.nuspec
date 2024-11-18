@@ -15,7 +15,6 @@
     <tags>node.js .net edge edge.js clr coreclr interop javascript edge-js edgejs</tags>
     <readme>README.md</readme>
     <dependencies>
-      <group targetFramework="net45"></group>
       <group targetFramework="net462"></group>
    </dependencies>
   </metadata>

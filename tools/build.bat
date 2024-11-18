@@ -53,8 +53,6 @@ exit /b 0
 
 set DESTDIR=%DESTDIRROOT%\%1\%MAJORVERSION%
 if not exist "%DESTDIR%" mkdir "%DESTDIR%"
-type NUL > %DESTDIR%\node.version
-echo %VERSION%> %DESTDIR%\node.version
 
 rem if exist "%DESTDIR%\node.exe" goto gyp
 
@@ -92,6 +90,9 @@ if "%ARCH%" == "arm64" (
 )
 
 "%NODEEXE%" "%GYP%" build
+
+type NUL > %DESTDIR%\node.version
+echo %VERSION%> %DESTDIR%\node.version
 
 echo %DESTDIR%
 copy /y .\build\%FLAVOR%\edge_*.node "%DESTDIR%"
