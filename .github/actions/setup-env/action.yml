@@ -40,4 +40,4 @@ runs:
 
     - name: npm install
       shell: bash
-      run: npm ci
+      run: npm i
