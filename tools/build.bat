@@ -42,7 +42,9 @@ pushd %SELF%\..
 if "%ARCH%" == "arm64" (
     call :build arm64 arm64 %VERSION%
 ) else (
-    call :build ia32 x86 %VERSION%
+    if %MAJORVERSION% LSS 23 (
+        call :build ia32 x86 %VERSION%
+    )
     call :build x64 x64 %VERSION%
 )
 popd
