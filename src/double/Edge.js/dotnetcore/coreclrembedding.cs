@@ -155,7 +155,7 @@ public class CoreCLREmbedding
                 try
                 {
                     DebugMessage("EdgeAssemblyLoadContext::Load (CLR) - Trying to load from {0}", assemblyPath);
-                    Assembly assembly = LoadFromAssemblyPath(assemblyPath);
+                    Assembly assembly = Default.LoadFromAssemblyPath(assemblyPath);
 
                     if (assembly != null)
                     {
@@ -291,7 +291,6 @@ public class CoreCLREmbedding
                             assemblyPath = Path.Combine(_packagesPath, runtimeLibrary.Name.ToLower(), runtimeLibrary.Version, assetPath.Replace('/', Path.DirectorySeparatorChar));
 
                     }
-                    DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Assembly path {0}", assemblyPath);
                     string libraryNameFromPath = Path.GetFileNameWithoutExtension(assemblyPath);
 
                     if (!File.Exists(assemblyPath) && !string.IsNullOrEmpty(runtimePath))
@@ -388,7 +387,7 @@ public class CoreCLREmbedding
             }
         
             var asset = runtimeLibrary.Name;
-            if (!asset.EndsWith(".dll"))
+            if (!asset.EndsWith(".dll") && !asset.EndsWith(".sni"))
             {
                 asset += ".dll";
             }
@@ -396,6 +395,11 @@ public class CoreCLREmbedding
             if (asset == "runtime.native.System.dll")
             {
                 asset = "System.dll";
+            }
+            
+            if (asset == "NETStandard.Library.dll")
+            {
+                asset = "netstandard.dll";
             }
             
             var assemblyPath = Path.Combine(runtimePath, Path.GetFileName(asset));
@@ -428,7 +432,7 @@ public class CoreCLREmbedding
             DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing dependency {1} {0} using .nuget packages and ApplicationDirectory path.", runtimeLibrary.Name, runtimeLibrary.Type);
                 
             var asset = runtimeLibrary.Name;
-            if (!asset.EndsWith(".dll"))
+            if (!asset.EndsWith(".dll") && !asset.EndsWith(".sni"))
             {
                 asset += ".dll";
             }
