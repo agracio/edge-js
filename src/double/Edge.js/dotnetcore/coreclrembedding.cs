@@ -259,10 +259,15 @@ public class CoreCLREmbedding
                 {
                     DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Added runtime assembly {1} from {0}", CompileAssemblies[runtimeLibrary.Name], runtimeLibrary.Name);
                     _libraries[runtimeLibrary.Name] = CompileAssemblies[runtimeLibrary.Name];
+                    AddNativeAssemblies(dependencyContext, runtimeLibrary);
+                    AddSupplementaryRuntime(runtimeLibrary);
+                    continue;
+
                 }
                 
                 if (_libraries.ContainsKey(runtimeLibrary.Name) && CompileAssemblies.ContainsKey(runtimeLibrary.Name))
                 {
+                    DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Already present in the runtime assemblies list, skipping");
                     AddNativeAssemblies(dependencyContext, runtimeLibrary);
                     AddSupplementaryRuntime(runtimeLibrary);
                     continue;
@@ -278,25 +283,8 @@ public class CoreCLREmbedding
                 if (assets.Any())
                 {
                     string assetPath = assets[0];
-
-                    string assemblyPath;
-                    if(runtimeLibrary.Type == "project")                    
-                        assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, assetPath);
-                    else if (standalone)
-                        assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(assetPath));
-                    else 
-                    {
-                        assemblyPath = Path.Combine(_packagesPath, runtimeLibrary.Name.ToLower(), runtimeLibrary.Version, assetPath.Replace('/', Path.DirectorySeparatorChar).ToLower());
-                        if(!File.Exists(assemblyPath))                                 
-                            assemblyPath = Path.Combine(_packagesPath, runtimeLibrary.Name.ToLower(), runtimeLibrary.Version, assetPath.Replace('/', Path.DirectorySeparatorChar));
-
-                    }
-                    string libraryNameFromPath = Path.GetFileNameWithoutExtension(assemblyPath);
-
-                    if (!File.Exists(assemblyPath) && !string.IsNullOrEmpty(runtimePath))
-                    {
-                        assemblyPath = Path.Combine(runtimePath, Path.GetFileName(assemblyPath));
-                    }
+                    
+                    var assemblyPath = ResolveAssemblyPath(assetPath, runtimeLibrary.Version, runtimeLibrary.Type, standalone);
 
                     if (!_libraries.ContainsKey(runtimeLibrary.Name))
                     {
@@ -305,12 +293,7 @@ public class CoreCLREmbedding
                             _libraries[runtimeLibrary.Name] = assemblyPath;
                             DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Added runtime assembly {1} from {0}", assemblyPath, runtimeLibrary.Name);
                             CompileAssemblies.TryAdd(runtimeLibrary.Name, assemblyPath);
-                            if (!string.Equals(runtimeLibrary.Name, libraryNameFromPath, StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                _libraries.TryAdd(libraryNameFromPath, assemblyPath);
-                                CompileAssemblies.TryAdd(libraryNameFromPath, assemblyPath);
-                                DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Added supplementary runtime assembly {1} from {0}", assemblyPath, libraryNameFromPath);
-                            }
+                            AddSupplementaryRuntime(runtimeLibrary);
                         }
                         else
                         {
@@ -331,6 +314,52 @@ public class CoreCLREmbedding
 
                 AddNativeAssemblies(dependencyContext, runtimeLibrary);
             }
+        }
+
+        private string ResolveAssemblyPath(string libraryName, string libraryVersion, string libraryType, bool standalone)
+        {
+            var runtimePath = Path.GetDirectoryName(RuntimeEnvironment.RuntimePath);
+            var assemblyPath = libraryName.Replace('/', Path.DirectorySeparatorChar);
+            var normalizedPath = libraryName.Replace('/', Path.DirectorySeparatorChar);
+
+            if (libraryType == "project")
+            {
+                assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(normalizedPath));
+            }
+            if (standalone)
+            {
+                if (File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(normalizedPath))))
+                {
+                    assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(normalizedPath));
+                }
+                else if (File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(normalizedPath))))
+                {
+                    assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(normalizedPath));
+                }
+                else if(!string.IsNullOrEmpty(runtimePath))
+                {
+                    assemblyPath = Path.Combine(runtimePath, Path.GetFileName(normalizedPath));
+                }
+            }
+            else 
+            {
+                assemblyPath = Path.Combine(_packagesPath, libraryName.ToLower(), libraryVersion, normalizedPath.ToLower());
+                if(!File.Exists(assemblyPath))
+                {
+                    assemblyPath = Path.Combine(_packagesPath, libraryName.ToLower(), libraryVersion, normalizedPath);
+                }
+                if(!File.Exists(assemblyPath) && File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(normalizedPath))))
+                {
+                    assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(normalizedPath));
+                }
+            }
+            
+            if (!File.Exists(assemblyPath) && !string.IsNullOrEmpty(runtimePath))
+            {
+                assemblyPath = Path.Combine(runtimePath, Path.GetFileName(assemblyPath));
+            }
+            
+            return assemblyPath;
         }
         
         private void AddSupplementaryRuntime(RuntimeLibrary runtimeLibrary)
@@ -359,6 +388,10 @@ public class CoreCLREmbedding
                     if (!File.Exists(nativeAssemblyPath) && !string.IsNullOrEmpty(runtimePath))
                     {
                         nativeAssemblyPath = Path.Combine(runtimePath, nativeAssembly.Replace('/', Path.DirectorySeparatorChar));
+                    }
+                    if (!File.Exists(nativeAssemblyPath) && !string.IsNullOrEmpty(runtimePath))
+                    {
+                        nativeAssemblyPath = Path.Combine(runtimePath, Path.GetFileName(nativeAssembly.Replace('/', Path.DirectorySeparatorChar)));
                     }
 						
                     if (File.Exists(nativeAssemblyPath))
@@ -409,20 +442,12 @@ public class CoreCLREmbedding
                 _libraries.TryAdd(runtimeLibrary.Name, assemblyPath);
                 
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Added dependency {1} from {0}", assemblyPath, runtimeLibrary.Name);
-                
-                var libraryNameFromPath = Path.GetFileNameWithoutExtension(assemblyPath);
-                if (!string.Equals(runtimeLibrary.Name, libraryNameFromPath, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Added supplementary assembly {1} from {0}", assemblyPath, libraryNameFromPath);
-                    CompileAssemblies.TryAdd(libraryNameFromPath, assemblyPath);
-                    _libraries.TryAdd(libraryNameFromPath, assemblyPath);
-                }
+                AddSupplementaryRuntime(runtimeLibrary);
             }
             else
             {
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Could not add dependency {0}", assemblyPath);
             }
-
         }
 
         private void AddDependencyFromAppDirectory(RuntimeLibrary runtimeLibrary)
@@ -454,14 +479,7 @@ public class CoreCLREmbedding
                 _libraries.TryAdd(runtimeLibrary.Name, assemblyPath);
                 
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Added dependency {1} from {0}", assemblyPath, runtimeLibrary.Name);
-                
-                var libraryNameFromPath = Path.GetFileNameWithoutExtension(assemblyPath);
-                if (!string.Equals(runtimeLibrary.Name, libraryNameFromPath, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Added supplementary assembly {1} from {0}", assemblyPath, libraryNameFromPath);
-                    CompileAssemblies.TryAdd(libraryNameFromPath, assemblyPath);
-                    _libraries.TryAdd(libraryNameFromPath, assemblyPath);
-                }
+                AddSupplementaryRuntime(runtimeLibrary);
             }
             else
             {
@@ -471,57 +489,21 @@ public class CoreCLREmbedding
 
         private void AddCompileDependencies(DependencyContext dependencyContext, bool standalone)
         {
-            var runtimePath = Path.GetDirectoryName(RuntimeEnvironment.RuntimePath);
             foreach (CompilationLibrary compileLibrary in dependencyContext.CompileLibraries)
             {
                 if (compileLibrary.Assemblies.Count == 0 || CompileAssemblies.ContainsKey(compileLibrary.Name))
                 {
                     continue;
                 }
-
-                var assemblyPath = compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar);
-                var normalizedPath = compileLibrary.Assemblies[0].Replace('/', Path.DirectorySeparatorChar);
-
-                DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing compile assembly {1} {0} {2}", compileLibrary.Name, compileLibrary.Type, compileLibrary.Assemblies[0]);
-
-                if (standalone)
-                {
-                    if (File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(normalizedPath))))
-                    {
-                        assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(normalizedPath));
-                    }
-                    else if (File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(normalizedPath))))
-                    {
-                        assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, "refs", Path.GetFileName(normalizedPath));
-                    }
-                    else if(!string.IsNullOrEmpty(runtimePath) && File.Exists(Path.Combine(runtimePath, Path.GetFileName(normalizedPath))))
-                    {
-                        assemblyPath = Path.Combine(runtimePath, Path.GetFileName(normalizedPath));
-                    }
-                }
-                else 
-                {
-                    assemblyPath = Path.Combine(_packagesPath, compileLibrary.Name.ToLower(), compileLibrary.Version, normalizedPath.ToLower());
-                    if(!File.Exists(assemblyPath))
-                    {
-                        assemblyPath = Path.Combine(_packagesPath, compileLibrary.Name.ToLower(), compileLibrary.Version, normalizedPath);
-                    }
-                    if(!File.Exists(assemblyPath) && File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(normalizedPath))))
-                    {
-                        assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(normalizedPath));
-                    }
-                }
                 
-                if (!File.Exists(assemblyPath) && !string.IsNullOrEmpty(runtimePath))
-                {
-                    assemblyPath = Path.Combine(runtimePath, Path.GetFileName(assemblyPath));
-                }
+                DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing compile assembly {1} {0} {2}", compileLibrary.Name, compileLibrary.Type, compileLibrary.Assemblies[0]);
+                var assemblyPath = ResolveAssemblyPath(compileLibrary.Assemblies[0], compileLibrary.Version, compileLibrary.Type, standalone);
 
                 if (!CompileAssemblies.ContainsKey(compileLibrary.Name))
                 {
-                    var libraryNameFromPath = Path.GetFileNameWithoutExtension(assemblyPath);
                     if (File.Exists(assemblyPath))
                     {
+                        var libraryNameFromPath = Path.GetFileNameWithoutExtension(assemblyPath);
                         CompileAssemblies[compileLibrary.Name] = assemblyPath;
                         DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Added compile assembly {1} from {0}", assemblyPath, compileLibrary.Name);
                         if (!string.Equals(compileLibrary.Name, libraryNameFromPath, StringComparison.CurrentCultureIgnoreCase))
