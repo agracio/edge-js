@@ -47,10 +47,11 @@ runs:
           mochawesome.html
 
     - name: Create test report
-      uses: phoenix-actions/test-reporting@v15
+      uses: hudl/GHA-test-reporter@v2.2.0
       if: success()
       with:
         name: ${{ inputs.name }}-${{ inputs.os }}-node-${{ inputs.node }}
+        show-html-notice: 'true'
         fail-on-error: true
-        path: mochawesome.json   # Path to test results
-        reporter: mochawesome-json 
+        path: test-results.xml   # Path to test results
+        reporter: jest-junit 
