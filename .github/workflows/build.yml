@@ -65,14 +65,14 @@ jobs:
             try {
               const fs = require('fs')
               if(${{ inputs.build-version }} <23){
-                fs.mkdirSync('release/ia32/${{ inputs.build-version }}');
+                fs.mkdirSync('release/ia32/${{ inputs.build-version }}', { recursive: true });
               }
-              fs.mkdirSync('release/x64/${{ inputs.build-version }}');
+              fs.mkdirSync('release/x64/${{ inputs.build-version }}', { recursive: true });
               if(${{ inputs.build-version }} >=20){
-                fs.mkdirSync('release/arm64/${{ inputs.build-version }}');
+                fs.mkdirSync('release/arm64/${{ inputs.build-version }}', { recursive: true });
               }
             } catch(err) {
-              core.error("Error writing node.version file")
+              core.error("Error creating release directory")
               core.setFailed(err)
             }
 
