@@ -9,6 +9,7 @@ on:
         default: '20'
         type: choice
         options:
+        - 16
         - 18
         - 20
         - 22
@@ -50,11 +51,30 @@ jobs:
       - name: install node-gyp
         run: npm i -g node-gyp
 
+      # - name: Create release folder
+      #   run: |
+      #       mkdir "release\ia32\${{ inputs.build-version }}"
+      #       mkdir "release\x64\${{ inputs.build-version }}"
+      #       mkdir "release\arm64\${{ inputs.build-version }}"
+
       - name: Create release folder
-        run: |
-            mkdir "release\ia32\${{ inputs.build-version }}"
-            mkdir "release\x64\${{ inputs.build-version }}"
-            mkdir "release\arm64\${{ inputs.build-version }}"
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            try {
+              const fs = require('fs')
+              if(${{ inputs.build-version }} <23){
+                fs.mkdirSync('release/ia32/${{ inputs.build-version }}');
+              }
+              fs.mkdirSync('release/x64/${{ inputs.build-version }}');
+              if(${{ inputs.build-version }} >=20){
+                fs.mkdirSync('release/arm64/${{ inputs.build-version }}');
+              }
+            } catch(err) {
+              core.error("Error writing node.version file")
+              core.setFailed(err)
+            }
 
       - name: Create node.version file
         uses: actions/github-script@v7
@@ -74,6 +94,14 @@ jobs:
               core.error("Error writing node.version file")
               core.setFailed(err)
             }
+
+      - name: Cache node-gyp
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-gyp
+        with:
+          path: ~\AppData\Local\node-gyp\Cache
+          key: ${{ runner.os }}
 
       - name: Build ia32
         timeout-minutes: 30
@@ -184,5 +212,5 @@ jobs:
           node: ${{ needs.build.outputs.node-version }}
           os: ${{ matrix.os }}
           name: 'build-tests'
-  
+  #AppData\\Local\\node-gyp\\Cache
     
