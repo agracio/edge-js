@@ -147,20 +147,14 @@ jobs:
     name: test ${{ matrix.os }}-node-${{ needs.build.outputs.node-version }}
     steps:
 
-      # - uses: agracio/github-substring-action@v1.0.0
-      #   id: node-version
-      #   with:
-      #       value: ${{ needs.build.outputs.node-version }}
-      #       length_from_start: 2
-
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup env
         uses: ./.github/actions/setup-env
         with:
-          # node: ${{ inputs.build-version }}
-          node: ${{ env.node }}
+          node: ${{ inputs.build-version }}
+          # node: ${{ env.node }}
           os: ${{ matrix.os }}
 
       - name: Download artifacts
@@ -206,5 +200,4 @@ jobs:
           node: ${{ needs.build.outputs.node-version }}
           os: ${{ matrix.os }}
           name: 'build-tests'
-  #AppData\\Local\\node-gyp\\Cache
     
