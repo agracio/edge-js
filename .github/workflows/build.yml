@@ -51,12 +51,6 @@ jobs:
       - name: install node-gyp
         run: npm i -g node-gyp
 
-      # - name: Create release folder
-      #   run: |
-      #       mkdir "release\ia32\${{ inputs.build-version }}"
-      #       mkdir "release\x64\${{ inputs.build-version }}"
-      #       mkdir "release\arm64\${{ inputs.build-version }}"
-
       - name: Create release folder
         uses: actions/github-script@v7
         with:
@@ -101,7 +95,7 @@ jobs:
           cache-name: cache-node-gyp
         with:
           path: ~\AppData\Local\node-gyp\Cache
-          key: ${{ runner.os }}
+          key: ${{ steps.node-test-version.outputs.node-version }}
 
       - name: Build ia32
         timeout-minutes: 30
