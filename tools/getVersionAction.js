@@ -18,14 +18,18 @@ http.get(url,(res) => {
 	res.on("end", () => {
 		try {
 			let json = JSON.parse(body);
-
+			let resolved;;
 			for (const el of json.sort()) {
 				let version = el.version.substring(1, el.version.length) ;
-				if(version.startsWith(process.argv[2])){
+				if(version.startsWith(`${process.argv[2]}.`)){
 					fs.writeFileSync('node.txt', version);
-					console.log(version)
+					console.log(version);
+					resolved = version;
 					return;
 				}
+			}
+			if(!resolved ){
+				throw `Unable to resolve latest version for Node.js ${process.argv[2]}`
 			}
 		} catch (error) {
 			throw error;
