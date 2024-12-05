@@ -1,0 +1,55 @@
+name: 'Test built Windows binary'
+description: 'Test built Windows binary'
+inputs:
+  os:
+    description: 'runs-on'
+    required: false
+    default: 'windows-2022'
+  node:
+    description: 'Node version'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Setup env
+      uses: ./.github/actions/setup-env
+      with:
+        node: ${{ inputs.node }}
+        os: ${{ inputs.os }}
+
+    - name: Create release folder
+      shell: pwsh
+      run: |
+        cmd /c if not exist "lib\native\win32\ia32\${{ inputs.node }}" mkdir "lib\native\win32\ia32\${{ inputs.node }}"
+        cmd /c if not exist "lib\native\win32\x64\${{ inputs.node }}" mkdir "lib\native\win32\x64\${{ inputs.node }}"
+        cmd /c if not exist "lib\native\win32\arm64\${{ inputs.node }}" mkdir "lib\native\win32\arm64\${{ inputs.node }}"
+
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: release
+        pattern: edge-js-${{ inputs.node }}*
+
+    - name: List artifacts
+      shell: bash
+      run: ls -R release
+
+    - name: Copy artifacts
+      shell: pwsh
+      run: |
+        cmd /c copy /y release\edge-js-${{ inputs.node }}\x64\${{ inputs.node }}\edge_*.node lib\native\win32\x64\${{ inputs.node }}
+
+    - name: Test
+      uses: ./.github/actions/test-windows
+      with:
+        node: ${{ inputs.node }}
+  
+    - name: Test report
+      uses: ./.github/actions/create-test-report
+      with:
+        node: ${{ inputs.node }}
+        os: ${{ inputs.os }}
+        name: 'build-tests'
+ 

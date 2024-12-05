@@ -23,118 +23,123 @@ env:
 jobs:
   build:
     runs-on: windows-2022
-    outputs:
-      node-version: ${{ steps.node-test-version.outputs.node-version }}
+    # outputs:
+    #   node-version: ${{ steps.node-test-version.outputs.node-version }}
     strategy:
       fail-fast: true
        
-    name: build windows-2022-node-${{ inputs.build-version }}
+    name: build node-${{ inputs.build-version }}
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup env
-        uses: ./.github/actions/setup-env
+      - name: Build Node ${{ inputs.build-version }}
+        uses: ./.github/actions/build-node
         with:
-          node: ${{ env.node }}
-          # node: ${{ inputs.build-version }}
-          os: windows-2022
+          node: ${{ inputs.build-version }}
+          os: ${{ runner.os }}
 
-      - name: Get latest Node.js version for v${{ inputs.build-version }}
-        id: node-test-version
-        shell: bash
-        run: |
-          node tools/getVersionAction.js ${{ inputs.build-version }}
-          echo "node-version=$(cat node.txt)" >> $GITHUB_OUTPUT
+      # - name: Setup env
+      #   uses: ./.github/actions/setup-env
+      #   with:
+      #     node: ${{ env.node }}
+      #     os: windows-2022
+
+      # - name: Get latest Node.js version for v${{ inputs.build-version }}
+      #   id: node-test-version
+      #   shell: bash
+      #   run: |
+      #     node tools/getVersionAction.js ${{ inputs.build-version }}
+      #     echo "node-version=$(cat node.txt)" >> $GITHUB_OUTPUT
     
-      - name: install node-gyp
-        run: npm i -g node-gyp
+      # - name: install node-gyp
+      #   run: npm i -g node-gyp
 
-      - name: Create release folder
-        uses: actions/github-script@v7
-        with:
-          result-encoding: string
-          script: |
-            try {
-              const fs = require('fs')
-              if(${{ inputs.build-version }} <23){
-                fs.mkdirSync('release/ia32/${{ inputs.build-version }}', { recursive: true });
-              }
-              fs.mkdirSync('release/x64/${{ inputs.build-version }}', { recursive: true });
-              if(${{ inputs.build-version }} >=20){
-                fs.mkdirSync('release/arm64/${{ inputs.build-version }}', { recursive: true });
-              }
-            } catch(err) {
-              core.error("Error creating release directory")
-              core.setFailed(err)
-            }
+      # - name: Create release folder
+      #   uses: actions/github-script@v7
+      #   with:
+      #     result-encoding: string
+      #     script: |
+      #       try {
+      #         const fs = require('fs')
+      #         if(${{ inputs.build-version }} <23){
+      #           fs.mkdirSync('release/ia32/${{ inputs.build-version }}', { recursive: true });
+      #         }
+      #         fs.mkdirSync('release/x64/${{ inputs.build-version }}', { recursive: true });
+      #         if(${{ inputs.build-version }} >=20){
+      #           fs.mkdirSync('release/arm64/${{ inputs.build-version }}', { recursive: true });
+      #         }
+      #       } catch(err) {
+      #         core.error("Error creating release directory")
+      #         core.setFailed(err)
+      #       }
 
-      - name: Create node.version file
-        uses: actions/github-script@v7
-        with:
-          result-encoding: string
-          script: |
-            try {
-              const fs = require('fs')
-              if(${{ inputs.build-version }} <23){
-                fs.writeFileSync('release/ia32/${{ inputs.build-version }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
-              }
-              fs.writeFileSync('release/x64/${{ inputs.build-version }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
-              if(${{ inputs.build-version }} >=20){
-                fs.writeFileSync('release/arm64/${{ inputs.build-version }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
-              }
-            } catch(err) {
-              core.error("Error writing node.version file")
-              core.setFailed(err)
-            }
+      # - name: Create node.version file
+      #   uses: actions/github-script@v7
+      #   with:
+      #     result-encoding: string
+      #     script: |
+      #       try {
+      #         const fs = require('fs')
+      #         if(${{ inputs.build-version }} <23){
+      #           fs.writeFileSync('release/ia32/${{ inputs.build-version }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
+      #         }
+      #         fs.writeFileSync('release/x64/${{ inputs.build-version }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
+      #         if(${{ inputs.build-version }} >=20){
+      #           fs.writeFileSync('release/arm64/${{ inputs.build-version }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
+      #         }
+      #       } catch(err) {
+      #         core.error("Error writing node.version file")
+      #         core.setFailed(err)
+      #       }
 
-      - name: Cache node-gyp
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-node-gyp
-        with:
-          path: ~\AppData\Local\node-gyp\Cache
-          key: ${{ steps.node-test-version.outputs.node-version }}
+      # - name: Cache node-gyp
+      #   uses: actions/cache@v4
+      #   env:
+      #     cache-name: cache-node-gyp
+      #   with:
+      #     path: ~\AppData\Local\node-gyp\Cache
+      #     key: ${{ steps.node-test-version.outputs.node-version }}
 
-      - name: Build ia32
-        timeout-minutes: 30
-        if: ${{ inputs.build-version <23 }}
-        run: |
-            node-gyp configure build --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=ia32
-            cmd /c copy /y build\Release\edge_*.node release\ia32\${{ inputs.build-version }}
-            cmd /c rmdir /S /Q build
+      # - name: Build ia32
+      #   timeout-minutes: 30
+      #   if: ${{ inputs.build-version <23 }}
+      #   run: |
+      #       node-gyp configure build --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=ia32
+      #       cmd /c copy /y build\Release\edge_*.node release\ia32\${{ inputs.build-version }}
+      #       cmd /c rmdir /S /Q build
 
-      - name: Build x64
-        timeout-minutes: 30
-        run: |
-            node-gyp configure build --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=x64
-            cmd /c copy /y build\Release\edge_*.node release\x64\${{ inputs.build-version }}
-            cmd /c rmdir /S /Q build
+      # - name: Build x64
+      #   timeout-minutes: 30
+      #   run: |
+      #       node-gyp configure build --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=x64
+      #       cmd /c copy /y build\Release\edge_*.node release\x64\${{ inputs.build-version }}
+      #       cmd /c rmdir /S /Q build
 
-      - name: Build arm64
-        timeout-minutes: 30
-        if: ${{ inputs.build-version >=20 }}
-        shell: pwsh
-        run: |
-            node-gyp configure --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=arm64
+      # - name: Build arm64
+      #   timeout-minutes: 30
+      #   if: ${{ inputs.build-version >=20 }}
+      #   shell: pwsh
+      #   run: |
+      #       node-gyp configure --target=${{ steps.node-test-version.outputs.node-version }} --runtime=node --release --arch=arm64
 
-            (Get-Content -Raw build/build_managed.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/build_managed.vcxproj
-            (Get-Content -Raw build/edge_coreclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_coreclr.vcxproj
-            (Get-Content -Raw build/edge_nativeclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_nativeclr.vcxproj
+      #       (Get-Content -Raw build/build_managed.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/build_managed.vcxproj
+      #       (Get-Content -Raw build/edge_coreclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_coreclr.vcxproj
+      #       (Get-Content -Raw build/edge_nativeclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_nativeclr.vcxproj
 
-            node-gyp build
-            cmd /c copy /y build\Release\edge_*.node release\arm64\${{ inputs.build-version }}
-            cmd /c rmdir /S /Q build
+      #       node-gyp build
+      #       cmd /c copy /y build\Release\edge_*.node release\arm64\${{ inputs.build-version }}
+      #       cmd /c rmdir /S /Q build
 
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: edge-js-${{ inputs.build-version }}
-          path: |
-            release
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@v4
+      #   if: success()
+      #   with:
+      #     name: edge-js-${{ inputs.build-version }}
+      #     path: |
+      #       release
 
   test:
     runs-on: ${{ matrix.os }}
@@ -144,60 +149,14 @@ jobs:
         os: [windows-2022]
       # fail-fast: false
 
-    name: test ${{ matrix.os }}-node-${{ needs.build.outputs.node-version }}
+    name: test ${{ matrix.os }}-node-${{ inputs.build-version }}
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup env
-        uses: ./.github/actions/setup-env
+      - name: Test build
+        uses: ./.github/actions/test-build
         with:
           node: ${{ inputs.build-version }}
-          # node: ${{ env.node }}
           os: ${{ matrix.os }}
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: release
-          pattern: edge-js-${{ inputs.build-version }}*
-
-      - run: ls -R release
-
-      - name: Create release folder
-        run: |
-          cmd /c if not exist "lib\native\win32\ia32\${{ inputs.build-version }}" mkdir "lib\native\win32\ia32\${{ inputs.build-version }}"
-          cmd /c if not exist "lib\native\win32\x64\${{ inputs.build-version }}" mkdir "lib\native\win32\x64\${{ inputs.build-version }}"
-          cmd /c if not exist "lib\native\win32\arm64\${{ inputs.build-version }}" mkdir "lib\native\win32\arm64\${{ inputs.build-version }}"
-
-      - name: runner.arch to lowercase
-        uses: actions/github-script@v7
-        id: arch-tolower
-        with:
-          result-encoding: string
-          script: |
-            try {
-              var arch = '${{ runner.arch }}'
-              return arch.toLowerCase();
-            } catch(err) {
-              core.setFailed(err)
-            }
-
-      - name: Copy artifacts
-        run: |
-          cmd /c copy /y release\edge-js-${{ inputs.build-version }}\${{ steps.arch-tolower.outputs.result }}\${{ inputs.build-version }}\edge_*.node lib\native\win32\${{ steps.arch-tolower.outputs.result }}\${{ inputs.build-version }}
-
-      - name: Test
-        timeout-minutes: 10
-        uses: ./.github/actions/test-windows
-        with:
-          node: ${{ needs.build.outputs.node-version }}
-    
-      - name: Test report
-        uses: ./.github/actions/create-test-report
-        with:
-          node: ${{ needs.build.outputs.node-version }}
-          os: ${{ matrix.os }}
-          name: 'build-tests'
-    
