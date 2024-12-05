@@ -1,0 +1,182 @@
+name: Build All
+
+on:
+  workflow_dispatch:
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true 
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1 
+  DOTNET_NOLOGO: 1
+  node: 20
+
+jobs:
+  build-16:
+    runs-on: windows-2022
+       
+    name: build node-16
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Node 16
+        uses: ./.github/actions/build-node
+        with:
+          node: 16
+          os: ${{ runner.os }}
+  
+  build-18:
+    runs-on: windows-2022
+       
+    name: build node-18
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Node 18
+        uses: ./.github/actions/build-node
+        with:
+          node: 18
+          os: ${{ runner.os }}
+  
+  build-20:
+    runs-on: windows-2022
+       
+    name: build node-20
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Node 20
+        uses: ./.github/actions/build-node
+        with:
+          node: 20
+          os: ${{ runner.os }}
+
+  build-22:
+    runs-on: windows-2022
+       
+    name: build node-22
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Node 22
+        uses: ./.github/actions/build-node
+        with:
+          node: 22
+          os: ${{ runner.os }}
+  
+  build-23:
+    runs-on: windows-2022
+       
+    name: build node-23
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Node 23
+        uses: ./.github/actions/build-node
+        with:
+          node: 23
+          os: ${{ runner.os }}
+  
+  test-16:
+    strategy:
+      matrix: 
+       os: [windows-2022]
+    runs-on: ${{ matrix.os }}
+    needs: build-16
+
+    name: test ${{ matrix.os }}-node-16
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test build
+        uses: ./.github/actions/test-build
+        with:
+          node: 16
+          os: ${{ matrix.os }}
+  
+  test-18:
+    strategy:
+      matrix: 
+       os: [windows-2022]
+    runs-on: ${{ matrix.os }}
+    needs: build-18
+
+    name: test ${{ matrix.os }}-node-18
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test build
+        uses: ./.github/actions/test-build
+        with:
+          node: 18
+          os: ${{ matrix.os }}
+  
+  test-20:
+    strategy:
+      matrix: 
+       os: [windows-2022]
+    runs-on: ${{ matrix.os }}
+    needs: build-20
+
+    name: test ${{ matrix.os }}-node-20
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test build
+        uses: ./.github/actions/test-build
+        with:
+          node: 20
+          os: ${{ matrix.os }}
+  
+  test-22:
+    strategy:
+      matrix: 
+       os: [windows-2022]
+    runs-on: ${{ matrix.os }}
+    needs: build-22
+
+    name: test ${{ matrix.os }}-node-22
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test build
+        uses: ./.github/actions/test-build
+        with:
+          node: 22
+          os: ${{ matrix.os }}
+  
+  test-23:
+    strategy:
+      matrix: 
+       os: [windows-2022]
+    runs-on: ${{ matrix.os }}
+    needs: build-23
+
+    name: test ${{ matrix.os }}-node-23
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test build
+        uses: ./.github/actions/test-build
+        with:
+          node: 23
+          os: ${{ matrix.os }}
+  
