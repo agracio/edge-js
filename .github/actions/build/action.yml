@@ -1,0 +1,28 @@
+name: 'Build Windows binaries'
+description: 'Build Windows binaries'
+inputs:
+  node:
+    description: 'Node version'
+    required: true
+  arch:
+    description: 'Target arch'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Build ${{ inputs.arch }}
+      shell: pwsh
+      run: |
+         node-gyp configure --target=${{ inputs.node }} --runtime=node --release --arch=${{ inputs.arch }}
+
+          if ( '${{ inputs.arch }}' -eq 'arm64'){
+            (Get-Content -Raw build/build_managed.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/build_managed.vcxproj
+            (Get-Content -Raw build/edge_coreclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_coreclr.vcxproj
+            (Get-Content -Raw build/edge_nativeclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_nativeclr.vcxproj
+          }
+
+          node-gyp build
+          cmd /c copy /y build\Release\edge_*.node release\${{ inputs.arch }}\${{ inputs.node }}
+          cmd /c rmdir /S /Q build
