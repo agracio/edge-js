@@ -4,6 +4,9 @@ inputs:
   node:
     description: 'Node version'
     required: true
+  node-major:
+    description: 'Node major version'
+    required: true
   arch:
     description: 'Target arch'
     required: true
@@ -24,5 +27,5 @@ runs:
           }
 
           node-gyp build
-          cmd /c copy /y build\Release\edge_*.node release\${{ inputs.arch }}\${{ inputs.node }}
+          cmd /c copy /y build\Release\edge_*.node release\${{ inputs.arch }}\${{ inputs.node-major }}
           cmd /c rmdir /S /Q build

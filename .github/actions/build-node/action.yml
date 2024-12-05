@@ -81,12 +81,14 @@ runs:
         uses: ./.github/actions/build
         with:
           node: ${{ steps.node-test-version.outputs.node-version }}
+          node-major: ${{ inputs.node }}
           arch: 'ia32'
 
       - name: Build x64
         uses: ./.github/actions/build
         with:
           node: ${{ steps.node-test-version.outputs.node-version }}
+          node-major: ${{ inputs.node }}
           arch: 'x64'
 
       - name: Build arm64
@@ -94,6 +96,7 @@ runs:
         uses: ./.github/actions/build
         with:
           node: ${{ steps.node-test-version.outputs.node-version }}
+          node-major: ${{ inputs.node }}
           arch: 'arm64'
     
       - name: Upload artifacts
