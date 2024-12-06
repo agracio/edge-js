@@ -20,7 +20,7 @@ results
 
 node_modules
 npm-debug.log
-build
+/build
 
 bin/
 obj/

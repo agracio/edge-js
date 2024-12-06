@@ -12,7 +12,9 @@ env:
 jobs:
   build-16:
     runs-on: windows-2022
-       
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false   
     name: build node-16
     steps:
 
@@ -27,7 +29,9 @@ jobs:
   
   build-18:
     runs-on: windows-2022
-       
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false   
     name: build node-18
     steps:
 
@@ -42,7 +46,9 @@ jobs:
   
   build-20:
     runs-on: windows-2022
-       
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false   
     name: build node-20
     steps:
 
@@ -57,7 +63,9 @@ jobs:
 
   build-22:
     runs-on: windows-2022
-       
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
     name: build node-22
     steps:
 
@@ -72,7 +80,9 @@ jobs:
   
   build-23:
     runs-on: windows-2022
-       
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false   
     name: build node-23
     steps:
 
@@ -87,6 +97,7 @@ jobs:
   
   test-16:
     strategy:
+      fail-fast: false
       matrix: 
        os: [windows-2022]
     runs-on: ${{ matrix.os }}
@@ -106,6 +117,7 @@ jobs:
   
   test-18:
     strategy:
+      fail-fast: false
       matrix: 
        os: [windows-2022]
     runs-on: ${{ matrix.os }}
@@ -125,6 +137,7 @@ jobs:
   
   test-20:
     strategy:
+      fail-fast: false
       matrix: 
        os: [windows-2022]
     runs-on: ${{ matrix.os }}
@@ -144,6 +157,7 @@ jobs:
   
   test-22:
     strategy:
+      fail-fast: false
       matrix: 
        os: [windows-2022]
     runs-on: ${{ matrix.os }}
@@ -163,6 +177,7 @@ jobs:
   
   test-23:
     strategy:
+      fail-fast: false
       matrix: 
        os: [windows-2022]
     runs-on: ${{ matrix.os }}
