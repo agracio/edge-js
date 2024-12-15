@@ -6,12 +6,6 @@ var prefix = process.env.EDGE_USE_CORECLR ? '[CoreCLR]' : process.platform === '
 
 describe('async call from node.js to .net', function () {
 
-    // afterEach(function () {
-    //     console.log('GC!');
-    //     gc();
-    //     console.log('AFTER GC!');
-    // });
-
     it(prefix + ' succeeds for hello world', function (done) {
         var func = edge.func({
         	assemblyFile: edgeTestDll,
