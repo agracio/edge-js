@@ -40,7 +40,14 @@ function build(){
             if (code === 0) {
                 run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], function(code, signal) {
                     if (code === 0) {
-                        run('cp', ['../test/bin/Debug/net6.0/test.dll', '../test/Edge.Tests.CoreClr.dll'], runOnSuccess);
+                        try{
+                            fs.mkdirSync('test/测试', { recursive: true })
+
+                        }
+                        catch (e){
+                            console.error(e)
+                        }
+                        run('cp', ['../test/bin/Debug/net6.0/test.dll', '../test/测试/Edge.Tests.CoreClr.dll'], runOnSuccess);
                     }
                 });
             }
@@ -139,6 +146,10 @@ function runOnSuccess(code, signal) {
 			console.log(err); 
 		});
 	}
+    else{
+        console.error(code, signal)
+    }
+
 }
 
 function mergeFiles(){

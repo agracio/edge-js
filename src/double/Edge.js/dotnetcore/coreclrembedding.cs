@@ -667,7 +667,7 @@ public class CoreCLREmbedding
     }
 
     [SecurityCritical]
-    public static IntPtr GetFunc(string assemblyFile, string typeName, string methodName, IntPtr exception)
+    public static IntPtr GetFunc([MarshalAs(UnmanagedType.LPUTF8Str)]string assemblyFile, string typeName, string methodName, IntPtr exception)
     {
         try
         {
