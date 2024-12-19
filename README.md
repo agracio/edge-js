@@ -139,11 +139,22 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 
 ### Next.js
 
-`next.config.mjs`
+`next.config.js`
 ```js
-  experimental: {
-    serverComponentsExternalPackages: ['edge-js'],
-  },
+const nextConfig = {
+  serverExternalPackages: ['edge-js'],
+}
+ 
+module.exports = nextConfig
+```
+
+`next.config.ts`
+```typescript
+const nextConfig: NextConfig = {
+  serverExternalPackages: ['edge-js'],
+};
+
+export default nextConfig;
 ```
 
 ## Additional languages support
