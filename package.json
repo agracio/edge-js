@@ -55,7 +55,7 @@
   "homepage": "https://github.com/agracio/edge-js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:agracio/edge-js.git"
+    "url": "git+ssh://git@github.com/agracio/edge-js.git"
   },
   "bugs": {
     "url": "http://github.com/agracio/edge-js/issues"

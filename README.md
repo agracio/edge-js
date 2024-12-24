@@ -1,6 +1,6 @@
 # Edge.js: .NET and Node.js in-process
 <!---[![Build Status](https://app.travis-ci.com/agracio/edge-js.svg?branch=master)](https://app.travis-ci.com/github/agracio/edge-js)--->
-[![Build status][appveyor-image]][appveyor-url]
+<!-- [![Build status][appveyor-image]][appveyor-url] -->
 [![Actions Status][github-img]][github-url]
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/agracio/edge-js.svg?style=shield )](https://dl.circleci.com/status-badge/redirect/gh/agracio/edge-js/tree/master)
 [![Git Issues][issues-img]][issues-url]
@@ -139,11 +139,22 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 
 ### Next.js
 
-`next.config.mjs`
+`next.config.js`
 ```js
-  experimental: {
-    serverComponentsExternalPackages: ['edge-js'],
-  },
+const nextConfig = {
+  serverExternalPackages: ['edge-js'],
+}
+ 
+module.exports = nextConfig
+```
+
+`next.config.ts`
+```typescript
+const nextConfig: NextConfig = {
+  serverExternalPackages: ['edge-js'],
+};
+
+export default nextConfig;
 ```
 
 ## Additional languages support
