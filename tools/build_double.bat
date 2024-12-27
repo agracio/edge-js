@@ -7,25 +7,36 @@ if "%1" equ "" (
     exit /b -1
 )
 
+FOR /F "tokens=* USEBACKQ" %%F IN (`node -p process.arch`) DO (SET ARCH=%%F)
+for /F "delims=." %%a in ("%1") do set MAJORVERSION=%%a
+set MAJORVERSION=%MAJORVERSION: =%
+
+
 call :build_lib
 if %ERRORLEVEL% neq 0 exit /b -1
 
 call :download_node %1
 if %ERRORLEVEL% neq 0 exit /b -1
 
-call :build_node %1 x86
-if %ERRORLEVEL% neq 0 exit /b -1
+if %MAJORVERSION% LSS 23 (
+    call :build_node %1 x86
+    if %ERRORLEVEL% neq 0 exit /b -1
+)
 
 call :build_node %1 x64
 if %ERRORLEVEL% neq 0 exit /b -1
 
-call :download_node_exe %1
-if %ERRORLEVEL% neq 0 exit /b -1
 
-call :build_edge %1 x86 ia32
-if %ERRORLEVEL% neq 0 exit /b -1
+@REM call :download_node_exe %1
+@REM if %ERRORLEVEL% neq 0 exit /b -1
+
 call :build_edge %1 x64 x64
 if %ERRORLEVEL% neq 0 exit /b -1
+
+if %MAJORVERSION% LSS 23 (
+    call :build_edge %1 x86 ia32
+    if %ERRORLEVEL% neq 0 exit /b -1
+)
 
 call :clean_nuget_package
 if %ERRORLEVEL% neq 0 exit /b -1
@@ -39,14 +50,14 @@ REM ===========================================================
 :build_lib
 echo :build_lib
 
-if exist "%SELF%\build\nuget\lib\net45" (
- echo "%SELF%\build\nuget\lib\net45" already exists.
- exit /b 0
- )
+@REM if exist "%SELF%\build\nuget\lib\net462" (
+@REM  echo "%SELF%\build\nuget\lib\net462" already exists.
+@REM  exit /b 0
+@REM  )
 
-mkdir "%SELF%\..\src\double\Edge.js\bin\Release\net45" > nul 2>&1
+mkdir "%SELF%\..\src\double\Edge.js\bin\Release\net462" > nul 2>&1
 
-csc /out:"%SELF%\..\src\double\Edge.js\bin\Release\net45\EdgeJs.dll" /target:library "%SELF%\..\src\double\Edge.js\dotnet\EdgeJs.cs"
+csc /out:"%SELF%\..\src\double\Edge.js\bin\Release\net462\EdgeJs.dll" /target:library "%SELF%\..\src\double\Edge.js\dotnet\EdgeJs.cs"
 if %ERRORLEVEL% neq 0 exit /b -1
 
 cd "%SELF%\..\src\double\Edge.js"
@@ -67,8 +78,8 @@ REM ===========================================================
 echo :build_node %1 %2
 
 if exist "%SELF%\build\node-%1-%2\node.lib" (
- echo "%SELF%\build\node-%1-%2\node.lib" already built
- exit /b 0
+    echo "%SELF%\build\node-%1-%2\node.lib" already built
+    exit /b 0
  )
 
 pushd "%SELF%\build\node-%1"
@@ -154,7 +165,7 @@ set GYP=%NODEBASE%\node_modules\node-gyp\bin\node-gyp.js
 
 pushd "%SELF%\.."
 
-"%NODEEXE%" "%GYP%" configure --msvs_version=2019
+node "%GYP%" configure --msvs_version=2022 --target=%1 --runtime=node --release --arch=%2
 if %ERRORLEVEL% neq 0 (
     echo Error configuring edge.node %FLAVOR% for node.js %2 v%3
     exit /b -1
@@ -164,6 +175,7 @@ FOR %%F IN (build\*.vcxproj) DO (
     echo Patch node.lib in %%F
     powershell -Command "(Get-Content -Raw %%F) -replace '\\\\node.lib', '\\\\libnode.lib' | Out-File -Encoding Utf8 %%F"
 )
+
 "%NODEEXE%" "%GYP%" build
 mkdir "%SELF%\build\nuget\content\edge\%2" > nul 2>&1
 copy /y build\release\edge_nativeclr.node "%SELF%\build\nuget\content\edge\%2"

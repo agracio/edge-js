@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -18,6 +17,7 @@ namespace EdgeJs
         static ManualResetEvent waitHandle = new ManualResetEvent(false);
         private static string edgeDirectory;
         private static List<Func<object, Task<object>>> compiledFuncs = new List<Func<object, Task<object>>>();
+        private static readonly bool DebugMode = Environment.GetEnvironmentVariable("EDGE_DEBUG") == "1";
 
         static Edge()
         {
@@ -33,6 +33,14 @@ namespace EdgeJs
             edgeDirectory = string.IsNullOrWhiteSpace(asm.CodeBase) || !Uri.TryCreate(asm.CodeBase, UriKind.Absolute, out codeBase) || !codeBase.IsFile
                 ? Path.GetDirectoryName(asm.Location)
                 : Path.GetDirectoryName(codeBase.LocalPath);
+        }
+        
+        internal static void DebugMessage(string message, params object[] parameters)
+        {
+            if (DebugMode)
+            {
+                Console.WriteLine(message, parameters);
+            }
         }
 
         static string assemblyDirectory;
@@ -56,7 +64,7 @@ namespace EdgeJs
             }
         }
 
-        // in case we want to set this path and not use an enviroment var
+        // in case we want to set this path and not use an environment var
         public static void SetAssemblyDirectory(string folder)
 	    {
 			assemblyDirectory = folder;
@@ -96,6 +104,28 @@ namespace EdgeJs
         [DllImport("kernel32.dll", EntryPoint = "LoadLibrary")]
         static extern int LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpLibFileName);
 
+        private static string GetLibNodeDll(string arch)
+        {
+            string path = ResolveUnicodeCharactersInPath(string.Format(@"{0}\edge\{1}\libnode.dll", AssemblyDirectory, arch));
+
+            if (!File.Exists(path))
+            {
+                path = string.Format(@"edge\{0}\libnode.dll", arch);
+            }
+
+            DebugMessage("libnode path: {0}", path);
+            return path;
+        }
+
+        private static string ResolveUnicodeCharactersInPath(string path)
+        {
+            // Workaround for Unicode characters in path
+            StringBuilder shortPath = new StringBuilder(255);
+            GetShortPathName(path, shortPath, shortPath.Capacity);
+            return shortPath.ToString();
+            // End workaround for Unicode characters in path
+        }
+
         public static Func<object,Task<object>> Func(string code)
         {
             if (!initialized)
@@ -107,14 +137,15 @@ namespace EdgeJs
                         Func<int, string[], int> nodeStart;
                         if (IntPtr.Size == 4)
                         {
-                            LoadLibrary(AssemblyDirectory + @"\edge\x86\libnode.dll");
+                            LoadLibrary(GetLibNodeDll("x86"));
                             nodeStart = NodeStartx86;
                         }
                         else if (IntPtr.Size == 8)
                         {
-                            LoadLibrary(AssemblyDirectory + @"\edge\x64\libnode.dll");
+                            LoadLibrary(GetLibNodeDll("x64"));
                             nodeStart = NodeStartx64;
                         }
+
                         else
                         {
                             throw new InvalidOperationException(
@@ -125,23 +156,34 @@ namespace EdgeJs
                         {
                             List<string> argv = new List<string>();
                             argv.Add("node");
-                            string node_params = Environment.GetEnvironmentVariable("EDGE_NODE_PARAMS");
-                            if (!string.IsNullOrEmpty(node_params))
+                            var nodeParams = Environment.GetEnvironmentVariable("EDGE_NODE_PARAMS");
+                            if (!string.IsNullOrEmpty(nodeParams))
                             {
-                                foreach (string p in node_params.Split(' '))
+                                foreach (string p in nodeParams.Split(' '))
                                 {
                                     argv.Add(p);
                                 }
                             }
 
-                            // Workaround for unicode characters in path
-                            string path = AssemblyDirectory + "\\edge\\double_edge.js";
-                            StringBuilder shortPath = new StringBuilder(255);
-                            int result = GetShortPathName(path, shortPath, shortPath.Capacity);
-                            argv.Add(shortPath.ToString());
-                            // End workaround for unicode characters in path
+                            var path = ResolveUnicodeCharactersInPath(AssemblyDirectory + @"\edge\double_edge.js");
+                            var edgeDll = ResolveUnicodeCharactersInPath(Path.Combine(edgeDirectory, "EdgeJs.dll"));
                             
-                            argv.Add(string.Format("-EdgeJs:{0}", Path.Combine(edgeDirectory, "EdgeJs.dll")));
+                            if (File.Exists(path) && File.Exists(edgeDll))
+                            {
+                                DebugMessage("double_edge.js path: {0}", path);
+                                DebugMessage("-EdgeJs:{0}", edgeDll);
+                                argv.Add(path);
+                                argv.Add(string.Format("-EdgeJs:{0}", edgeDll));
+                            }
+                            else
+                            {
+                                DebugMessage("double_edge.js path: {0}", @"edge\double_edge.js");
+                                DebugMessage("-EdgeJs:EdgeJs.dll");
+
+                                argv.Add(@"edge\double_edge.js");
+                                argv.Add("-EdgeJs:EdgeJs.dll");
+                            }
+                            
                             nodeStart(argv.Count, argv.ToArray());
                         }, 1048576); // Force typical Windows stack size because less is liable to break
 

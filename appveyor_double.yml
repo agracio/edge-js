@@ -17,5 +17,8 @@ after_test:
 
 only_commits:
   files:
-    - 'test/double'
+    - 'test/double/**'
+    - 'test/double/double_test/*'
+    - 'test/double/double_test/**/*'
     - 'appveyor_double.yml'
+    - 'src/double/Edge.js/dotnet/EdgeJs.cs'
