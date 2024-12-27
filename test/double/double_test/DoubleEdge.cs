@@ -63,7 +63,7 @@ namespace double_test
             ")(".NET").Result;
 
             System.Console.WriteLine(result);
-            Assert.AreEqual(result, "v20.12.2");
+            Assert.AreEqual(result, "v22.12.0");
         }
 
         [Test]
