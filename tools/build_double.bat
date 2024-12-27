@@ -26,10 +26,6 @@ if %MAJORVERSION% LSS 23 (
 call :build_node %1 x64
 if %ERRORLEVEL% neq 0 exit /b -1
 
-
-@REM call :download_node_exe %1
-@REM if %ERRORLEVEL% neq 0 exit /b -1
-
 call :build_edge %1 x64 x64
 if %ERRORLEVEL% neq 0 exit /b -1
 
@@ -116,31 +112,10 @@ if not exist "%SELF%\build\%1.zip" (
 echo :unzip %1.zip
 if not exist "%SELF%\build\node-%1" (
     pushd "%SELF%\build\"
-    powershell Expand-Archive -Path %1.zip -DestinationPath "%SELF%\build\"
+    tar -xf %1.zip
     popd
 ) else (
      echo "%SELF%\build\node-%1" already exists.
-)
-
-exit /b 0
-
-
-REM ===========================================================
-:download_node_exe
-echo :download_node_exe
-
-if not exist "%SELF%\build\node-%1-x86\node.exe" (
-    echo Downloading Node.js binary to  "%SELF%\build\node-%1-x86\node.exe"
-    node "%SELF%\download_double.js" http://nodejs.org/dist/v%1/win-x86/node.exe "%SELF%\build\node-%1-x86\node.exe"
-) else (
-    echo "%SELF%\build\node-%1-x86\node.exe" already exists.
-)
-
-if not exist "%SELF%\build\node-%1-x64\node.exe" (
-    echo Downloading Node.js binary to "%SELF%\build\node-%1-x64\node.exe"
-    node "%SELF%\download_double.js" http://nodejs.org/dist/v%1/win-x64/node.exe "%SELF%\build\node-%1-x64\node.exe"
-) else (
-    echo "%SELF%\build\node-%1-x64\node.exe" already exists.
 )
 
 exit /b 0
@@ -167,7 +142,7 @@ pushd "%SELF%\.."
 
 node "%GYP%" configure --msvs_version=2022 --target=%1 --runtime=node --release --arch=%2
 if %ERRORLEVEL% neq 0 (
-    echo Error configuring edge.node %FLAVOR% for node.js %2 v%3
+    echo Error configuring edge.node for node.js %2 v%3
     exit /b -1
 )
 
@@ -176,7 +151,7 @@ FOR %%F IN (build\*.vcxproj) DO (
     powershell -Command "(Get-Content -Raw %%F) -replace '\\\\node.lib', '\\\\libnode.lib' | Out-File -Encoding Utf8 %%F"
 )
 
-"%NODEEXE%" "%GYP%" build
+node "%GYP%" build
 mkdir "%SELF%\build\nuget\content\edge\%2" > nul 2>&1
 copy /y build\release\edge_nativeclr.node "%SELF%\build\nuget\content\edge\%2"
 copy /y "%SELF%\build\node-%1-%2\libnode.dll" "%SELF%\build\nuget\content\edge\%2"
