@@ -42,12 +42,19 @@ function build(){
                     if (code === 0) {
                         try{
                             fs.mkdirSync('test/测试', { recursive: true })
-
                         }
                         catch (e){
-                            console.error(e)
+                            console.error(e);
+                            throw e;
                         }
-                        run('cp', ['../test/bin/Debug/net6.0/test.dll', '../test/测试/Edge.Tests.CoreClr.dll'], runOnSuccess);
+                        fs.copyFile('test/bin/Debug/net6.0/test.dll', 'test/测试/Edge.Tests.CoreClr.dll', (e) => {
+                            if (e) {
+                                console.error(e);
+                                throw e;
+                            }
+                            runOnSuccess(0);
+                        });
+                        //run('cp', ['../test/bin/Debug/net6.0/test.dll', '../test/测试/Edge.Tests.CoreClr.dll'], runOnSuccess);
                     }
                 });
             }
