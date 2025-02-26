@@ -54,7 +54,6 @@ function build(){
                             }
                             runOnSuccess(0);
                         });
-                        //run('cp', ['../test/bin/Debug/net6.0/test.dll', '../test/测试/Edge.Tests.CoreClr.dll'], runOnSuccess);
                     }
                 });
             }
