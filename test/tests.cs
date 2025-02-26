@@ -22,13 +22,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Xml;
-#if NET6_0
+#if NETCOREAPP
 using Newtonsoft.Json;
 using System.Reflection;
 using Microsoft.Extensions.DependencyModel;
 using System.Linq;
 using System.Net;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable CheckNamespace
 #endif
 
 #pragma warning disable 1998
@@ -73,6 +74,13 @@ namespace Edge.Tests
                     if (i == null) throw new Exception("i is not a Func<object,Task<object>>");
                 }
                 if ((DateTime)data["j"] != new DateTime(2013, 08, 30)) throw new Exception("j is not DateTime(2013,08,30)");
+                
+                int k = (int)data["k"];
+                if (k != 65535) throw new Exception("k is not 65535");
+                UInt32 l = (UInt32)data["l"];
+                if (l != 4294967295) throw new Exception("l is not 4294967295");
+                double m = (double)data["m"];
+                if (m != 18446744073709551615) throw new Exception("m is not 18446744073709551615");
             }
             catch (Exception e)
             {
@@ -106,6 +114,14 @@ namespace Edge.Tests
                     if (i == null) throw new Exception("dynamic i is not a Func<object,Task<object>>");
                 }
                 if ((DateTime)input.j != new DateTime(2013, 08, 30)) throw new Exception("dynamic j is not DateTime(2013,08,30)");
+                
+                int k = input.k;
+                if (k != 65535) throw new Exception("k is not 65535");
+                UInt32 l = input.l;
+                if (l != 4294967295) throw new Exception("l is not 4294967295");
+                double m = input.m;
+                if (m != 18446744073709551615) throw new Exception("m is not 18446744073709551615");
+
             }
             catch (Exception e)
             {
@@ -139,6 +155,9 @@ namespace Edge.Tests
             result.h = new { a = "fooåäö", b = 12 };
             result.i = (Func<object,Task<object>>)(async (i) => { return i; });
             result.j = new DateTime(2013, 08, 30);
+            result.k = ushort.MaxValue;
+            result.l = uint.MaxValue;;
+            result.m = ulong.MaxValue;;
 
             return Task.FromResult<object>(result);
         }       
@@ -188,6 +207,10 @@ namespace Edge.Tests
             payload.h = new { a = "fooåäö", b = 12 };
             payload.i = (Func<object,Task<object>>)(async (i) => { return i; });
             payload.j = new DateTime(2013, 08, 30);
+            payload.k = ushort.MaxValue;
+            payload.l = uint.MaxValue;;
+            payload.m = ulong.MaxValue;;
+
 
             var result = await input.hello(payload);
             return result;

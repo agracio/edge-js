@@ -35,7 +35,11 @@ describe('async call from node.js to .net', function () {
             g: [ 1, 'fooåäö' ],
             h: { a: 'fooåäö', b: 12 },
             i: function (payload, callback) { },
-            j: new Date(Date.UTC(2013, 07, 30))
+            j: new Date(Date.UTC(2013, 07, 30)),
+            k: 65535,
+            l: 4294967295,
+            m: 18446744073709551615,
+
         };
         func(payload, function (error, result) {
             assert.ifError(error);
@@ -71,6 +75,9 @@ describe('async call from node.js to .net', function () {
             assert.equal(typeof result.i, 'function');
             assert.equal(typeof result.j, 'object');
             assert.ok(result.j.valueOf() === Date.UTC(2013, 07, 30));
+            assert.equal(result.k, 65535);
+            assert.equal(result.l, 4294967295);
+            assert.equal(result.m, 18446744073709551615);
             done();
         });
     });

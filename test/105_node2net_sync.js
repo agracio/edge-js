@@ -52,7 +52,10 @@ describe('sync call from node.js to .net', function () {
             g: [ 1, 'fooåäö' ],
             h: { a: 'fooåäö', b: 12 },
             i: function (payload, callback) { },
-            j: new Date(Date.UTC(2013,07,30))
+            j: new Date(Date.UTC(2013,07,30)),
+            k: 65535,
+            l: 4294967295,
+            m: 18446744073709551615,
         };
         var result = func(payload, true);
         assert.equal(result, 'yes');

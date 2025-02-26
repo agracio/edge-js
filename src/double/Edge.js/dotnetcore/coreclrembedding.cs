@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Threading.Tasks;
 using System.IO;
+using System.Numerics;
+using System.Security.Policy;
 using Microsoft.Extensions.DependencyModel;
 
 // ReSharper disable InconsistentNaming
@@ -1005,6 +1007,7 @@ public class CoreCLREmbedding
         {
             case V8Type.String:
             case V8Type.Int32:
+            case V8Type.UInt32:
             case V8Type.Boolean:
             case V8Type.Number:
             case V8Type.Date:
@@ -1138,7 +1141,7 @@ public class CoreCLREmbedding
             return Marshal.StringToCoTaskMemUTF8(clrObject.ToString());
         }
 
-        else if (clrObject is short)
+        else if (clrObject is short || clrObject is ushort)
         {
             v8Type = V8Type.Int32;
             IntPtr memoryLocation = Marshal.AllocCoTaskMem(sizeof (int));
@@ -1155,6 +1158,15 @@ public class CoreCLREmbedding
             Marshal.WriteInt32(memoryLocation, (int) clrObject);
             return memoryLocation;
         }
+        
+        else if (clrObject is uint)
+        {
+            v8Type = V8Type.Number;
+            IntPtr memoryLocation = Marshal.AllocCoTaskMem(sizeof (uint));
+        
+            WriteDouble(memoryLocation, Convert.ToDouble(BigInteger.Parse(clrObject.ToString()).ToString()));
+            return memoryLocation;
+        }
 
         else if (clrObject is long)
         {
@@ -1164,7 +1176,16 @@ public class CoreCLREmbedding
             WriteDouble(memoryLocation, Convert.ToDouble((long) clrObject));
             return memoryLocation;
         }
+        
+        else if (clrObject is ulong)
+        {
+            v8Type = V8Type.Number;
+            IntPtr memoryLocation = Marshal.AllocCoTaskMem(sizeof (double));
 
+            WriteDouble(memoryLocation, Convert.ToDouble((ulong) clrObject));
+            return memoryLocation;
+        }
+        
         else if (clrObject is double)
         {
             v8Type = V8Type.Number;
