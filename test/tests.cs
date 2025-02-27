@@ -18,19 +18,17 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using System.Xml;
 #if NETCOREAPP
 using Newtonsoft.Json;
 using System.Reflection;
 using Microsoft.Extensions.DependencyModel;
 using System.Linq;
-using System.Net;
+
+#endif
 // ReSharper disable UnusedMember.Global
 // ReSharper disable CheckNamespace
-#endif
 
 #pragma warning disable 1998
 
@@ -42,7 +40,7 @@ namespace Edge.Tests
         {
             
         }
-
+        
         string ValidateMarshalNodeJsToNet(dynamic input, bool expectFunction)
         {
             string result = "yes"; 
@@ -58,7 +56,7 @@ namespace Edge.Tests
                 bool d = (bool)data["d"];
                 if (d != true) throw new Exception("d is not true");
                 bool e = (bool)data["e"];
-                if (e != false) throw new Exception("e is not false");
+                if (e) throw new Exception("e is not false");
                 byte[] f = (byte[])data["f"];
                 if (f.Length != 10) throw new Exception("f.length is not 10");
                 object[] g = (object[])data["g"];
@@ -81,6 +79,10 @@ namespace Edge.Tests
                 if (l != 4294967295) throw new Exception("l is not 4294967295");
                 double m = (double)data["m"];
                 if (m != 18446744073709551615) throw new Exception("m is not 18446744073709551615");
+                char n = Convert.ToChar(data["n"]);
+                if (n != 'c') throw new Exception("n is not 'c'");
+                Guid o = new Guid(data["o"].ToString());
+                if (o.ToString() != "19b25856-e1c1-450c-8a83-4cffc8b59b23") throw new Exception("o is not 19b25856-e1c1-450c-8a83-4cffc8b59b23");
             }
             catch (Exception e)
             {
@@ -98,7 +100,7 @@ namespace Edge.Tests
                 bool d = input.d;
                 if (d != true) throw new Exception("dynamic d is not true");
                 bool e = input.e;
-                if (e != false) throw new Exception("dynamic e is not false");
+                if (e) throw new Exception("dynamic e is not false");
                 byte[] f = input.f;
                 if (f.Length != 10) throw new Exception("dynamic f.length is not 10");
                 dynamic[] g = input.g;
@@ -116,11 +118,16 @@ namespace Edge.Tests
                 if ((DateTime)input.j != new DateTime(2013, 08, 30)) throw new Exception("dynamic j is not DateTime(2013,08,30)");
                 
                 int k = input.k;
-                if (k != 65535) throw new Exception("k is not 65535");
+                if (k != 65535) throw new Exception("dynamic k is not 65535");
                 UInt32 l = input.l;
-                if (l != 4294967295) throw new Exception("l is not 4294967295");
+                if (l != 4294967295) throw new Exception("dynamic l is not 4294967295");
                 double m = input.m;
-                if (m != 18446744073709551615) throw new Exception("m is not 18446744073709551615");
+                if (m != 18446744073709551615) throw new Exception("dynamic m is not 18446744073709551615");
+                char n = Convert.ToChar(input.n);
+                if (n != 'c') throw new Exception("dynamic n is not 'c'");
+                Guid o = new Guid(input.o.ToString());
+                if (o.ToString() != "19b25856-e1c1-450c-8a83-4cffc8b59b23") throw new Exception("dynamic o is not 19b25856-e1c1-450c-8a83-4cffc8b59b23");
+
 
             }
             catch (Exception e)
@@ -144,21 +151,7 @@ namespace Edge.Tests
 
         public Task<object> MarshalBack(dynamic input)
         {
-            dynamic result = new ExpandoObject();
-            result.a = 1;
-            result.b = 3.1415;
-            result.c = "fooåäö";
-            result.d = true;
-            result.e = false;
-            result.f = new byte[10];
-            result.g = new object[] { 1, "fooåäö" };
-            result.h = new { a = "fooåäö", b = 12 };
-            result.i = (Func<object,Task<object>>)(async (i) => { return i; });
-            result.j = new DateTime(2013, 08, 30);
-            result.k = ushort.MaxValue;
-            result.l = uint.MaxValue;;
-            result.m = ulong.MaxValue;;
-
+            dynamic result = GenerateObject();
             return Task.FromResult<object>(result);
         }       
 
@@ -196,6 +189,14 @@ namespace Edge.Tests
 
         public async Task<object> MarshalInFromNet(dynamic input)
         {
+            dynamic payload = GenerateObject();
+
+            var result = await input.hello(payload);
+            return result;
+        }
+
+        private dynamic GenerateObject()
+        {
             dynamic payload = new ExpandoObject();
             payload.a = 1;
             payload.b = 3.1415;
@@ -208,12 +209,13 @@ namespace Edge.Tests
             payload.i = (Func<object,Task<object>>)(async (i) => { return i; });
             payload.j = new DateTime(2013, 08, 30);
             payload.k = ushort.MaxValue;
-            payload.l = uint.MaxValue;;
-            payload.m = ulong.MaxValue;;
+            payload.l = uint.MaxValue;
+            payload.m = ulong.MaxValue;
+            payload.n = 'c';
+            payload.o = new Guid("19b25856-e1c1-450c-8a83-4cffc8b59b23");
+            
+            return payload;
 
-
-            var result = await input.hello(payload);
-            return result;
         }
 
         public async Task<object> MarshalBackToNet(dynamic input)
@@ -431,7 +433,7 @@ namespace Edge.Tests
             return serializer.Deserialize(new StringReader(@"<SerializationTest AttributeValue=""My attribute value""><ElementValue>This is an element value</ElementValue></SerializationTest>"));
         }
 
-#if NET6_0
+#if NETCOREAPP
         public async Task<object> CorrectVersionOfNewtonsoftJsonUsed(object input)
         {
             return typeof(JsonConvert).GetTypeInfo().Assembly.GetName().Version.ToString();
