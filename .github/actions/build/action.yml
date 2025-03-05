@@ -20,7 +20,7 @@ runs:
       run: |
          node-gyp configure --target=${{ inputs.node }} --runtime=node --release --arch=${{ inputs.arch }}
 
-          if ( '${{ inputs.arch }}' -eq 'arm64'){
+          if ( '${{ inputs.arch }}' -eq 'arm64' -And '${{ runner.os }}' -eq 'Windows'){
             (Get-Content -Raw build/build_managed.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/build_managed.vcxproj
             (Get-Content -Raw build/edge_coreclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_coreclr.vcxproj
             (Get-Content -Raw build/edge_nativeclr.vcxproj) -replace '<FloatingPointModel>Strict</FloatingPointModel>', '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->' | Out-File -Encoding Utf8 build/edge_nativeclr.vcxproj

@@ -17,7 +17,7 @@ runs:
         uses: ./.github/actions/setup-env
         with:
           node: 20
-          os: windows-2022
+          os: ${{ inputs.runs-on }}
 
       - name: Get latest Node.js version for v${{ inputs.node }}
         id: node-test-version
@@ -37,11 +37,17 @@ runs:
           script: |
             try {
               const fs = require('fs')
-              if(${{ inputs.node }} <23){
-                fs.mkdirSync('release/ia32/${{ inputs.node }}', { recursive: true });
+              if(${{ inputs.runs-on }} == 'windows-2022'){
+                if(${{ inputs.node }} <23){
+                  fs.mkdirSync('release/ia32/${{ inputs.node }}', { recursive: true });
+                }
+                fs.mkdirSync('release/x64/${{ inputs.node }}', { recursive: true });
+                if(${{ inputs.node }} >=20){
+                  fs.mkdirSync('release/arm64/${{ inputs.node }}', { recursive: true });
+                }
               }
-              fs.mkdirSync('release/x64/${{ inputs.node }}', { recursive: true });
-              if(${{ inputs.node }} >=20){
+              else if(${{ inputs.runs-on }} == 'macos-14'){
+                fs.mkdirSync('release/x64/${{ inputs.node }}', { recursive: true });
                 fs.mkdirSync('release/arm64/${{ inputs.node }}', { recursive: true });
               }
             } catch(err) {
@@ -56,11 +62,16 @@ runs:
           script: |
             try {
               const fs = require('fs')
-              if(${{ inputs.node }} <23){
-                fs.writeFileSync('release/ia32/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
-              }
-              fs.writeFileSync('release/x64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
-              if(${{ inputs.node }} >=20){
+              if(${{ inputs.runs-on }} == 'windows-2022'){
+                if(${{ inputs.node }} <23){
+                  fs.writeFileSync('release/ia32/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
+                }
+                fs.writeFileSync('release/x64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
+                if(${{ inputs.node }} >=20){
+                  fs.writeFileSync('release/arm64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
+                }
+              else if(${{ inputs.runs-on }} == 'macos-14'){
+                fs.writeFileSync('release/x64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
                 fs.writeFileSync('release/arm64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
               }
             } catch(err) {
@@ -69,6 +80,7 @@ runs:
             }
 
       - name: Cache node-gyp
+        if: runner.os == 'Windows'
         uses: actions/cache@v4
         env:
           cache-name: cache-node-gyp
@@ -77,7 +89,7 @@ runs:
           key: ${{ steps.node-test-version.outputs.node-version }}
 
       - name: Build ia32
-        if: ${{ inputs.node <23 }}
+        if: ${{ inputs.node <23 }} && runner.os == 'Windows'
         uses: ./.github/actions/build
         with:
           node: ${{ steps.node-test-version.outputs.node-version }}
@@ -92,7 +104,7 @@ runs:
           arch: 'x64'
 
       - name: Build arm64
-        if: ${{ inputs.node >=20 }}
+        if: ${{ inputs.node >=20 }} || runner.os == 'macOS'
         uses: ./.github/actions/build
         with:
           node: ${{ steps.node-test-version.outputs.node-version }}

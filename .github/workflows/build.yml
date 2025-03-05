@@ -21,10 +21,13 @@ env:
 
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: ${{ matrix.os }}
     # outputs:
     #   node-version: ${{ steps.node-test-version.outputs.node-version }}
     strategy:
+      matrix:
+        # os: [windows-2022, macos-14]
+        os: [macos-14]
       fail-fast: true
        
     name: build node-${{ inputs.build-version }}
@@ -37,7 +40,7 @@ jobs:
         uses: ./.github/actions/build-node
         with:
           node: ${{ inputs.build-version }}
-          os: ${{ runner.os }}
+          os: ${{ matrix.os }}
 
   test:
     runs-on: ${{ matrix.os }}
