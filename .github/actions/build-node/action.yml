@@ -48,6 +48,7 @@ runs:
               }
               else if('${{ inputs.os }}' == 'macos-14'){
                 fs.mkdirSync('release/x64/${{ inputs.node }}', { recursive: true });
+                fs.mkdirSync('release/x64/${{ inputs.node }}', { recursive: true });
                 fs.mkdirSync('release/arm64/${{ inputs.node }}', { recursive: true });
               }
             } catch(err) {
@@ -72,7 +73,6 @@ runs:
                 }
               }
               else if('${{ inputs.os }}' == 'macos-14'){
-                fs.writeFileSync('release/ia32/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
                 fs.writeFileSync('release/x64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
                 fs.writeFileSync('release/arm64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
               }

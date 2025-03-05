@@ -33,6 +33,6 @@ runs:
           }
 
           if ( '${{ runner.os }}' -eq 'macOS'){
-            Copy-Item "build/Release/edge_*.node" -Destination "release/${{ inputs.arch }}/${{ inputs.node-major }}"
+            Copy-Item "build/Release/eedge_coreclr.node" -Destination "release/${{ inputs.arch }}/${{ inputs.node-major }}"
             node-gyp clean
           }
