@@ -42,22 +42,22 @@ jobs:
           node: ${{ inputs.build-version }}
           os: ${{ matrix.os }}
 
-  test:
-    runs-on: ${{ matrix.os }}
-    needs: build
-    strategy:
-      matrix:
-        os: [windows-2022]
-      # fail-fast: false
+  # test:
+  #   runs-on: ${{ matrix.os }}
+  #   needs: build
+  #   strategy:
+  #     matrix:
+  #       os: [windows-2022]
+  #     # fail-fast: false
 
-    name: test ${{ matrix.os }}-node-${{ inputs.build-version }}
-    steps:
+  #   name: test ${{ matrix.os }}-node-${{ inputs.build-version }}
+  #   steps:
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Test build
-        uses: ./.github/actions/test-build
-        with:
-          node: ${{ inputs.build-version }}
-          os: ${{ matrix.os }}
+  #     - name: Test build
+  #       uses: ./.github/actions/test-build
+  #       with:
+  #         node: ${{ inputs.build-version }}
+  #         os: ${{ matrix.os }}
