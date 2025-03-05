@@ -27,5 +27,12 @@ runs:
           }
 
           node-gyp build
-          cmd /c copy /y build\Release\edge_*.node release\${{ inputs.arch }}\${{ inputs.node-major }}
-          cmd /c rmdir /S /Q build
+          if ( '${{ runner.os }}' -eq 'Windows'){
+            cmd /c copy /y build\Release\edge_*.node release\${{ inputs.arch }}\${{ inputs.node-major }}
+            cmd /c rmdir /S /Q build
+          }
+
+          if ( '${{ runner.os }}' -eq 'macOS'){
+            Copy-Item "build/Release/edge_*.node" -Destination "release/${{ inputs.arch }}/${{ inputs.node-major }}"
+            node-gyp clean
+          }
