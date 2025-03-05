@@ -70,6 +70,7 @@ runs:
                 if(${{ inputs.node }} >=20){
                   fs.writeFileSync('release/arm64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
                 }
+              }
               else if('${{ inputs.os }}' == 'macos-14'){
                 fs.writeFileSync('release/x64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
                 fs.writeFileSync('release/arm64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
