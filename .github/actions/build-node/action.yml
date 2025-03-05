@@ -99,7 +99,7 @@ runs:
           key: '${{ inputs.os }}-${{ inputs.node}}'
 
       - name: Build ia32
-        if: ${{ inputs.node <23 }} && ${{ runner.os  == 'Windows' }}
+        if: ${{ inputs.node <23 && runner.os == 'Windows' }}
         uses: ./.github/actions/build
         with:
           node: ${{ steps.node-test-version.outputs.node-version }}
@@ -114,7 +114,7 @@ runs:
           arch: 'x64'
 
       - name: Build arm64
-        if: ${{ inputs.node >=20 }} || ${{ runner.os  == 'macOS' }}
+        if: ${{ inputs.node >=20 || runner.os  == 'macOS'}}
         uses: ./.github/actions/build
         with:
           node: ${{ steps.node-test-version.outputs.node-version }}
