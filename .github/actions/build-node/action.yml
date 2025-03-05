@@ -47,7 +47,7 @@ runs:
                 }
               }
               else if('${{ inputs.os }}' == 'macos-14'){
-                fs.mkdirSync('release/x64/${{ inputs.node }}', { recursive: true });
+                fs.mkdirSync('release/ia32/${{ inputs.node }}', { recursive: true });
                 fs.mkdirSync('release/x64/${{ inputs.node }}', { recursive: true });
                 fs.mkdirSync('release/arm64/${{ inputs.node }}', { recursive: true });
               }
