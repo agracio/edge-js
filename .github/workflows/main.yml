@@ -71,7 +71,6 @@ on:
       - '*.sln'
       - '*.vcxproj'
 
-
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
   DOTNET_CLI_TELEMETRY_OPTOUT: 1 
@@ -104,14 +103,19 @@ jobs:
       #   run: |
       #     pip install setuptools
 
-      - if: runner.os == 'Windows'
-        name: Run Windows tests
-        uses: ./.github/actions/test-windows
-        with:
-          node: ${{ matrix.node }}
+      - name: Run .NET 4.5 tests
+        if:  runner.os == 'Windows'
+        shell: bash
+        run: node tools/test.js CI
+
+      # - if: runner.os == 'Windows'
+      #   name: Run Windows tests
+      #   uses: ./.github/actions/test-windows
+      #   with:
+      #     node: ${{ matrix.node }}
 
       - if: runner.os == 'macOS' || runner.os == 'Linux'
-        name: "Run macOS|Linux tests"
+        name: "Run .net core tests"
         run: node tools/test.js CI
         env:
           EDGE_USE_CORECLR: 1

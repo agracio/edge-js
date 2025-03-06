@@ -13,12 +13,6 @@ runs:
   using: "composite"
   steps:
 
-    - name: Setup env
-      uses: ./.github/actions/setup-env
-      with:
-        node: ${{ inputs.node }}
-        os: ${{ inputs.os }}
-
     - name: Create release folder
       if:  runner.os == 'Windows'
       shell: pwsh
@@ -72,6 +66,12 @@ runs:
             core.error("Error creating release directory")
             core.setFailed(err)
           }
+          
+    - name: Setup env
+      uses: ./.github/actions/setup-env
+      with:
+        node: ${{ inputs.node }}
+        os: ${{ inputs.os }}
 
     - name: Test
       uses: ./.github/actions/test-windows
