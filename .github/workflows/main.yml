@@ -86,7 +86,7 @@ jobs:
         # os: [macos-13, macos-14, ubuntu-22.04, ubuntu-22.04-arm, windows-2022]
         os: [macos-13, macos-15]
         # node: [18, 20, 22, 23]
-        node: [16]
+        node: [16,18,20,22,23]
     steps:
 
       - name: Checkout code
