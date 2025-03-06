@@ -7,4 +7,4 @@ catch (e) {
 	console.log('***************************************');
 }
 
-console.log('Success: platform check for edge.js: node.js ' + process.arch + ' v' + process.versions.node);
+console.log('Success: platform check for edge.js: ' + process.platform + '-' + process.arch + ' v' + process.versions.node);

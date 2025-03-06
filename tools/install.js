@@ -1,10 +1,10 @@
-var fs = require('fs')
+const fs = require('fs')
 	, path = require('path')
 	, spawn = require('child_process').spawn
 	, whereis = require('./whereis');
 
 if (process.platform === 'win32') {
-	var libroot = path.resolve(__dirname, '../lib/native/win32')
+	const libroot = path.resolve(__dirname, '../lib/native/win32')
 		, lib32bit = path.resolve(libroot, 'ia32')
 		, lib64bit = path.resolve(libroot, 'x64')
 		, libarm64 = path.resolve(libroot, 'arm64');
@@ -47,16 +47,16 @@ if (process.platform === 'win32') {
 		.map(getPath);
 	}
 
-	var redist = [
+	const redist = [
         'concrt140.dll',
         'msvcp140.dll',
         'vccorlib140.dll',
         'vcruntime140.dll',
 	];
 
-	var dest32dirs = getDestDirs(lib32bit);
-	var dest64dirs = getDestDirs(lib64bit);
-	var destarmdirs = getDestDirs(libarm64);
+	const dest32dirs = getDestDirs(lib32bit);
+	const dest64dirs = getDestDirs(lib64bit);
+	const destarmdirs = getDestDirs(libarm64);
 
 	function copyRedist(lib, destDirs){
 		redist.forEach(function (dllname) {
@@ -69,7 +69,7 @@ if (process.platform === 'win32') {
 	copyRedist(lib64bit, dest64dirs);
 	copyRedist(libarm64, destarmdirs);
 
-	var dotnetPath = whereis('dotnet', 'dotnet.exe');
+	const dotnetPath = whereis('dotnet', 'dotnet.exe');
 
 	if (dotnetPath) {
 		spawn(dotnetPath, ['restore'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
@@ -87,5 +87,20 @@ if (process.platform === 'win32') {
 } 
 
 else {
-	spawn('node-gyp', ['configure', 'build'], { stdio: 'inherit' });
+	if(process.platform === 'darwin'){
+		const edjeNative = path.resolve(__dirname, '../lib/native/' + process.platform + '/' + process.arch + '/' + determineVersion() + '/' + 'edge_coreclr.node');
+		console.log(edjeNative)
+		if(fs.existsSync(edjeNative)){
+			spawn(dotnetPath, ['build', '--configuration', 'Release'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
+			.on('close', function() {
+				require('./checkplatform');
+			});
+		}
+		else{
+			spawn('node-gyp', ['configure', 'build'], { stdio: 'inherit' });
+		}
+	}
+	else{
+		spawn('node-gyp', ['configure', 'build'], { stdio: 'inherit' });
+	}
 }
