@@ -37,10 +37,18 @@ runs:
           }
 
     - name: Download artifacts
+      if:  runner.os == 'Windows'
       uses: actions/download-artifact@v4
       with:
         path: release
-        pattern: edge-js-${{ inputs.node }}*
+        pattern: win32-edge-js-${{ inputs.node }}*
+
+    - name: Download artifacts
+      if:  runner.os == 'macOS'
+      uses: actions/download-artifact@v4
+      with:
+        path: release
+        pattern: darwin-edge-js-${{ inputs.node }}*
 
     - name: List artifacts
       shell: bash
