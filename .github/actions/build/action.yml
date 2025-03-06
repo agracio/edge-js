@@ -28,11 +28,11 @@ runs:
 
           node-gyp build
           if ( '${{ runner.os }}' -eq 'Windows'){
-            cmd /c copy /y build\Release\edge_*.node release\${{ inputs.arch }}\${{ inputs.node-major }}
+            cmd /c copy /y build\Release\edge_*.node release\win32\${{ inputs.arch }}\${{ inputs.node-major }}
             cmd /c rmdir /S /Q build
           }
 
           if ( '${{ runner.os }}' -eq 'macOS'){
-            Copy-Item "build/Release/edge_coreclr.node" -Destination "release/${{ inputs.arch }}/${{ inputs.node-major }}"
+            Copy-Item "build/Release/edge_coreclr.node" -Destination "release/darwin/${{ inputs.arch }}/${{ inputs.node-major }}"
             node-gyp clean
           }
