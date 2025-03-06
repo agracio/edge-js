@@ -50,7 +50,7 @@ runs:
       if:  runner.os == 'Windows'
       shell: pwsh
       run: |
-        cmd /c copy /y release\edge-js-${{ inputs.node }}\x64\${{ inputs.node }}\edge_*.node lib\native\win32\x64\${{ inputs.node }}
+        cmd /c copy /y release\win32-edge-js-${{ inputs.node }}\win32\x64\${{ inputs.node }}\edge_*.node lib\native\win32\x64\${{ inputs.node }}
 
     - name: Copy artifacts
       if:  runner.os == 'macOS'
@@ -60,13 +60,13 @@ runs:
         script: |
           try {
             const fs = require('fs')
-              fs.copyFileSync('release/edge-js-${{ inputs.node }}/x64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/x64/${{ inputs.node }}/edge_coreclr.node');
-              fs.copyFileSync('release/edge-js-${{ inputs.node }}/x64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_coreclr.node');
+              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/x64/${{ inputs.node }}/edge_coreclr.node');
+              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_coreclr.node');
           } catch(err) {
             core.error("Error creating release directory")
             core.setFailed(err)
           }
-          
+
     - name: Setup env
       uses: ./.github/actions/setup-env
       with:

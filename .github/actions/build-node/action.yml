@@ -39,17 +39,16 @@ runs:
               const fs = require('fs')
               if('${{ runner.os }}' == 'Windows'){
                 if(${{ inputs.node }} <23){
-                  fs.mkdirSync('release/ia32/${{ inputs.node }}', { recursive: true });
+                  fs.mkdirSync('release/win32/ia32/${{ inputs.node }}', { recursive: true });
                 }
-                fs.mkdirSync('release/x64/${{ inputs.node }}', { recursive: true });
+                fs.mkdirSync('release/win32/x64/${{ inputs.node }}', { recursive: true });
                 if(${{ inputs.node }} >=20){
-                  fs.mkdirSync('release/arm64/${{ inputs.node }}', { recursive: true });
+                  fs.mkdirSync('release/win32/arm64/${{ inputs.node }}', { recursive: true });
                 }
               }
               else if('${{ runner.os }}' == 'macOS'){
-                fs.mkdirSync('release/ia32/${{ inputs.node }}', { recursive: true });
-                fs.mkdirSync('release/x64/${{ inputs.node }}', { recursive: true });
-                fs.mkdirSync('release/arm64/${{ inputs.node }}', { recursive: true });
+                fs.mkdirSync(`release/${process.platform}/x64/${{ inputs.node }}`, { recursive: true });
+                fs.mkdirSync(`release/${process.platform}/arm64/${{ inputs.node }}`, { recursive: true });
               }
             } catch(err) {
               core.error("Error creating release directory")
@@ -65,27 +64,21 @@ runs:
               const fs = require('fs')
               if('${{ runner.os }}' == 'Windows'){
                 if(${{ inputs.node }} <23){
-                  fs.writeFileSync('release/ia32/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
+                  fs.writeFileSync('release/win32/ia32/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
                 }
-                fs.writeFileSync('release/x64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
+                fs.writeFileSync('release/win32/x64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
                 if(${{ inputs.node }} >=20){
-                  fs.writeFileSync('release/arm64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
+                  fs.writeFileSync('release/win32/arm64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
                 }
               }
               else if('${{ runner.os }}' == 'macOS'){
-                fs.writeFileSync('release/x64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
-                fs.writeFileSync('release/arm64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
+                fs.writeFileSync(`release/${process.platform}/x64/${{ inputs.node }}/node.version`, '${{ steps.node-test-version.outputs.node-version }}');
+                fs.writeFileSync(`release/${process.platform}/arm64/${{ inputs.node }}/node.version`, '${{ steps.node-test-version.outputs.node-version }}');
               }
             } catch(err) {
               core.error("Error writing node.version file")
               core.setFailed(err)
             }
-
-      - if: runner.os == 'macOS' && inputs.node == 16
-        shell: bash
-        name: Add missing packages for macOS NodeJs 16 
-        run: |
-          pip install setuptools
 
       - name: Cache node-gyp Windows
         if: runner.os == 'Windows'
