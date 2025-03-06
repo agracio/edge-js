@@ -98,7 +98,7 @@ else {
 			});
 		}
 		else{
-			spawn('node-gyp', [`configure --target=${process.versions.node} --runtime=node --arch=${process.arch}`], { stdio: 'inherit' });
+			spawn('node-gyp', [`configure`, `--target=${process.versions.node}`, `--runtime=node`,  `--arch=${process.arch}`], { stdio: 'inherit' });
 		}
 	}
 	else{
