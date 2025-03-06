@@ -81,6 +81,12 @@ runs:
               core.setFailed(err)
             }
 
+      - if: runner.os == 'macOS' && inputs.node == 16
+        shell: bash
+        name: Add missing packages for macOS NodeJs 16 
+        run: |
+          pip install setuptools
+
       - name: Cache node-gyp Windows
         if: runner.os == 'Windows'
         uses: actions/cache@v4
@@ -115,7 +121,7 @@ runs:
           arch: 'x64'
 
       - name: Build arm64
-        if: ${{ inputs.node >=20 || runner.os  == 'macOS'}}
+        if: (inputs.node >=20) || (runner.os  == 'macOS')
         uses: ./.github/actions/build
         with:
           node: ${{ steps.node-test-version.outputs.node-version }}

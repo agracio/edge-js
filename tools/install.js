@@ -92,7 +92,7 @@ else {
 		const edjeNative = path.resolve(__dirname, '../lib/native/' + process.platform + '/' + process.arch + '/' + nodeVersion + '/' + 'edge_coreclr.node');
 		console.log(edjeNative)
 		if(fs.existsSync(edjeNative)){
-			spawn(dotnetPath, ['build', '--configuration', 'Release'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
+			spawn('dotnet', ['build', '--configuration', 'Release'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
 			.on('close', function() {
 				require('./checkplatform');
 			});
