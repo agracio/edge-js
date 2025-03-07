@@ -120,7 +120,7 @@ runs:
       uses: EnricoMi/publish-unit-test-result-action/macos@v2
       with:
         check_run_annotations: 'none'
-        check_name: 'test-summary-${{ inputs.os }}'
+        check_name: 'test-summary node-${{ inputs.node }} ${{ inputs.os }}'
         files: "test-results.xml"
         
     - name: publish test-summary Windows
@@ -128,5 +128,5 @@ runs:
       uses: EnricoMi/publish-unit-test-result-action/windows@v2
       with:
         check_run_annotations: 'none'
-        check_name: 'test-summary-${{ inputs.os }}'
+        check_name: 'test-summary node-${{ inputs.node }} ${{ inputs.os }}'
         files: "test-results.xml"

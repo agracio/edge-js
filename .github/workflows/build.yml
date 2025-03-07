@@ -52,7 +52,7 @@ jobs:
         os: [windows-2022, macos-13, macos-15]
       fail-fast: false
 
-    name: test ${{ matrix.os }}-node-${{ inputs.build-version }}
+    name: test node-${{ inputs.build-version }} ${{ matrix.os }}
     steps:
 
       - name: Checkout code

@@ -17,7 +17,7 @@ jobs:
       matrix: 
        os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
-    name: build node-16
+    name: build node-16 ${{ matrix.os }}
     steps:
 
       - name: Checkout code
@@ -36,7 +36,7 @@ jobs:
       matrix: 
        os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
-    name: build node-18
+    name: build node-18 ${{ matrix.os }}
     steps:
 
       - name: Checkout code
@@ -55,7 +55,7 @@ jobs:
       matrix: 
        os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
-    name: build node-20
+    name: build node-20 ${{ matrix.os }}
     steps:
 
       - name: Checkout code
@@ -74,7 +74,7 @@ jobs:
       matrix: 
        os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
-    name: build node-22
+    name: build node-22 ${{ matrix.os }}
     steps:
 
       - name: Checkout code
@@ -92,7 +92,7 @@ jobs:
       matrix: 
        os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
-    name: build node-23
+    name: build node-23 ${{ matrix.os }}
     steps:
 
       - name: Checkout code
@@ -108,11 +108,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022, macos-15]
+       os: [windows-2022, macos-13, macos-15]
     runs-on: ${{ matrix.os }}
     needs: build-16
 
-    name: test ${{ matrix.os }}-node-16
+    name: test node-16 ${{ matrix.os }}
     steps:
 
       - name: Checkout code
@@ -128,11 +128,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022, macos-15]
+       os: [windows-2022, macos-13, macos-15]
     runs-on: ${{ matrix.os }}
     needs: build-18
 
-    name: test ${{ matrix.os }}-node-18
+    name: test node-18 ${{ matrix.os }}
     steps:
 
       - name: Checkout code
@@ -148,11 +148,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022, macos-15]
+       os: [windows-2022, macos-13, macos-15]
     runs-on: ${{ matrix.os }}
     needs: build-20
 
-    name: test ${{ matrix.os }}-node-20
+    name: test node-20 ${{ matrix.os }}
     steps:
 
       - name: Checkout code
@@ -168,11 +168,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022, macos-15]
+       os: [windows-2022, macos-13, macos-15]
     runs-on: ${{ matrix.os }}
     needs: build-22
 
-    name: test ${{ matrix.os }}-node-22
+    name: test node-22 ${{ matrix.os }}
     steps:
 
       - name: Checkout code
@@ -188,11 +188,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022, macos-15]
+       os: [windows-2022, macos-13, macos-15]
     runs-on: ${{ matrix.os }}
     needs: build-23
 
-    name: test ${{ matrix.os }}-node-23
+    name: test node-23 ${{ matrix.os }}
     steps:
 
       - name: Checkout code
