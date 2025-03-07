@@ -88,9 +88,10 @@ if (process.platform === 'win32') {
 
 else {
 	if(process.platform === 'darwin'){
+  
 		const nodeVersion = process.versions.node.split(".")[0]
 		const edjeNative = path.resolve(__dirname, '../lib/native/' + process.platform + '/' + process.arch + '/' + nodeVersion + '/' + 'edge_coreclr.node');
-		console.log(edjeNative)
+
 		if(fs.existsSync(edjeNative)){
 			spawn('dotnet', ['build', '--configuration', 'Release'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
 			.on('close', function() {

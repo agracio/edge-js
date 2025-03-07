@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022]
+       os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
     name: build node-16
     steps:
@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022]
+       os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
     name: build node-18
     steps:
@@ -53,7 +53,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022]
+       os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
     name: build node-20
     steps:
@@ -72,7 +72,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022]
+       os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
     name: build node-22
     steps:
@@ -90,7 +90,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022]
+       os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
     name: build node-23
     steps:
@@ -108,7 +108,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022]
+       os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
     needs: build-16
 
@@ -128,7 +128,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022]
+       os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
     needs: build-18
 
@@ -148,7 +148,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022]
+       os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
     needs: build-20
 
@@ -168,7 +168,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022]
+       os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
     needs: build-22
 
@@ -188,7 +188,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
-       os: [windows-2022]
+       os: [windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
     needs: build-23
 

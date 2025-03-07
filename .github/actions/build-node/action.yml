@@ -17,7 +17,7 @@ runs:
         uses: ./.github/actions/setup-env
         with:
           node: 20
-          os: ${{ inputs.runs-on }}
+          os: ${{ inputs.os }}
 
       - name: Get latest Node.js version for v${{ inputs.node }}
         id: node-test-version
