@@ -81,11 +81,33 @@ runs:
         node: ${{ inputs.node }}
         os: ${{ inputs.os }}
 
-    - name: Test
-      uses: ./.github/actions/test-windows
+    - name: Check edge-js Windows pre-built files
+      if:  runner.os == 'Windows'
+      uses: andstor/file-existence-action@v3
       with:
-        node: ${{ inputs.node }}
-  
+        files: "lib/native/win32/${{ runner.arch }}/${{ steps.node_version.outputs.substring }}/edge_coreclr.node, lib/native/win32/${{ runner.arch }}/${{ steps.node_version.outputs.substring }}/edge_nativeclr.node"
+        fail: true
+        ignore_case: true
+
+    - name: Check edge-js macOS pre-built files
+      if:  runner.os == 'macOS'
+      uses: andstor/file-existence-action@v3
+      with:
+        files: "lib/native/darwin/${{ runner.arch }}/${{ steps.node_version.outputs.substring }}/edge_coreclr.node"
+        fail: true
+        ignore_case: true
+
+    - name: Run .NET 4.5 tests
+      if:  runner.os == 'Windows'
+      shell: bash
+      run: node tools/test.js CI
+
+    - name: "Run .net core tests"
+      shell: bash
+      run: node tools/test.js CI
+      env:
+        EDGE_USE_CORECLR: 1
+
     - name: Test report
       uses: ./.github/actions/create-test-report
       with:

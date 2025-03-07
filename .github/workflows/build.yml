@@ -28,7 +28,7 @@ jobs:
     strategy:
       matrix:
         # os: [windows-2022, macos-14]
-        os: [macos-15]
+        os: [windows-2022, macos-15]
       fail-fast: true
        
     name: build node-${{ inputs.build-version }} ${{ matrix.os }}
@@ -49,7 +49,7 @@ jobs:
     strategy:
       matrix:
         # os: [windows-2022]
-        os: [macos-13, macos-15]
+        os: [windows-2022, macos-13, macos-15]
       fail-fast: false
 
     name: test ${{ matrix.os }}-node-${{ inputs.build-version }}
