@@ -85,7 +85,7 @@ runs:
       if:  runner.os == 'Windows'
       uses: andstor/file-existence-action@v3
       with:
-        files: "lib/native/win32/${{ runner.arch }}/${{ steps.node_version.outputs.substring }}/edge_coreclr.node, lib/native/win32/${{ runner.arch }}/${{ steps.node_version.outputs.substring }}/edge_nativeclr.node"
+        files: "lib/native/win32/${{ runner.arch }}/${{ inputs.node }}/edge_coreclr.node, lib/native/win32/${{ runner.arch }}/${{ inputs.node }}/edge_nativeclr.node"
         fail: true
         ignore_case: true
 
@@ -93,7 +93,7 @@ runs:
       if:  runner.os == 'macOS'
       uses: andstor/file-existence-action@v3
       with:
-        files: "lib/native/darwin/${{ runner.arch }}/${{ steps.node_version.outputs.substring }}/edge_coreclr.node"
+        files: "lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_coreclr.node"
         fail: true
         ignore_case: true
 
