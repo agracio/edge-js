@@ -14,6 +14,7 @@ on:
         - 20
         - 22
         - 23
+        - 24
 
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1 
@@ -21,13 +22,16 @@ env:
 
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: ${{ matrix.os }}
     # outputs:
     #   node-version: ${{ steps.node-test-version.outputs.node-version }}
     strategy:
+      matrix:
+        # os: [windows-2022, macos-14]
+        os: [windows-2022, macos-15]
       fail-fast: true
        
-    name: build node-${{ inputs.build-version }}
+    name: build node-${{ inputs.build-version }} ${{ matrix.os }}
     steps:
 
       - name: Checkout code
@@ -37,17 +41,18 @@ jobs:
         uses: ./.github/actions/build-node
         with:
           node: ${{ inputs.build-version }}
-          os: ${{ runner.os }}
+          os: ${{ matrix.os }}
 
   test:
     runs-on: ${{ matrix.os }}
     needs: build
     strategy:
       matrix:
-        os: [windows-2022]
-      # fail-fast: false
+        # os: [windows-2022]
+        os: [windows-2022, macos-13, macos-15]
+      fail-fast: false
 
-    name: test ${{ matrix.os }}-node-${{ inputs.build-version }}
+    name: test node-${{ inputs.build-version }} ${{ matrix.os }}
     steps:
 
       - name: Checkout code

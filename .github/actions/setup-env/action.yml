@@ -28,16 +28,16 @@ runs:
         path: ~/.cache/node-gyp
         key: '${{ inputs.os }}-${{ inputs.node}}'
 
-    - name: Cache node-gyp macOs
-      if: runner.os == 'macOS'
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-node-gyp
-      with:
-        path: ~/Library/Caches/node-gyp
-        key: '${{ inputs.os }}-${{ inputs.node}}'
+    # - name: Cache node-gyp macOs
+    #   if: runner.os == 'macOS'
+    #   uses: actions/cache@v4
+    #   env:
+    #     cache-name: cache-node-gyp
+    #   with:
+    #     path: ~/Library/Caches/node-gyp
+    #     key: '${{ inputs.os }}-${{ inputs.node}}'
 
-   
+
     - name: Cache node modules
       id: cache-nodemodules
       uses: actions/cache@v4
@@ -56,6 +56,12 @@ runs:
       shell: bash
       run: |
         node -v && npm -v && dotnet --version && node -p process.platform && node -p process.arch
+
+    - if: runner.os == 'macOS' && inputs.node <= 16
+      shell: bash
+      name: Add missing packages for macOS NodeJs 16 
+      run: |
+        pip install setuptools
 
     - name: npm install
       shell: bash
