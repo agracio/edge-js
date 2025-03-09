@@ -62,7 +62,7 @@ runs:
       if: runner.os == 'Linux'
       shell: bash
       run: |
-        apt install mono-complete pkg-config
+        sudo apt install mono-complete pkg-config
 
     - name: Versions
       shell: bash
