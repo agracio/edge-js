@@ -48,7 +48,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: [macos-13, macos-14]
+        os: [macos-13, macos-15]
         # os: [windows-2022, macos-13, macos-15]
       fail-fast: false
 

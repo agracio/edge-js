@@ -62,8 +62,8 @@ runs:
       if: inputs.os == 'macos-13'
       shell: bash
       run: |
-        brew reinstall mono --force
-        brew reinstall pkg-config --force
+        brew reinstall mono --overwrite
+        brew reinstall pkg-config --overwrite
 
 
     - name: Versions
