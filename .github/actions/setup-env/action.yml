@@ -56,7 +56,8 @@ runs:
       if: runner.os == 'macOS'
       shell: bash
       run: |
-        brew reinstall pkgconf
+        brew install mono
+        brew reinstall pkg-config
 
     - name: Versions
       shell: bash
