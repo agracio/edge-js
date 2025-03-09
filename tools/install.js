@@ -95,9 +95,7 @@ else {
 
 		if(fs.existsSync(edjeNative) && fs.existsSync(edjeNativeClr)){
 			spawn('dotnet', ['build', '--configuration', 'Release'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
-			.on('close', function() {
-				require('./checkplatform');
-			});
+
 		}
 		else{
 			spawn('node-gyp', ['configure', 'build'], { stdio: 'inherit' });
