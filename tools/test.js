@@ -12,8 +12,15 @@ const marge = require('mochawesome-report-generator')
 
 var runner = process.argv[2];
 
-if (process.platform !== 'win32') {
-    process.env.EDGE_USE_CORECLR = 1
+// if (process.platform !== 'win32') {
+//     process.env.EDGE_USE_CORECLR = 1
+// }
+
+if(process.platform === 'linux' && !process.env.EDGE_USE_CORECLR){
+    Object.assign(process.env, {
+        // Work around Mono problem: undefined symbol: mono_add_internal_call_with_flags
+        LD_PRELOAD: 'libmono-2.0.so libmonosgen-2.0.so libstdc++.so.6',
+    });
 }
 
 if(process.argv[3] === 'coreclr'){

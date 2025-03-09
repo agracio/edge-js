@@ -69,7 +69,11 @@ runs:
           try {
             const fs = require('fs')
               fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/x64/${{ inputs.node }}/edge_coreclr.node');
+              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/edge_nativeclr.node', 'lib/native/darwin/x64/${{ inputs.node }}/edge_nativeclr.node');
+              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/MonoEmbedding.exe', 'lib/native/darwin/x64/${{ inputs.node }}/MonoEmbedding.exe');
               fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_coreclr.node');
+              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node');
+              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe', 'lib/native/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe');
           } catch(err) {
             core.error("Error creating release directory")
             core.setFailed(err)
@@ -93,12 +97,12 @@ runs:
       if:  runner.os == 'macOS'
       uses: andstor/file-existence-action@v3
       with:
-        files: "lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_coreclr.node"
+        files: "lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_coreclr.node, lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_nativeclr.node"
         fail: true
         ignore_case: true
 
     - name: Run .NET 4.5 tests
-      if:  runner.os == 'Windows'
+      if: inputs.os != 'macos-13'
       shell: bash
       run: node tools/test.js CI
 
