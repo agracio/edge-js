@@ -52,8 +52,8 @@ runs:
       with:
         dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
 
-    - name: Setup pkf-config
-      if: runner.os == 'macOS'
+    - name: Setup Mono
+      if: inputs.os == 'macos-14'
       shell: bash
       run: |
         brew install mono
