@@ -55,16 +55,14 @@ runs:
       if: inputs.os == 'macos-14' || inputs.os == 'macos-15'
       shell: bash
       run: |
-        brew install mono
+        brew install mono --overwrite
         brew reinstall pkg-config
 
     - name: Setup Mono
-      if: inputs.os == 'macos-13'
+      if: runner.os == 'Linux'
       shell: bash
       run: |
-        brew install mono --overwrite 
-        brew install pkg-config --overwrite 
-
+        apt install mono-complete pkg-config
 
     - name: Versions
       shell: bash
