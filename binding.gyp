@@ -199,51 +199,8 @@
               'src/common/callbackhelper.cpp',
               'src/common/edge.cpp'
             ]
-          },
-          {
-            'conditions': [
-              [
-                '"<!((which mono 2>/dev/null) || echo not_found)"!="not_found"',
-                {
-                    'conditions': [
-                        [
-                        '"<!((pkg-config mono-2 --libs 2>/dev/null) || echo not_found)"!="not_found"',
-                          {                  
-                              'sources+': [
-                                'src/mono/clractioncontext.cpp',
-                                'src/mono/clrfunc.cpp',
-                                'src/mono/clrfuncinvokecontext.cpp',
-                                'src/mono/monoembedding.cpp',
-                                'src/mono/task.cpp',
-                                'src/mono/dictionary.cpp',
-                                'src/mono/nodejsfunc.cpp',
-                                'src/mono/nodejsfuncinvokecontext.cpp',
-                                'src/mono/utils.cpp',
-                                'src/common/utils.cpp',
-                                'src/common/v8synchronizationcontext.cpp',
-                                'src/common/callbackhelper.cpp',
-                                'src/common/edge.cpp'
-                              ],
-
-                                'include_dirs': [
-                                  '<!@(pkg-config mono-2 --cflags-only-I | sed s/-I//g)',
-                                  '<!@(pkg-config glib-2.0 --cflags-only-I | sed s/-I//g)',
-                                ],
-                                'link_settings': {
-                                  'libraries': [
-                                    '<!@(pkg-config mono-2 --libs)'
-                                  ]
-                                }
-                          }
-                      ]
-                    ],
-                },
-                {
-                  'type': 'none'
-                }
-              ]
-            ]
           }
+          
         ]
       ],
       'configurations': {
@@ -313,30 +270,6 @@
           },
           {
             'conditions': [
-              [
-                '"<!((which mono 2>/dev/null) || echo not_found)"!="not_found"',
-                {
-                  'actions+': [
-                    {
-                      'action_name': 'compile_mono_embed',
-                      'inputs': [
-                        'src/mono/*.cs'
-                      ],
-                      'outputs': [
-                        'build/$(BUILDTYPE)/monoembedding.exe'
-                      ],
-                      'action': [
-                        'mcs',
-                        '-sdk:4.5',
-                        '-target:exe',
-                        '-out:build/$(BUILDTYPE)/MonoEmbedding.exe',
-                        'src/mono/*.cs',
-                        'src/common/*.cs'
-                      ]
-                    }
-                  ]
-                }
-              ],
               [
                 '"<!((which dotnet 2>/dev/null) || echo not_found)"!="not_found"',
                 {

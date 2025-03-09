@@ -25,7 +25,7 @@ call :node_version
 pushd %SELF%\..
 
 if %MAJORVERSION% LSS 23 (
-    call :build ia32 x86 %VERSION%
+    call :build ia32 ia32 %VERSION%
     call :stamp_version
     call :copy
     if %ERRORLEVEL% neq 0 exit /b -1
