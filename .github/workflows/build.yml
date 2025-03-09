@@ -43,23 +43,23 @@ jobs:
           node: ${{ inputs.build-version }}
           os: ${{ matrix.os }}
 
-  # test:
-  #   runs-on: ${{ matrix.os }}
-  #   needs: build
-  #   strategy:
-  #     matrix:
-  #       # os: [windows-2022]
-  #       os: [windows-2022, macos-13, macos-15]
-  #     fail-fast: false
+  test:
+    runs-on: ${{ matrix.os }}
+    needs: build
+    strategy:
+      matrix:
+        os: [macos-13, macos-14]
+        # os: [windows-2022, macos-13, macos-15]
+      fail-fast: false
 
-  #   name: test node-${{ inputs.build-version }} ${{ matrix.os }}
-  #   steps:
+    name: test node-${{ inputs.build-version }} ${{ matrix.os }}
+    steps:
 
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  #     - name: Test build
-  #       uses: ./.github/actions/test-build
-  #       with:
-  #         node: ${{ inputs.build-version }}
-  #         os: ${{ matrix.os }}
+      - name: Test build
+        uses: ./.github/actions/test-build
+        with:
+          node: ${{ inputs.build-version }}
+          os: ${{ matrix.os }}

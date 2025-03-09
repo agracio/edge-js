@@ -35,5 +35,7 @@ runs:
           if ( '${{ runner.os }}' -eq 'macOS'){
             Get-ChildItem -Path build/Release
             Copy-Item "build/Release/edge_coreclr.node" -Destination "release/darwin/${{ inputs.arch }}/${{ inputs.node-major }}"
-            node-gyp clean
+            Copy-Item "build/Release/edge_nativeclr.node" -Destination "release/darwin/${{ inputs.arch }}/${{ inputs.node-major }}"
+            Copy-Item "build/Release/MonoEmbedding.exe" -Destination "release/darwin/${{ inputs.arch }}/${{ inputs.node-major }}"
+           node-gyp clean
           }
