@@ -5,7 +5,7 @@ var prefix = process.env.EDGE_USE_CORECLR ? '[CoreCLR]' : process.platform === '
 describe('serialization', function () {
 
     it(prefix + ' complex exception serialization', function (done) {
-        if (process.env.EDGE_USE_CORECLR) {
+        if (process.env.EDGE_USE_CORECLR || process.platform !== 'win32') {
             this.skip();
         }
         var func = edge.func({
