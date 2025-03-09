@@ -83,8 +83,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, macos-15, ubuntu-24.04, ubuntu-24.04-arm, windows-2022]
-        # os: [macos-13, macos-15]
+        # os: [macos-13, macos-15, ubuntu-24.04, ubuntu-24.04-arm, windows-2022]
+        os: [macos-13, macos-14]
        # node: [18, 20, 22, 23]
         node: [18, 20, 22, 23]
     steps:
@@ -103,13 +103,13 @@ jobs:
       #   run: |
       #     pip install setuptools
 
-      - if:  runner.os == 'Windows'
-        name: Run .NET 4.5 tests
+      - name: Run .NET 4.5 tests
+        # if:  runner.os == 'Windows'
         shell: bash
         run: node tools/test.js CI
 
-      - if: runner.os == 'macOS' || runner.os == 'Linux'
-        name: "Run .net core tests"
+      - name: "Run .net core tests"
+        # if: runner.os == 'macOS' || runner.os == 'Linux'
         run: node tools/test.js CI
         env:
           EDGE_USE_CORECLR: 1

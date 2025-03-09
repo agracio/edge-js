@@ -90,9 +90,10 @@ else {
 	if(process.platform === 'darwin'){
   
 		const nodeVersion = process.versions.node.split(".")[0]
-		const edjeNative = path.resolve(__dirname, '../lib/native/' + process.platform + '/' + process.arch + '/' + nodeVersion + '/' + 'edge_coreclr.node');
+		const edjeNative = path.resolve(__dirname, '../lib/native/' + process.platform + '/' + process.arch + '/' + nodeVersion + '/' + 'edge_nativeclr.node');
+		const edjeNativeClr = path.resolve(__dirname, '../lib/native/' + process.platform + '/' + process.arch + '/' + nodeVersion + '/' + 'edge_coreclr.node');
 
-		if(fs.existsSync(edjeNative)){
+		if(fs.existsSync(edjeNative) && fs.existsSync(edjeNativeClr)){
 			spawn('dotnet', ['build', '--configuration', 'Release'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
 			.on('close', function() {
 				require('./checkplatform');
