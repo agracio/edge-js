@@ -101,26 +101,25 @@ https://github.com/agracio/edge-js-quick-start
 <tr><th>Script CLR from Node.js </th><th>Script Node.js from CLR</th></tr>
 <tr><td>
 
-|         | .NET 4.5           | Mono 6.x           | CoreCLR            |
-| ------- | ------------------ | ------------------ | ------------------ |
-| Windows | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Linux   | :x:                | :x:                | :heavy_check_mark: |
-| macOS   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+|         | .NET 4.5           | CoreCLR            |
+| ------- | ------------------ | ------------------ |
+| Windows | :heavy_check_mark: | :heavy_check_mark: |
+| Linux   | :x:                | :heavy_check_mark: |
+| macOS   | :x:                | :heavy_check_mark: |
 
 </td><td>
 
-|         | .NET 4.5           | Mono       | CoreCLR       |
-| ------- | ------------------ | ---------- | ------------- |
-| Windows | :heavy_check_mark: | :x:        | :x:           |
-| Linux   | :x:                | :x:        | :x:           |
-| macOS   | :x:                | :x:        | :x:           |
+|         | .NET 4.5           | CoreCLR       |
+| ------- | ------------------ | ------------- |
+| Windows | :heavy_check_mark: | :x:           |
+| Linux   | :x:                | :x:           |
+| macOS   | :x:                | :x:           |
 
 </td></tr> </table>
 
 ## Mono
 
-Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core.  
-Mono tests are excluded from CI.
+Mono is no longer supported. 
 
 ## Node.js application packaging
 
