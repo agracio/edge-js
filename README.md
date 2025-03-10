@@ -43,7 +43,7 @@ Read more about the background and motivations of the project [here](http://toma
 
 ## Updates
 * Support for new versions of Node.Js.
-* Support for .NET Core 3.1 - 8.x on Windows/Linux/macOS.
+* Support for .NET Core 3.1 - 9.x on Windows/Linux/macOS.
 * Fixes AccessViolationException when running Node.js code from C# [PR #573](https://github.com/tjanczuk/edge/pull/573).
 * Fixes StackOverflowException [PR #566](https://github.com/tjanczuk/edge/pull/566) that occurs when underlying C# code throws complex exception.
 * Fixes issues [#469](https://github.com/tjanczuk/edge/issues/469), [#713](https://github.com/tjanczuk/edge/issues/713)
@@ -51,9 +51,11 @@ Read more about the background and motivations of the project [here](http://toma
 * Multiple bug fixes and improvements to the original code.
 
 ----
+
 ### NPM package [`edge-js`](https://www.npmjs.com/package/edge-js)
 
 ### NuGet package [`EdgeJs`](https://www.nuget.org/packages/EdgeJs)
+
 ----
 
 ## Electron
@@ -75,7 +77,7 @@ https://github.com/agracio/edge-js-quick-start
 ### Windows
 
 | Version | x86                | x64                | arm64              |
-| ------- | ------------------ | ------------------ | ------------------ |
+|---------|--------------------|--------------------|--------------------|
 | 16.x    | :heavy_check_mark: | :heavy_check_mark: | :x:                |
 | 18.x    | :heavy_check_mark: | :heavy_check_mark: | :x:                |
 | 20.x    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
@@ -85,15 +87,15 @@ https://github.com/agracio/edge-js-quick-start
 
 ### macOS
 
-| Version        | x64                | arm64 (M1+)        |
-| -------------- | ------------------ | ------------------ |
-| 16.x - 23.x    | :heavy_check_mark: | :heavy_check_mark: |
+| Version     | x64                | arm64 (M1+)        |
+|-------------|--------------------|--------------------|
+| 16.x - 23.x | :heavy_check_mark: | :heavy_check_mark: |
 
 ### Linux
 
-| Version        | x64                | arm64              |
-| -------------- | ------------------ | ------------------ |
-| 14.x - 23.x    | :heavy_check_mark: | :heavy_check_mark: |
+| Version     | x64                | arm64              |
+|-------------|--------------------|--------------------|
+| 14.x - 23.x | :heavy_check_mark: | :heavy_check_mark: |
 
 ## Scripting CLR from Node.js and Node.js from CRL 
 
@@ -101,32 +103,54 @@ https://github.com/agracio/edge-js-quick-start
 <tr><th>Script CLR from Node.js </th><th>Script Node.js from CLR</th></tr>
 <tr><td>
 
-|         | .NET 4.5           | Mono 6.x           | CoreCLR            |
-| ------- | ------------------ | ------------------ | ------------------ |
-| Windows | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Linux   | :x:                | :x:                | :heavy_check_mark: |
-| macOS   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+|         | .NET 4.5           | Mono 6.x            | CoreCLR            |
+|---------|--------------------|---------------------|--------------------|
+| Windows | :heavy_check_mark: | :heavy_check_mark:* | :heavy_check_mark: |
+| Linux   | :x:                | :heavy_check_mark:* | :heavy_check_mark: |
+| macOS   | :x:                | :heavy_check_mark:* | :heavy_check_mark: |
 
 </td><td>
 
-|         | .NET 4.5           | Mono       | CoreCLR       |
-| ------- | ------------------ | ---------- | ------------- |
-| Windows | :heavy_check_mark: | :x:        | :x:           |
-| Linux   | :x:                | :x:        | :x:           |
-| macOS   | :x:                | :x:        | :x:           |
+|         | .NET 4.5           | Mono | CoreCLR |
+|---------|--------------------|------|---------|
+| Windows | :heavy_check_mark: | :x:  | :x:     |
+| Linux   | :x:                | :x:  | :x:     |
+| macOS   | :x:                | :x:  | :x:     |
 
 </td></tr> </table>
 
 ## Mono
 
-Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core.  
-Mono tests are excluded from CI.
+Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core. 
+
+`*` Edge.js does not have a flag to force it to run in Mono environment on Windows, it would only be possible to run if you have Windows without .NET Framework present.  
+`*` Mono does not appear to work on macOS x64.  
+`*` On Linux there is a known bug that will throw exception when executing C# code under certain conditions. Use one of the following options.
+
+1. Set `LD_PRELOAD` env variable before running Edge.js with Mono
+```bash
+EXPORT LD_PRELOAD="libmono-2.0.so libmonosgen-2.0.so libstdc++.so.6"
+```
+
+2. Set `LD_PRELOAD` in your Node.js app entry point using Javascript
+
+```js
+Object.assign(process.env, {
+    // Work around Mono problem: undefined symbol: mono_add_internal_call_with_flags
+    LD_PRELOAD: 'libmono-2.0.so libmonosgen-2.0.so libstdc++.so.6',
+});
+```
+Source: https://github.com/mono/mono/issues/17079#issuecomment-1195918648  
+
+ Edge.js uses this code in test setup: https://github.com/agracio/edge-js/blob/8bab03aca2abaea66e78c3af2f29e35ac2fcb8cf/tools/test.js#L19-L24
+
 
 ## Node.js application packaging
 
 When packaging your application using Webpack make sure that `edge-js` is specified as external module.
 
 ### Webpack
+
 ```js
   externals: {
     'edge-js': 'commonjs2 edge-js',
@@ -163,47 +187,57 @@ export default nextConfig;
 
 **NOTE** This functionality requires IronPython 3.4
 
-| Framework   | Platform      | NPM Package  | Language code | Documentation |
-| ----------- | ------------  | ------------ |-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-py`    | `py` | [Script Python in Node.js](https://github.com/agracio/edge-py) :link: |
-| CoreCLR     | Any           | `edge-py`    | `py` | [Script Python in Node.js](https://github.com/agracio/edge-py) :link: |
+| Framework | Platform | NPM Package | Language code | Documentation                                                         |
+|-----------|----------|-------------|---------------|-----------------------------------------------------------------------|
+| .NET 4.5  | Windows  | `edge-py`   | `py`          | [Script Python in Node.js](https://github.com/agracio/edge-py) :link: |
+| CoreCLR   | Any      | `edge-py`   | `py`          | [Script Python in Node.js](https://github.com/agracio/edge-py) :link: |
 
 ### PowerShell scripting
 
 **NOTE** CoreCLR requires dotnet 8
 
-| Framework   | Platform      | NPM Package | Language code | Documentation |
-| ----------- | ------------  | ----------- |-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-ps`   | `ps` | [Script PowerShell in Node.js](https://github.com/agracio/edge-ps) :link: |
-| CoreCLR     | Windows       | `edge-ps`   | `ps` | [Script PowerShell in Node.js](https://github.com/agracio/edge-ps) :link: |
+| Framework | Platform | NPM Package | Language code | Documentation                                                             |
+|-----------|----------|-------------|---------------|---------------------------------------------------------------------------|
+| .NET 4.5  | Windows  | `edge-ps`   | `ps`          | [Script PowerShell in Node.js](https://github.com/agracio/edge-ps) :link: |
+| CoreCLR   | Windows  | `edge-ps`   | `ps`          | [Script PowerShell in Node.js](https://github.com/agracio/edge-ps) :link: |
 
 ### MS SQL scripting
 
 Provides simple access to MS SQL without the need to write separate C# code.     
 
-| Framework     | Platform      | NPM Package | Language code | Documentation |
-| ------------- | ------------  | ----------- |-------------- | ------------- |
-| .NET 4.5      | Windows       | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
-| CoreCLR       | Any           | `edge-sql`  | `sql`| [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
+| Framework | Platform | NPM Package | Language code | Documentation                                                         |
+|-----------|----------|-------------|---------------|-----------------------------------------------------------------------|
+| .NET 4.5  | Windows  | `edge-sql`  | `sql`         | [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
+| CoreCLR   | Any      | `edge-sql`  | `sql`         | [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
 
 ### F# scripting
 
-| Framework   | Platform      | NPM Package | Language code | Documentation |
-| ----------- | ------------  | ----------- |-------------- | ------------- |
-| .NET 4.5    | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link: |
-| CoreCLR     | Windows       | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link: |
+| Framework | Platform | NPM Package | Language code | Documentation                                                     |
+|-----------|----------|-------------|---------------|-------------------------------------------------------------------|
+| .NET 4.5  | Windows  | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link: |
+| CoreCLR   | Windows  | `edge-fs`   | `fs`          | [Script F# in Node.js](https://github.com/agracio/edge-fs) :link: |
 
 ---------
 
 ## How to use
 
-#### [Scripting CLR from Node.js](#scripting-clr-from-nodejs) - full documentation
-#### [Scripting Node.js from CLR](#how-to-integrate-nodejs-code-into-clr-code) - full documentation
+### [Scripting CLR from Node.js](#scripting-clr-from-nodejs) - full documentation
+### [Scripting Node.js from CLR](#how-to-integrate-nodejs-code-into-clr-code) - full documentation
 
-#### Scripting CLR from Node.js sample app https://github.com/agracio/edge-js-quick-start
+### Scripting CLR from Node.js sample app https://github.com/agracio/edge-js-quick-start
 ----
 
-### Scripting CLR from Node.js examples
+### Short guide
+
+- [Inline C# code](#inline-c-code)  
+  - [Passing parameters](#passing-parameters)  
+  - [Using C# class](#using-c-class)  
+- [Using compiled dll](#using-compiled-assembly)  
+- [Using CoreCLR](#coreclr)  
+- [Executing synchronously without function callback](#executing-synchronously-without-function-callback) 
+- [Using promises/async](#promises)  
+- [Scripting Node.js from CLR](#scripting-nodejs-from-clr)  
+- [Docker](#docker)  
 
 ### Inline C# code 
 
@@ -234,32 +268,6 @@ var helloWorld = edge.func(`
         return ".NET Welcomes " + input.ToString(); 
     }
 `);
-
-helloWorld('JavaScript', function (error, result) {
-    if (error) throw error;
-    console.log(result);
-});
-```
-
-#### CoreCLR
-* If not set Edge.js will run as .NET 4.5 on Windows and as Mono on macOS/Linux
-* Can be set using `js` code below or as an environment variable `SET EDGE_USE_CORECLR=1`
-* Check [appveyor.yml](https://github.com/agracio/edge-js/blob/master/appveyor.yml) `test_script` for reference on setting env variables
-* Must be set before `var edge = require('edge-js');`
-
-```js
-// set this variable before 
-// var edge = require('edge-js');
-
-process.env.EDGE_USE_CORECLR=1
-
-var edge = require('edge-js');
-
-var helloWorld = edge.func(function () {/*
-    async (input) => { 
-        return ".NET Welcomes " + input.ToString(); 
-    }
-*/});
 
 helloWorld('JavaScript', function (error, result) {
     if (error) throw error;
@@ -383,7 +391,7 @@ namespace EdgeJsMethods
 var edge = require('edge-js');
 
 var getPerson = edge.func({
-    assemblyFile: myDll, // path to .dll
+    assemblyFile: myDll, // path to compiled .dll
     typeName: 'EdgeJsMethods.Methods',
     methodName: 'GetPerson'
 });
@@ -402,6 +410,31 @@ public async Task<object> MyMethod(object|dynamic input)
 {
     //return results sync/async;
 }
+```
+
+#### CoreCLR
+* If not set Edge.js will run as .NET 4.5 on Windows and as Mono on macOS/Linux
+* Can be set using `js` code below or as an environment variable `SET EDGE_USE_CORECLR=1` or `EXPORT EDGE_USE_CORECLR=1` depending on your platform.
+* Must be set before `var edge = require('edge-js');`
+
+```js
+// set this variable before 
+// var edge = require('edge-js');
+
+process.env.EDGE_USE_CORECLR=1
+
+var edge = require('edge-js');
+
+var helloWorld = edge.func(function () {/*
+    async (input) => { 
+        return ".NET Welcomes " + input.ToString(); 
+    }
+*/});
+
+helloWorld('JavaScript', function (error, result) {
+    if (error) throw error;
+    console.log(result);
+});
 ```
 
 ### Executing synchronously without function callback
@@ -434,9 +467,30 @@ var helloWorld = edge.func(function () {/*
 // sync call will throw exception
 var result = helloWorld('JavaScript', true);
 ```
+
+### Promises
+
+```js
+
+var func = edge.func(function () {/*
+    async (dynamic input) => { 
+        return "Welcome " + input.name + " " + input.surname; 
+    }
+*/});
+
+function helloWorld(){
+    return new Promise<T>((resolve, reject) =>{
+        func({name: 'John', surname: 'Smith'}, function (error, result) {
+            if(error) reject(error);
+            else resolve(result);
+        });
+    });
+}
+
+```
 ----
 
-### Scripting Node.js from CLR example
+### Scripting Node.js from CLR
 
 ```cs
 using System; 

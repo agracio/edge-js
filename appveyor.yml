@@ -3,9 +3,10 @@ branches:
     - circleci
     
 image:
-  - Visual Studio 2022
-  - Ubuntu2204
-  - macos-monterey
+  # - Visual Studio 2022
+  # - Ubuntu2204
+  - macos-ventura
+  - macos-sonoma
 
 environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
@@ -20,6 +21,8 @@ install:
   # - sh: if [ "$APPVEYOR_BUILD_WORKER_IMAGE" = 'Ubuntu2204' ]; then sudo apt-get -qq update && sudo apt-get -y -qq install build-essential libgconf-2-4 python3 libglib2.0-dev; fi
   # - cmd: powershell .\appveyor.ps1  
   - cmd: powershell Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs) x64
+  - sh: brew install mono --overwrite
+  - sh: brew reinstall pkg-config
   - sh: nvm ls
   - sh: nvm use $nodejs || nvm install $nodejs
   - cmd: node -v && npm -v && dotnet --version
