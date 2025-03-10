@@ -103,11 +103,11 @@ https://github.com/agracio/edge-js-quick-start
 <tr><th>Script CLR from Node.js </th><th>Script Node.js from CLR</th></tr>
 <tr><td>
 
-|         | .NET 4.5           | Mono 6.x           | CoreCLR            |
-|---------|--------------------|--------------------|--------------------|
-| Windows | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Linux   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
-| macOS   | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+|         | .NET 4.5           | Mono 6.x            | CoreCLR            |
+|---------|--------------------|---------------------|--------------------|
+| Windows | :heavy_check_mark: | :heavy_check_mark:* | :heavy_check_mark: |
+| Linux   | :x:                | :heavy_check_mark:* | :heavy_check_mark: |
+| macOS   | :x:                | :heavy_check_mark:* | :heavy_check_mark: |
 
 </td><td>
 
@@ -121,7 +121,29 @@ https://github.com/agracio/edge-js-quick-start
 
 ## Mono
 
-Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core.  
+Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core. 
+
+`*` Edge.js does not have a flag to force it to run in Mono environment on Windows, it would only be possible to run if you have Windows without .NET Framework present.  
+`*` Mono does not appear to work on macOS x64.  
+`*` On Linux there is a known bug that will throw exception when executing C# code under certain conditions. Use one of the following options.
+
+1. Set `LD_PRELOAD` env variable before running Edge.js with Mono
+```bash
+EXPORT LD_PRELOAD="libmono-2.0.so libmonosgen-2.0.so libstdc++.so.6"
+```
+
+2. Set `LD_PRELOAD` in your Node.js app entry point using Javascript
+
+```js
+Object.assign(process.env, {
+    // Work around Mono problem: undefined symbol: mono_add_internal_call_with_flags
+    LD_PRELOAD: 'libmono-2.0.so libmonosgen-2.0.so libstdc++.so.6',
+});
+```
+Source: https://github.com/mono/mono/issues/17079#issuecomment-1195918648  
+
+ Edge.js uses this code in test setup: https://github.com/agracio/edge-js/blob/8bab03aca2abaea66e78c3af2f29e35ac2fcb8cf/tools/test.js#L19
+
 
 ## Node.js application packaging
 
