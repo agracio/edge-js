@@ -142,7 +142,7 @@ Object.assign(process.env, {
 ```
 Source: https://github.com/mono/mono/issues/17079#issuecomment-1195918648  
 
- Edge.js uses this code in test setup: https://github.com/agracio/edge-js/blob/8bab03aca2abaea66e78c3af2f29e35ac2fcb8cf/tools/test.js#L19
+ Edge.js uses this code in test setup: https://github.com/agracio/edge-js/blob/8bab03aca2abaea66e78c3af2f29e35ac2fcb8cf/tools/test.js#L19-L24
 
 
 ## Node.js application packaging
