@@ -34,6 +34,7 @@ install:
 test_script:
   - cmd: node tools/test.js CI
   - cmd: SET EDGE_USE_CORECLR=1 & node tools/test.js CI
+  - sh: node tools/test.js CI
   - sh: EDGE_USE_CORECLR=1 node tools/test.js CI
 
 after_test:
