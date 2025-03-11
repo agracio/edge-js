@@ -119,7 +119,7 @@ runs:
           arch: 'x64'
 
       - name: Build arm64
-        if: (inputs.node >=20) || (inputs.os  == 'macos-15')
+        if: ((inputs.node >=20) || (inputs.os  == 'macos-15') && inputs.os != 'macos-13')
         uses: ./.github/actions/build
         with:
           node: ${{ steps.node-test-version.outputs.node-version }}
