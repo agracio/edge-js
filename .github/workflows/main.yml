@@ -99,7 +99,6 @@ jobs:
           os: ${{ matrix.os }}
 
       - name: Run .NET 4.5 tests
-        if: matrix.os != 'macos-13'
         shell: bash
         run: node tools/test.js CI
 

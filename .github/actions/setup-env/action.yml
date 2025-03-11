@@ -52,7 +52,7 @@ runs:
         dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
 
     - name: Setup Mono
-      if: inputs.os == 'macos-14' || inputs.os == 'macos-15'
+      if: runner.os == 'macOS'
       shell: bash
       run: |
         brew install mono --overwrite

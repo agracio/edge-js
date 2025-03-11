@@ -46,9 +46,11 @@ runs:
                   fs.mkdirSync('release/win32/arm64/${{ inputs.node }}', { recursive: true });
                 }
               }
-              else if('${{ runner.os }}' == 'macOS'){
-                fs.mkdirSync(`release/${process.platform}/x64/${{ inputs.node }}`, { recursive: true });
+              else if('${{ runner.os }}' == 'macOS' && '${{ inputs.os }}' != 'macos-13'){
                 fs.mkdirSync(`release/${process.platform}/arm64/${{ inputs.node }}`, { recursive: true });
+              }
+              else if('${{ runner.os }}' == 'macOS' && '${{ inputs.os }}' == 'macos-13'){
+                fs.mkdirSync(`release/${process.platform}/x64/${{ inputs.node }}`, { recursive: true });
               }
             } catch(err) {
               core.error("Error creating release directory")
@@ -71,9 +73,11 @@ runs:
                   fs.writeFileSync('release/win32/arm64/${{ inputs.node }}/node.version', '${{ steps.node-test-version.outputs.node-version }}');
                 }
               }
-              else if('${{ runner.os }}' == 'macOS'){
-                fs.writeFileSync(`release/${process.platform}/x64/${{ inputs.node }}/node.version`, '${{ steps.node-test-version.outputs.node-version }}');
+              else if('${{ runner.os }}' == 'macOS' && '${{ inputs.os }}' != 'macos-13'){
                 fs.writeFileSync(`release/${process.platform}/arm64/${{ inputs.node }}/node.version`, '${{ steps.node-test-version.outputs.node-version }}');
+              }
+              else if('${{ runner.os }}' == 'macOS' && '${{ inputs.os }}' == 'macos-13'){
+                fs.writeFileSync(`release/${process.platform}/x64/${{ inputs.node }}/node.version`, '${{ steps.node-test-version.outputs.node-version }}');
               }
             } catch(err) {
               core.error("Error writing node.version file")
@@ -106,20 +110,22 @@ runs:
           node-major: ${{ inputs.node }}
           arch: 'ia32'
 
-      - name: Build x64
-        uses: ./.github/actions/build
-        with:
-          node: ${{ steps.node-test-version.outputs.node-version }}
-          node-major: ${{ inputs.node }}
-          arch: 'x64'
-
       - name: Build arm64
-        if: (inputs.node >=20) || (runner.os  == 'macOS')
+        if: inputs.os != 'macos-13' && (inputs.node >=20 || inputs.os  == 'macos-15')
         uses: ./.github/actions/build
         with:
           node: ${{ steps.node-test-version.outputs.node-version }}
           node-major: ${{ inputs.node }}
           arch: 'arm64'
+
+      - name: Build x64
+        uses: ./.github/actions/build
+        if: (runner.os == 'Windows') || (inputs.os  == 'macos-13')
+        with:
+          node: ${{ steps.node-test-version.outputs.node-version }}
+          node-major: ${{ inputs.node }}
+          arch: 'x64'
+
     
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -131,9 +137,17 @@ runs:
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
-        if: runner.os  == 'macOS' && success()
+        if: runner.os  == 'macOS' && inputs.os  == 'macos-15' && success()
         with:
-          name: darwin-edge-js-${{ inputs.node }}
+          name: darwin-arm64-edge-js-${{ inputs.node }}
+          path: |
+            release
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: runner.os  == 'macOS' && inputs.os  == 'macos-13' && success()
+        with:
+          name: darwin-x64-edge-js-${{ inputs.node }}
           path: |
             release
 

@@ -107,7 +107,7 @@ https://github.com/agracio/edge-js-quick-start
 |---------|--------------------|---------------------|--------------------|
 | Windows | :heavy_check_mark: | :heavy_check_mark:* | :heavy_check_mark: |
 | Linux   | :x:                | :heavy_check_mark:* | :heavy_check_mark: |
-| macOS   | :x:                | :heavy_check_mark:* | :heavy_check_mark: |
+| macOS   | :x:                | :heavy_check_mark:  | :heavy_check_mark: |
 
 </td><td>
 
@@ -124,7 +124,6 @@ https://github.com/agracio/edge-js-quick-start
 Mono is no longer actively supported. Existing code will remain In Edge.Js but focus will be on .NET Core. 
 
 `*` Edge.js does not have a flag to force it to run in Mono environment on Windows, it would only be possible to run if you have Windows without .NET Framework present.  
-`*` Mono does not appear to work on macOS x64.  
 `*` On Linux there is a known bug that will throw exception when executing C# code under certain conditions. Use one of the following options.
 
 1. Set `LD_PRELOAD` env variable before running Edge.js with Mono
