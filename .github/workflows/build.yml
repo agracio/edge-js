@@ -27,7 +27,7 @@ jobs:
     #   node-version: ${{ steps.node-test-version.outputs.node-version }}
     strategy:
       matrix:
-        os: [macos-13]
+        os: [macos-13, macos-15]
         # os: [windows-2022, macos-15]
       fail-fast: true
        
