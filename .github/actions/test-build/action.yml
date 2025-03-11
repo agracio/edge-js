@@ -44,11 +44,18 @@ runs:
         pattern: win32-edge-js-${{ inputs.node }}*
 
     - name: Download artifacts
-      if:  runner.os == 'macOS'
+      if:  runner.os == 'macOS' && inputs.os != 'macos-13'
       uses: actions/download-artifact@v4
       with:
         path: release
-        pattern: darwin-edge-js-${{ inputs.node }}*
+        pattern: darwin-arm64-edge-js-${{ inputs.node }}*
+
+    - name: Download artifacts
+      if:  runner.os == 'macOS' && inputs.os == 'macos-13'
+      uses: actions/download-artifact@v4
+      with:
+        path: release
+        pattern: darwin-x64-edge-js-${{ inputs.node }}*
 
     - name: List artifacts
       shell: bash
@@ -61,19 +68,32 @@ runs:
         cmd /c copy /y release\win32-edge-js-${{ inputs.node }}\win32\x64\${{ inputs.node }}\edge_*.node lib\native\win32\x64\${{ inputs.node }}
 
     - name: Copy artifacts
-      if:  runner.os == 'macOS'
+      if:  runner.os == 'macOS' && inputs.os != 'macos-13'
       uses: actions/github-script@v7
       with:
         result-encoding: string
         script: |
           try {
             const fs = require('fs')
-              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/x64/${{ inputs.node }}/edge_coreclr.node');
-              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/edge_nativeclr.node', 'lib/native/darwin/x64/${{ inputs.node }}/edge_nativeclr.node');
-              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/MonoEmbedding.exe', 'lib/native/darwin/x64/${{ inputs.node }}/MonoEmbedding.exe');
-              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_coreclr.node');
-              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node');
-              fs.copyFileSync('release/darwin-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe', 'lib/native/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe');
+              fs.copyFileSync('release/darwin-arm64-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_coreclr.node');
+              fs.copyFileSync('release/darwin-arm64-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node');
+              fs.copyFileSync('release/darwin-arm64-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe', 'lib/native/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe');
+          } catch(err) {
+            core.error("Error creating release directory")
+            core.setFailed(err)
+          }
+
+    - name: Copy artifacts
+      if:  runner.os == 'macOS' && inputs.os == 'macos-13'
+      uses: actions/github-script@v7
+      with:
+        result-encoding: string
+        script: |
+          try {
+            const fs = require('fs')
+              fs.copyFileSync('release/darwin-x64-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/x64/${{ inputs.node }}/edge_coreclr.node');
+              fs.copyFileSync('release/darwin-x64-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/edge_nativeclr.node', 'lib/native/darwin/x64/${{ inputs.node }}/edge_nativeclr.node');
+              fs.copyFileSync('release/darwin-x64-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/MonoEmbedding.exe', 'lib/native/darwin/x64/${{ inputs.node }}/MonoEmbedding.exe');
           } catch(err) {
             core.error("Error creating release directory")
             core.setFailed(err)
@@ -94,10 +114,18 @@ runs:
         ignore_case: true
 
     - name: Check edge-js macOS pre-built files
-      if:  runner.os == 'macOS'
+      if:  runner.os == 'macOS' && inputs.os == 'macos-13'
       uses: andstor/file-existence-action@v3
       with:
-        files: "lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_coreclr.node, lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_nativeclr.node"
+        files: "lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_nativeclr.node"
+        fail: true
+        ignore_case: true
+
+    - name: Check edge-js macOS pre-built files
+      if:  runner.os == 'macOS' && inputs.os != 'macos-13'
+      uses: andstor/file-existence-action@v3
+      with:
+        files: "lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_coreclr.node"
         fail: true
         ignore_case: true
 

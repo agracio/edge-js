@@ -53,7 +53,6 @@ runs:
 
     - name: Setup Mono
       if: runner.os == 'macOS'
-      # if: inputs.os == 'macos-14' || inputs.os == 'macos-15'
       shell: bash
       run: |
         brew install mono --overwrite
