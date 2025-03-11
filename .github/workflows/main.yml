@@ -83,10 +83,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # os: [macos-13, macos-15, ubuntu-24.04, ubuntu-24.04-arm, windows-2022]
-        os: [macos-15]
-        node: [20]
-        # node: [18, 20, 22, 23]
+        os: [macos-13, macos-15, ubuntu-24.04, ubuntu-24.04-arm, windows-2022]
+        # os: [macos-13, macos-15]
+       # node: [18, 20, 22, 23]
+        node: [18, 20, 22, 23]
     steps:
 
       - name: Checkout code
@@ -99,7 +99,6 @@ jobs:
           os: ${{ matrix.os }}
 
       - name: Run .NET 4.5 tests
-        if: matrix.os != 'macos-13'
         shell: bash
         run: node tools/test.js CI
 
