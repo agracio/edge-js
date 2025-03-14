@@ -78,3 +78,5 @@ runs:
     - name: npm install
       shell: bash
       run: npm i
+      env:
+        DOTNET_CLI_TELEMETRY_OPTOUT: 1
