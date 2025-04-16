@@ -1,5 +1,4 @@
 # Edge.js: .NET and Node.js in-process
-<!---[![Build Status](https://app.travis-ci.com/agracio/edge-js.svg?branch=master)](https://app.travis-ci.com/github/agracio/edge-js)--->
 <!-- [![Build status][appveyor-image]][appveyor-url] -->
 [![Actions Status][github-img]][github-url]
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/agracio/edge-js.svg?style=shield )](https://dl.circleci.com/status-badge/redirect/gh/agracio/edge-js/tree/master)
@@ -74,6 +73,13 @@ https://github.com/agracio/edge-js-quick-start
 
 ## Node.js Support
 
+### edge-js support policy
+
+- Windows supports 4 latest LTS or candidate LTS releases (even numbered).
+- Windows supports up to 1 "Current" (odd numbered) release and drops it when superseeded by new LTS candidate.
+- macOS comes precompiled with same releases as Windows. When using Node.js version that is not pre-compiled `edge-js` binaries will be compiled during `npm install` using `node-gyp`.
+- Linux will will always compile `edge-js` binaries during `npm install` using `node-gyp`.
+
 ### Windows
 
 | Version | x86                | x64                | arm64              |
@@ -85,17 +91,30 @@ https://github.com/agracio/edge-js-quick-start
 | 23.x    | :x:                | :heavy_check_mark: | :heavy_check_mark: |
 
 
-### macOS
+### macOS binaries pre-compiled for
+
+| Version | x64                | arm64 (M1+)        |
+|---------|--------------------|--------------------|
+| 16.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 18.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 20.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 22.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 23.x    | :heavy_check_mark: | :heavy_check_mark: |
+
+#### Supports
 
 | Version     | x64                | arm64 (M1+)        |
 |-------------|--------------------|--------------------|
 | 16.x - 23.x | :heavy_check_mark: | :heavy_check_mark: |
+
 
 ### Linux
 
 | Version     | x64                | arm64              |
 |-------------|--------------------|--------------------|
 | 14.x - 23.x | :heavy_check_mark: | :heavy_check_mark: |
+
+Other Linux architectures might work but have not been tested.
 
 ## Scripting CLR from Node.js and Node.js from CRL 
 
