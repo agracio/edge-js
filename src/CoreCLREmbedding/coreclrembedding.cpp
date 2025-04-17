@@ -132,7 +132,13 @@ pal::string_t GetOSVersion()
 		return _X("10");
 	}
 
+	else if (version_info.dwBuildNumber >= 22000)
+	{
+		return _X("11");
+	}
+
 	return _X("");
+	
 #elif EDGE_PLATFORM_NIX
 	utility::ifstream_t lsbRelease;
 	lsbRelease.open("/etc/os-release", std::ifstream::in);
@@ -259,6 +265,9 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 	pal::realpath(&bootstrapper);
     trace::info(_X("CoreClrEmbedding::Initialize - Resolved bootstrapper is %s"), bootstrapper.c_str());
 
+	pal::string_t edgeAppName;
+	pal::getenv(_X("EDGE_APP_NAME"), &edgeAppName);
+
 	pal::string_t edgeAppDir;
 	pal::getenv(_X("EDGE_APP_ROOT"), &edgeAppDir);
 
@@ -288,8 +297,13 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 	trace::info(_X("CoreClrEmbedding::Initialize - Getting the dependency manifest file for the Edge app directory: %s"), edgeAppDir.c_str());
 
 	std::vector<pal::string_t> depsJsonFiles;
-	pal::readdir(edgeAppDir, _X("*.deps.json"), &depsJsonFiles);
-
+	if (edgeAppName.empty()){
+		pal::readdir(edgeAppDir, _X("*.deps.json"), &depsJsonFiles);
+	}
+	else{
+		pal::readdir(edgeAppDir, edgeAppName.append(_X(".deps.json")), &depsJsonFiles);
+	}
+	
 	if (depsJsonFiles.size() > 1)
 	{
 		std::vector<char> edgeAppDirCstr;
@@ -317,6 +331,158 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 	trace::info(_X("CoreClrEmbedding::Initialize - Path is %s"), pathEnvironmentVariable.c_str());
 
 	pal::string_t dotnetExecutablePath, dotnetDirectory;
+
+#ifdef EDGE_PLATFORM_WINDOWS
+
+	BOOL is_wow64_process = false;
+	IsWow64Process(GetCurrentProcess(), &is_wow64_process);
+
+	// 1. Get path to .NET from environment variable DOTNET_ROOT
+	if (is_wow64_process)
+	{
+		pal::getenv(_X("DOTNET_ROOT(x86)"), &dotnetDirectory);
+		trace::verbose(_X("CoreClrEmbedding::Initialize - Running as WOW64, checking DOTNET_ROOT(x86)"));
+	}
+	else
+	{
+		pal::getenv(_X("DOTNET_ROOT"), &dotnetDirectory);
+		trace::verbose(_X("CoreClrEmbedding::Initialize - Checking DOTNET_ROOT"));
+	}
+	append_path(&dotnetExecutablePath, _X("dotnet"));
+	dotnetExecutablePath.append(pal::exe_suffix());
+	if (pal::file_exists(dotnetExecutablePath))
+	{
+		pal::realpath(&dotnetExecutablePath);
+		dotnetDirectory = get_directory(dotnetExecutablePath);
+		trace::info(_X("CoreClrEmbedding::Initialize - Found dotnet at %s"), dotnetExecutablePath.c_str());
+	}
+	else
+	{
+		dotnetExecutablePath = _X("");
+		dotnetDirectory = _X("");
+		trace::info(_X("CoreClrEmbedding::Initialize - dotnet not found in in DOTNET_ROOT"));
+	}
+
+	// 2. Get path to .NET from registry
+	if (dotnetDirectory.empty())
+	{
+		pal::string_t arch = GetOSArchitecture();
+		pal::string_t registry_key = _X("SOFTWARE\\dotnet\\Setup\\InstalledVersions\\");
+		registry_key.append(arch);
+		trace::info(_X("CoreClrEmbedding::Initialize - Checking registry key %s"), registry_key.c_str());
+
+		HKEY hkey = NULL;
+		if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, registry_key.c_str(), 0, KEY_READ | KEY_WOW64_32KEY, &hkey) == ERROR_SUCCESS)
+		{
+			WCHAR buffer[MAX_PATH] = {0};
+			DWORD buffer_size = sizeof(buffer);
+			DWORD type = 0;
+
+			if (RegQueryValueExW(hkey, _X("InstallLocation"), NULL, &type, (LPBYTE)buffer, &buffer_size) == ERROR_SUCCESS && type == REG_SZ)
+			{
+				dotnetDirectory = buffer;
+				trace::info(_X("CoreClrEmbedding::Initialize - Found dotnet directory from registry: %s"), dotnetDirectory.c_str());
+
+				dotnetExecutablePath = dotnetDirectory;
+				append_path(&dotnetExecutablePath, _X("dotnet"));
+				dotnetExecutablePath.append(pal::exe_suffix());
+
+				if (!pal::file_exists(dotnetExecutablePath))
+				{
+					trace::warning(_X("CoreClrEmbedding::Initialize - dotnet executable not found at %s"), dotnetExecutablePath.c_str());
+					dotnetExecutablePath = _X("");
+					dotnetDirectory = _X("");
+				}
+				else
+				{
+					trace::info(_X("CoreClrEmbedding::Initialize - Found dotnet from registry at %s"), dotnetExecutablePath.c_str());
+				}
+			}
+			RegCloseKey(hkey);
+		}
+		else
+		{
+			trace::warning(_X("CoreClrEmbedding::Initialize - Failed to open registry key %s"), registry_key.c_str());
+		}
+	}
+
+	// 3. Get path to .NET from environment variable %ProgramFiles%
+	if (dotnetDirectory.empty())
+	{
+		if (is_wow64_process)
+		{
+			pal::getenv(_X("ProgramFiles(x86)"), &dotnetDirectory);
+			trace::verbose(_X("CoreClrEmbedding::Initialize - Running as WOW64, checking ProgramFiles(x86)"));
+		}
+		else
+		{
+			pal::getenv(_X("ProgramFiles"), &dotnetDirectory);
+			trace::verbose(_X("CoreClrEmbedding::Initialize - Checking ProgramFiles"));
+		}
+		append_path(&dotnetDirectory, _X("dotnet"));
+
+		dotnetExecutablePath = dotnetDirectory;
+		append_path(&dotnetExecutablePath, _X("dotnet"));
+		dotnetExecutablePath.append(pal::exe_suffix());
+		if (pal::file_exists(dotnetExecutablePath))
+		{
+			pal::realpath(&dotnetExecutablePath);
+			dotnetDirectory = get_directory(dotnetExecutablePath);
+			trace::info(_X("CoreClrEmbedding::Initialize - Found dotnet at %s"), dotnetExecutablePath.c_str());
+		}
+		else
+		{
+			dotnetExecutablePath = _X("");
+			dotnetDirectory = _X("");
+			trace::info(_X("CoreClrEmbedding::Initialize - dotnet not found in ProgramFiles"));
+		}
+	}
+
+	// 4. Get path to .NET from the PATH environment variable
+	if (dotnetDirectory.empty())
+	{
+		size_t previousIndex = 0;
+		size_t currentIndex = pathEnvironmentVariable.find(PATH_SEPARATOR);
+	
+		while (dotnetExecutablePath.empty() && previousIndex != std::string::npos)
+		{
+			if (currentIndex != std::string::npos)
+			{
+				dotnetExecutablePath = pathEnvironmentVariable.substr(previousIndex, currentIndex - previousIndex);
+			}
+	
+			else
+			{
+				dotnetExecutablePath = pathEnvironmentVariable.substr(previousIndex);
+			}
+	
+			append_path(&dotnetExecutablePath, _X("dotnet"));
+			dotnetExecutablePath.append(pal::exe_suffix());
+	
+			trace::info(_X("CoreClrEmbedding::Initialize - Checking for dotnet at %s"), dotnetExecutablePath.c_str());
+	
+			if (pal::file_exists(dotnetExecutablePath))
+			{
+				pal::realpath(&dotnetExecutablePath);
+				dotnetDirectory = get_directory(dotnetExecutablePath);
+				trace::info(_X("CoreClrEmbedding::Initialize - Found dotnet at %s"), dotnetExecutablePath.c_str());
+	
+				break;
+			}
+	
+			else
+			{
+				dotnetExecutablePath = _X("");
+				previousIndex = currentIndex == std::string::npos ? currentIndex : currentIndex + 1;
+	
+				if (previousIndex != std::string::npos)
+				{
+					currentIndex = pathEnvironmentVariable.find(PATH_SEPARATOR, previousIndex);
+				}
+			}
+		}	
+	}
+#else
 
 	size_t previousIndex = 0;
 	size_t currentIndex = pathEnvironmentVariable.find(PATH_SEPARATOR);
@@ -358,6 +524,7 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 			}
 		}
 	}
+#endif
 
 	host_mode_t mode = coreclr_exists_in_dir(edgeAppDir) ? host_mode_t::standalone : host_mode_t::muxer;
 
@@ -373,7 +540,13 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 		trace::verbose(_X("CoreClrEmbedding::Initialize - host mode: muxer"));
 
 		std::vector<pal::string_t> appConfigFiles;
-		pal::readdir(edgeAppDir, _X("*.runtimeconfig.json"), &appConfigFiles);
+		if (edgeAppName.empty()){
+			pal::readdir(edgeAppDir, _X("*.runtimeconfig.json"), &appConfigFiles);
+		}
+		else{
+			pal::readdir(edgeAppDir, edgeAppName.append(_X(".runtimeconfig.json")), &appConfigFiles);
+		}
+	
 		pal::string_t runtimeconfigfile;
 
 		pal::string_t sdkDirectory;
