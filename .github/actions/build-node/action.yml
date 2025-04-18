@@ -146,7 +146,6 @@ runs:
           node: ${{ steps.node-test-version.outputs.node-version }}
           node-major: ${{ inputs.node }}
           arch: 'x64'
-
     
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -168,7 +167,7 @@ runs:
         uses: actions/upload-artifact@v4
         if: inputs.os  == 'macos-15' && success()
         with:
-          name: darwin-arm64-edge-js-${{ inputs.node }}
+          name: darwin-edge-js-arm64-${{ inputs.node }}
           path: |
             release
 
@@ -176,7 +175,7 @@ runs:
         uses: actions/upload-artifact@v4
         if: inputs.os  == 'macos-13' && success()
         with:
-          name: darwin-x64-edge-js-${{ inputs.node }}
+          name: darwin-edge-js-x64-${{ inputs.node }}
           path: |
             release
 

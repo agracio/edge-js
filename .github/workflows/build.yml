@@ -57,25 +57,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: release
-          pattern: win32-edge-js-${{ inputs.build-version }}*
+          pattern: win32-edge-js*
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           path: release
-          pattern: win32-edge-js-ia32-${{ inputs.build-version }}*
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: release
-          pattern: darwin-arm64-edge-js-${{ inputs.build-version }}*
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: release
-          pattern: darwin-x64-edge-js-${{ inputs.build-version }}*
+          pattern: darwin-edge-js*
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
