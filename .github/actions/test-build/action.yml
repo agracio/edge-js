@@ -51,18 +51,25 @@ runs:
         pattern: win32-edge-js-${{ inputs.node }}*
 
     - name: Download artifacts
-      if: runner.os == 'macOS'
+      if: inputs.os == 'macos-13'
       uses: actions/download-artifact@v4
       with:
         path: release
-        pattern: darwin-${{ runner.arch }}-edge-js-${{ inputs.node }}*
+        pattern: darwin-x64-edge-js-${{ inputs.node }}*
+
+    - name: Download artifacts
+      if: inputs.os == 'macos-15'
+      uses: actions/download-artifact@v4
+      with:
+        path: release
+        pattern: darwin-arm64-edge-js-${{ inputs.node }}*
 
     - name: List artifacts
       shell: bash
       run: ls -R release
 
     - name: Copy artifacts
-      if:  inputs.os == 'windows-2025'
+      if: inputs.os == 'windows-2025'
       shell: pwsh
       run: |
         cmd /c copy /y release\win32-edge-js-${{ inputs.node }}\win32\x64\${{ inputs.node }}\edge_*.node lib\native\win32\x64\${{ inputs.node }}
@@ -71,19 +78,35 @@ runs:
       if:  inputs.os == 'windows-2022'
       shell: pwsh
       run: |
-        cmd /c copy /y release\win32-edge-js-${{ inputs.node }}\win32\ia32\${{ inputs.node }}\edge_*.node lib\native\win32\ia32\${{ inputs.node }}
+        cmd /c copy /y release\win32-edge-js-ia32-${{ inputs.node }}\win32\ia32\${{ inputs.node }}\edge_*.node lib\native\win32\ia32\${{ inputs.node }}
 
     - name: Copy artifacts
-      if: runner.os == 'macOS'
+      if: inputs.os == 'macos-13'
       uses: actions/github-script@v7
       with:
         result-encoding: string
         script: |
           try {
             const fs = require('fs')
-              fs.copyFileSync('release/darwin-${{ runner.arch }}-edge-js-${{ inputs.node }}/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_coreclr.node');
-              fs.copyFileSync('release/darwin-${{ runner.arch }}-edge-js-${{ inputs.node }}/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_nativeclr.node', 'lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_nativeclr.node');
-              fs.copyFileSync('release/darwin-${{ runner.arch }}-edge-js-${{ inputs.node }}/darwin/${{ runner.arch }}/${{ inputs.node }}/MonoEmbedding.exe', 'lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/MonoEmbedding.exe');
+              fs.copyFileSync('release/darwin-x64-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/x64/${{ inputs.node }}/edge_coreclr.node');
+              fs.copyFileSync('release/darwin-x64-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/edge_nativeclr.node', 'lib/native/darwin/x64/${{ inputs.node }}/edge_nativeclr.node');
+              fs.copyFileSync('release/darwin-x64-edge-js-${{ inputs.node }}/darwin/x64/${{ inputs.node }}/MonoEmbedding.exe', 'lib/native/darwin/x64/${{ inputs.node }}/MonoEmbedding.exe');
+          } catch(err) {
+            core.error("Error creating release directory")
+            core.setFailed(err)
+          }
+
+    - name: Copy artifacts
+      if: inputs.os == 'macos-15'
+      uses: actions/github-script@v7
+      with:
+        result-encoding: string
+        script: |
+          try {
+            const fs = require('fs')
+              fs.copyFileSync('release/darwin-arm64-edge-js-arm64/darwin/arm64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_coreclr.node');
+              fs.copyFileSync('release/darwin-arm64-edge-js-arm64/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node');
+              fs.copyFileSync('release/darwin-arm64-edge-js-arm64/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe', 'lib/native/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe');
           } catch(err) {
             core.error("Error creating release directory")
             core.setFailed(err)
@@ -91,7 +114,7 @@ runs:
 
     - name: Setup env
       uses: ./.github/actions/setup-env
-      if:  inputs.os != 'windows-2022'
+      if: inputs.os != 'windows-2022'
       with:
         node: ${{ inputs.node }}
         os: ${{ inputs.os }}
@@ -99,7 +122,7 @@ runs:
 
     - name: Setup env
       uses: ./.github/actions/setup-env
-      if:  inputs.os == 'windows-2022'
+      if: inputs.os == 'windows-2022'
       with:
         node: ${{ inputs.node }}
         os: ${{ inputs.os }}
@@ -114,7 +137,7 @@ runs:
         ignore_case: true
 
     - name: Check edge-js Windows pre-built files
-      if: inputs.os != 'windows-2022'
+      if: runner.os == 'Windows' && inputs.os != 'windows-2022'
       uses: andstor/file-existence-action@v3
       with:
         files: "lib/native/win32/${{ runner.arch }}/${{ inputs.node }}/edge_coreclr.node, lib/native/win32/${{ runner.arch }}/${{ inputs.node }}/edge_nativeclr.node"
@@ -122,7 +145,7 @@ runs:
         ignore_case: true
 
     - name: Check edge-js macOS pre-built files
-      if:  runner.os == 'macOS'
+      if: runner.os == 'macOS'
       uses: andstor/file-existence-action@v3
       with:
         files: "lib/native/darwin/${{ runner.arch }}/${{ inputs.node }}/edge_nativeclr.node"
