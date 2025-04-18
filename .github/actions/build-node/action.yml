@@ -127,27 +127,27 @@ runs:
           arch: 'x64'
 
     
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: runner.os == 'Windows' && success()
-        with:
-          name: win32-edge-js-${{ inputs.node }}
-          path: |
-            release
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@v4
+      #   if: runner.os == 'Windows' && success()
+      #   with:
+      #     name: win32-edge-js-${{ inputs.node }}
+      #     path: |
+      #       release
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: runner.os  == 'macOS' && inputs.os  == 'macos-15' && success()
-        with:
-          name: darwin-arm64-edge-js-${{ inputs.node }}
-          path: |
-            release
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@v4
+      #   if: runner.os  == 'macOS' && inputs.os  == 'macos-15' && success()
+      #   with:
+      #     name: darwin-arm64-edge-js-${{ inputs.node }}
+      #     path: |
+      #       release
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: runner.os  == 'macOS' && inputs.os  == 'macos-13' && success()
-        with:
-          name: darwin-x64-edge-js-${{ inputs.node }}
-          path: |
-            release
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@v4
+      #   if: runner.os  == 'macOS' && inputs.os  == 'macos-13' && success()
+      #   with:
+      #     name: darwin-x64-edge-js-${{ inputs.node }}
+      #     path: |
+      #       release
 

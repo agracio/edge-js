@@ -45,28 +45,11 @@ jobs:
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
-        if: runner.os == 'Windows' && success()
+        if: success()
         with:
-          name: win32-edge-js
+          name: edge-js-${{ inputs.build-version }}
           path: |
-            release
-  
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: runner.os  == 'macOS' && matrix.os  == 'macos-15' && success()
-        with:
-          name: darwin-arm64-edge-js
-          path: |
-            release
-  
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: runner.os  == 'macOS' && matrix.os  == 'macos-13' && success()
-        with:
-          name: darwin-x64-edge-js
-          path: |
-            release
-  
+            release 
 
   test:
     runs-on: ${{ matrix.os }}
