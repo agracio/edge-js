@@ -43,6 +43,31 @@ jobs:
           node: ${{ inputs.build-version }}
           os: ${{ matrix.os }}
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows' && success()
+        with:
+          name: win32-edge-js
+          path: |
+            release
+  
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: runner.os  == 'macOS' && matrix.os  == 'macos-15' && success()
+        with:
+          name: darwin-arm64-edge-js
+          path: |
+            release
+  
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: runner.os  == 'macOS' && matrix.os  == 'macos-13' && success()
+        with:
+          name: darwin-x64-edge-js
+          path: |
+            release
+  
+
   test:
     runs-on: ${{ matrix.os }}
     needs: build
