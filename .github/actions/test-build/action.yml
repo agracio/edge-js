@@ -104,9 +104,9 @@ runs:
         script: |
           try {
             const fs = require('fs')
-              fs.copyFileSync('release/darwin-arm64-edge-js-arm64/darwin/arm64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_coreclr.node');
-              fs.copyFileSync('release/darwin-arm64-edge-js-arm64/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node');
-              fs.copyFileSync('release/darwin-arm64-edge-js-arm64/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe', 'lib/native/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe');
+              fs.copyFileSync('release/darwin-arm64-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/edge_coreclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_coreclr.node');
+              fs.copyFileSync('release/darwin-arm64-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node', 'lib/native/darwin/arm64/${{ inputs.node }}/edge_nativeclr.node');
+              fs.copyFileSync('release/darwin-arm64-edge-js-${{ inputs.node }}/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe', 'lib/native/darwin/arm64/${{ inputs.node }}/MonoEmbedding.exe');
           } catch(err) {
             core.error("Error creating release directory")
             core.setFailed(err)
