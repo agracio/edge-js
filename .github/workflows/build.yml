@@ -44,25 +44,31 @@ jobs:
           os: ${{ matrix.os }}
 
 
-  artifacts:
-    runs-on: ubuntu-latest
-    needs: build
-    strategy:
-      fail-fast: false
+  # artifacts:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   strategy:
+  #     fail-fast: false
 
-    name: artifacts node-${{ inputs.build-version }}
-    steps:
+  #   name: artifacts node-${{ inputs.build-version }}
+  #   steps:
 
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
+  #     - name: Download artifacts
+  #       uses: actions/download-artifact@v4
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: edge-js-${{ inputs.build-version }}
-          path: |
-            release 
+  #     - name: Download artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         path: release
+  #         pattern: darwin-x64-edge-js-${{ inputs.build-version }}*
+
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@v4
+  #       if: success()
+  #       with:
+  #         name: edge-js-${{ inputs.build-version }}
+  #         path: |
+  #           release 
   
   test:
     runs-on: ${{ matrix.os }}
@@ -70,7 +76,7 @@ jobs:
     strategy:
       matrix:
         # os: [macos-13, macos-15]
-        os: [windows-2022, macos-13, macos-15]
+        os: [windows-2022, windows-2025, macos-13, macos-15]
       fail-fast: false
 
     name: test node-${{ inputs.build-version }} ${{ matrix.os }}
