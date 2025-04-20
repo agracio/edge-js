@@ -17,6 +17,15 @@ runs:
   steps:
 
     - name: Setup NodeJS
+      if: runner.os == 'Linux'
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node }}
+        cache: 'npm'
+        cache-dependency-path: package-lock.json
+
+    - name: Setup NodeJS
+      if: runner.os != 'Linux'
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node }}

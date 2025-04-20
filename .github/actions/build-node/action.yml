@@ -14,25 +14,18 @@ runs:
   steps:
 
       - name: Setup env
-        if: inputs.os == 'windows-2025'
-        uses: ./.github/actions/setup-env
-        with:
-          node: 20
-          os: ${{ inputs.os }}
-
-      - name: Setup env
         if: inputs.os == 'windows-2022'
         uses: ./.github/actions/setup-env
         with:
-          node: 20
+          node: 22
           os: ${{ inputs.os }}
           arch: 'x86'
 
       - name: Setup env
-        if: runner.os == 'macOS'
+        if: inputs.os != 'windows-2022'
         uses: ./.github/actions/setup-env
         with:
-          node: 20
+          node: 22
           os: ${{ inputs.os }}
           arch: ${{ runner.arch }}
 
