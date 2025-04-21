@@ -117,15 +117,6 @@ jobs:
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
-        with:
-          path: release
-          pattern: win32-edge-js*
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: release
-          pattern: darwin-edge-js*
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -133,7 +124,7 @@ jobs:
         with:
           name: edge-js
           path: |
-            release 
+            * 
   
   test-16:
     strategy:
