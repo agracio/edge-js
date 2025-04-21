@@ -27,7 +27,6 @@ runs:
         with:
           node: 22
           os: ${{ inputs.os }}
-          arch: ${{ runner.arch }}
 
       - name: Get latest Node.js version for v${{ inputs.node }}
         id: node-test-version
