@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths-ignore:
+      - 'samples/*'
+      - 'stress/*'
+      - 'performance/*'
+      - '.github/FUNDING.YML'
+      - '.github/workflows/ci-old.yml'
+      - '.github/workflows/build.yml'
+      - '.github/workflows/build*.yml'
+      - '.github/actions/test-build/action.yml'
+      - '.github/actions/build*/*.*'
+      - '.github/actions/build/*.*'
+      - '**/*.md'
+      - '**/*.d.ts'
+      - '**/*.bat'
+      - '.travis.yml'
+      - 'Dockerfile'
+      - '.gitconfig'
+      - '.gitignore'
+      - 'appveyor*.*'
+      - 'LICENSE*'
+      - '.idea/**'
+      - '.vscode/**'
+      - '*.bat'
+      - '*.nuspec'
+      - 'tools/nuget/*'
+      - '.npmignore'
+      - 'test/config.json'
+      - 'test/double'
+      - '.circleci'
+      - '.circleci/*'
+      - 'README.md'
+      - '*.sln'
+      - '*.vcxproj'
+  push:
+    branches-ignore:
+      - 'circleci'
+    paths-ignore:
+      - 'samples/*'
+      - 'stress/*'
+      - 'performance/*'
+      - '.github/FUNDING.YML'
+      - '.github/workflows/ci-old.yml'
+      - '.github/workflows/build.yml'
+      - '.github/workflows/build*.yml'
+      - '.github/actions/test-build/action.yml'
+      - '.github/actions/build*/*.*'
+      - '.github/actions/build/*.*'
+      - '**/*.md'
+      - '**/*.d.ts'
+      - '**/*.bat'
+      - '.travis.yml'
+      - 'Dockerfile'
+      - '.gitconfig'
+      - '.gitignore'
+      - 'appveyor*.*'
+      - 'LICENSE*'
+      - '.idea/**'
+      - '.vscode/**'
+      - '*.bat'
+      - '*.nuspec'
+      - 'tools/nuget/*'
+      - '.npmignore'
+      - 'test/config.json'
+      - 'test/double'
+      - '.circleci'
+      - '.circleci/*'
+      - 'README.md'
+      - '*.sln'
+      - '*.vcxproj'
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1 
+  DOTNET_NOLOGO: 1 
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    name: test-${{ matrix.os }}-node-${{ matrix.node }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-13, macos-15, ubuntu-24.04, ubuntu-24.04-arm, windows-2022]
+        # os: [macos-13, macos-15]
+       # node: [18, 20, 22, 23]
+        node: [18, 20, 22, 23]
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup env
+        uses: ./.github/actions/setup-env
+        with:
+          node: ${{ matrix.node }}
+          os: ${{ matrix.os }}
+
+      - name: Run .NET 4.5 tests
+        shell: bash
+        run: node tools/test.js CI
+
+      - name: "Run .net core tests"
+        run: node tools/test.js CI
+        env:
+          EDGE_USE_CORECLR: 1
+
+      - name: Test report
+        uses: ./.github/actions/create-test-report
+        with:
+          node: ${{ matrix.node }}
+          os: ${{ matrix.os }}
+

@@ -41,6 +41,12 @@ runs:
       with:
         path: ~/Library/Caches/node-gyp
         key: '${{ inputs.os }}-${{ inputs.node}}'
+        
+    - if: runner.os == 'macOS' && inputs.node == 16
+      shell: bash
+      name: Add missing packages for macOS NodeJs 16 
+      run: |
+        pip install setuptools
 
     - name: Cache node modules
       id: cache-nodemodules

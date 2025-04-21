@@ -1,4 +1,4 @@
-name: Test
+name: CI
 
 on:
   workflow_dispatch:
@@ -8,6 +8,7 @@ on:
       - 'stress/*'
       - 'performance/*'
       - '.github/FUNDING.YML'
+      - '.github/workflows/ci.yml'
       - '.github/workflows/build.yml'
       - '.github/workflows/build*.yml'
       - '.github/actions/test-build/action.yml'
@@ -43,6 +44,7 @@ on:
       - 'stress/*'
       - 'performance/*'
       - '.github/FUNDING.YML'
+      - '.github/workflows/ci.yml'
       - '.github/workflows/build.yml'
       - '.github/workflows/build*.yml'
       - '.github/actions/test-build/action.yml'
@@ -83,10 +85,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, macos-15, ubuntu-24.04, ubuntu-24.04-arm, windows-2022]
-        # os: [macos-13, macos-15]
-       # node: [18, 20, 22, 23]
-        node: [18, 20, 22, 23]
+        os: [macos-13, macos-15, ubuntu-24.04, ubuntu-24.04-arm]
+        node: [16]
     steps:
 
       - name: Checkout code

@@ -2116,7 +2116,7 @@ Issues? Feedback? You [know what to do](https://github.com/agracio/edge-js/issue
 [codacy-img]: https://app.codacy.com/project/badge/Grade/3833e15b273d4add8d2030764e8977d9
 [codacy-url]: https://app.codacy.com/gh/agracio/edge-js/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade
 
-[github-img]: https://github.com/agracio/edge-js/workflows/Test/badge.svg
+[github-img]: https://github.com/agracio/edge-js/workflows/CI/badge.svg
 [github-url]: https://github.com/agracio/edge-js/actions/workflows/main.yml
 
 
