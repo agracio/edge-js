@@ -1,4 +1,4 @@
-name: CI
+name: CI out of support
 
 on:
   workflow_dispatch:
