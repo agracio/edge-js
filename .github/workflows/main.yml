@@ -97,7 +97,6 @@ jobs:
         with:
           node: ${{ matrix.node }}
           os: ${{ matrix.os }}
-          arch: ${{ runner.arch }}
 
       - name: Run .NET 4.5 tests
         shell: bash

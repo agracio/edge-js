@@ -10,7 +10,7 @@ inputs:
   arch:
     description: 'Architecture'
     required: false
-    default: 'x64'
+    default: ''
 
 runs:
   using: "composite"
