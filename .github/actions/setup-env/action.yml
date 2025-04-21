@@ -73,7 +73,7 @@ runs:
       if: runner.os == 'Linux'
       shell: bash
       run: |
-        sudo apt -q install mono-complete pkg-config glib-2.0
+        sudo apt -q install mono-complete pkg-config libglib2.0-dev
 
     - name: Versions
       shell: bash
