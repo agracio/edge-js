@@ -65,7 +65,6 @@ function dotnet(compiler, buildParameters){
 }
 
 function coreclr(){
-    console.log('Building with CoreCLR')
     run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], function(code, signal) {
         if (code === 0) {
             run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], function(code, signal) {
