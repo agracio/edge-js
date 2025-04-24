@@ -59,7 +59,7 @@ refs:
         name: Test
         command: |
           if [[ $OSTYPE == darwin* || $OSTYPE == linux* ]]; then
-              node tools/test.js circleci
+              EDGE_USE_CORECLR=1 node tools/test.js circleci
           else
             node tools/test.js circleci
             node tools/test.js circleci coreclr
