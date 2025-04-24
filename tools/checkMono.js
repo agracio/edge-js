@@ -15,6 +15,3 @@ module.exports = function() {
     let pkgconfig = exists('which pkg-config');
     return mono && pkgconfig
 }
-
-
-

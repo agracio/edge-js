@@ -3,6 +3,8 @@ const fs = require('fs')
 	, spawn = require('child_process').spawn
 	, whereis = require('./whereis');
 
+const checkMono = require('./checkMono');
+
 if (process.platform === 'win32') {
 	const libroot = path.resolve(__dirname, '../lib/native/win32')
 		, lib32bit = path.resolve(libroot, 'ia32')
@@ -93,7 +95,9 @@ else {
 		const edjeNative = path.resolve(__dirname, '../lib/native/' + process.platform + '/' + process.arch + '/' + nodeVersion + '/' + 'edge_nativeclr.node');
 		const edjeNativeClr = path.resolve(__dirname, '../lib/native/' + process.platform + '/' + process.arch + '/' + nodeVersion + '/' + 'edge_coreclr.node');
 
-		if(fs.existsSync(edjeNative) && fs.existsSync(edjeNativeClr)){
+		const checkNative = checkMono() ? fs.existsSync(edjeNative) : true;
+
+		if(checkNative && fs.existsSync(edjeNativeClr)){
 			spawn('dotnet', ['build', '--configuration', 'Release'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
 
 		}
