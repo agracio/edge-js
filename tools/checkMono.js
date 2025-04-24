@@ -1,21 +1,20 @@
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 
-function exists(cmd, cb){
-    exec(cmd, function (err, stdout, stderr) {
-        let result
-        if(err){
-            result = false;
-        }
-        else{
-            result = stdout.toLowerCase().includes('not found') || stdout.length === 0 ? false : true
-        }
-        cb(result);
-    });
+function exists(cmd){
+    try{
+        let result = execSync(cmd).toString();
+        return result.toLowerCase().includes('not found') || result.length === 0 ? false : true;
+    }
+    catch{
+        return false;
+    }
 }
 
-exists('which mono', (mono)=>{
-    exists('which pkg-config', (pkgconfig)=>{
-        console.log(mono && pkgconfig)
-    });
-});
+module.exports = function() {
+    let mono = exists('which mono');
+    let pkgconfig = exists('which pkg-config');
+    return mono && pkgconfig
+}
+
+
 
