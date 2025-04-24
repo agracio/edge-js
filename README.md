@@ -431,7 +431,8 @@ public async Task<object> MyMethod(object|dynamic input)
 ```
 
 #### CoreCLR
-* If not set Edge.js will run as .NET 4.5 on Windows and as Mono on macOS/Linux
+* If not set Edge.js will run as .NET 4.5 on Windows.
+* On macOS and Linux Edge.js will default to Mono if it is installed otherwise will run as CoreCLR.
 * Can be set using `js` code below or as an environment variable `SET EDGE_USE_CORECLR=1` or `EXPORT EDGE_USE_CORECLR=1` depending on your platform.
 * Must be set before `var edge = require('edge-js');`
 
