@@ -8,7 +8,8 @@ var mocha = path.resolve(__dirname, '../node_modules/mocha/bin/mocha');
 var fs = require('fs');
 const merge = require('junit-report-merger');
 const mochawesomeMerge = require('mochawesome-merge');
-const marge = require('mochawesome-report-generator')
+const marge = require('mochawesome-report-generator');
+const checkMono = require('./checkMono');
 
 var runner = process.argv[2];
 
@@ -37,35 +38,56 @@ function build(){
             buildParameters = buildParameters.concat(['-sdk:4.5']);
         }
 
-        var compiler = 'C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe'
+        let compiler;
 
-        run(process.platform === 'win32' ? compiler : 'mcs', buildParameters, runOnSuccess);
+        if(process.platform === 'win32'){
+            compiler = 'C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe'
+        }
+        else if(checkMono()){
+            compiler = 'mcs'
+        }
+        
+        if(compiler){
+            dotnet(compiler, buildParameters);
+        }
+        else{
+            coreclr();
+        }
     }
 
     else {
-        run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], function(code, signal) {
-            if (code === 0) {
-                run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], function(code, signal) {
-                    if (code === 0) {
-                        try{
-                            fs.mkdirSync('test/测试', { recursive: true })
-                        }
-                        catch (e){
+        coreclr();
+    }
+}
+
+function dotnet(compiler, buildParameters){
+    run(compiler, buildParameters, runOnSuccess);
+}
+
+function coreclr(){
+    console.log('Building with CoreCLR')
+    run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], function(code, signal) {
+        if (code === 0) {
+            run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], function(code, signal) {
+                if (code === 0) {
+                    try{
+                        fs.mkdirSync('test/测试', { recursive: true })
+                    }
+                    catch (e){
+                        console.error(e);
+                        throw e;
+                    }
+                    fs.copyFile('test/bin/Debug/net6.0/test.dll', 'test/测试/Edge.Tests.CoreClr.dll', (e) => {
+                        if (e) {
                             console.error(e);
                             throw e;
                         }
-                        fs.copyFile('test/bin/Debug/net6.0/test.dll', 'test/测试/Edge.Tests.CoreClr.dll', (e) => {
-                            if (e) {
-                                console.error(e);
-                                throw e;
-                            }
-                            runOnSuccess(0);
-                        });
-                    }
-                });
-            }
-        });
-    }
+                        runOnSuccess(0);
+                    });
+                }
+            });
+        }
+    });
 }
 
 build();
@@ -84,6 +106,7 @@ function run(cmd, args, onClose){
     });
 
     command.on('error', function(err) {
+        console.log(result);
         console.log(error);
         console.log(err);
     });
@@ -160,6 +183,7 @@ function runOnSuccess(code, signal) {
 		});
 	}
     else{
+        console.error('Error running tests:')
         console.error(code, signal)
     }
 
