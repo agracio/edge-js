@@ -118,5 +118,5 @@ workflows:
             parameters:
               # os: ['linux', 'linux-arm', 'macos']
               os: ['macos']
-              node-version: ['18', '20']
+              node-version: ['20', '22']
 
