@@ -123,21 +123,15 @@ runs:
         script: |
             core.notice('Skipping arm64 tests on Windows ARM for Node.js version ' + ${{ inputs.node }});
 
-    - name: Skip arm64 tests
-      shell: bash
-      if: matrix.os == 'windows-11-arm' && inputs.node < 20
-      run: |
-        gh run cancel ${{ github.run_id }}
-        gh run watch ${{ github.run_id }}
-
     - name: Setup env
+      if: matrix.os != 'windows-11-arm' || matrix.node >= 20
       uses: ./.github/actions/setup-env
       with:
         node: ${{ inputs.node }}
         os: ${{ inputs.os }}
 
     - name: Check edge-js Windows pre-built files
-      if: runner.os == 'Windows'
+      if: runner.os == 'Windows' && (matrix.os != 'windows-11-arm' || matrix.node >= 20)
       uses: andstor/file-existence-action@v3
       with:
         files: "lib/native/win32/${{ runner.arch }}/${{ inputs.node }}/edge_coreclr.node, lib/native/win32/${{ runner.arch }}/${{ inputs.node }}/edge_nativeclr.node"
@@ -153,17 +147,19 @@ runs:
         ignore_case: true
 
     - name: Run .NET 4.5 tests
-      # if: inputs.os != 'macos-13'
+      if: matrix.os != 'windows-11-arm' || matrix.node >= 20
       shell: bash
       run: node tools/test.js CI
 
     - name: "Run .net core tests"
+      if: matrix.os != 'windows-11-arm' || matrix.node >= 20
       shell: bash
       run: node tools/test.js CI
       env:
         EDGE_USE_CORECLR: 1
 
     - name: Test report
+      if: matrix.os != 'windows-11-arm' || matrix.node >= 20
       uses: ./.github/actions/create-test-report
       with:
         node: ${{ inputs.node }}
@@ -179,7 +175,7 @@ runs:
         files: "test-results.xml"
         
     - name: publish test-summary Windows
-      if: runner.os == 'Windows'
+      if: runner.os == 'Windows' && (matrix.os != 'windows-11-arm' || matrix.node >= 20)
       uses: EnricoMi/publish-unit-test-result-action/windows@v2
       with:
         check_run_annotations: 'none'
