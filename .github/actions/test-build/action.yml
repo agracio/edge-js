@@ -166,18 +166,18 @@ runs:
         os: ${{ inputs.os }}
         name: 'build-tests'
 
-    - name: publish test-summary nacOS
-      if: runner.os == 'macOS'
-      uses: EnricoMi/publish-unit-test-result-action/macos@v2
-      with:
-        check_run_annotations: 'none'
-        check_name: 'test-summary node-${{ inputs.node }} ${{ inputs.os }}'
-        files: "test-results.xml"
+    # - name: publish test-summary nacOS
+    #   if: runner.os == 'macOS'
+    #   uses: EnricoMi/publish-unit-test-result-action/macos@v2
+    #   with:
+    #     check_run_annotations: 'none'
+    #     check_name: 'test-summary node-${{ inputs.node }} ${{ inputs.os }}'
+    #     files: "test-results.xml"
         
-    - name: publish test-summary Windows
-      if: runner.os == 'Windows' && (inputs.os != 'windows-11-arm' || inputs.node >= 20)
-      uses: EnricoMi/publish-unit-test-result-action/windows@v2
-      with:
-        check_run_annotations: 'none'
-        check_name: 'test-summary node-${{ inputs.node }} ${{ inputs.os }}'
-        files: "test-results.xml"
+    # - name: publish test-summary Windows
+    #   if: runner.os == 'Windows' && (inputs.os != 'windows-11-arm' || inputs.node >= 20)
+    #   uses: EnricoMi/publish-unit-test-result-action/windows@v2
+    #   with:
+    #     check_run_annotations: 'none'
+    #     check_name: 'test-summary node-${{ inputs.node }} ${{ inputs.os }}'
+    #     files: "test-results.xml"
