@@ -130,7 +130,7 @@ jobs:
       matrix: 
        os: [windows-2025, windows-11-arm, macos-13, macos-15]
     runs-on: ${{ matrix.os }}
-    needs: build-16
+    needs: [upload-artifacts, build-16]
 
     name: test node-16 ${{ matrix.os }}
     steps:
@@ -150,7 +150,7 @@ jobs:
       matrix: 
        os: [windows-2025, windows-11-arm, macos-13, macos-15]
     runs-on: ${{ matrix.os }}
-    needs: build-18
+    needs: [upload-artifacts, build-18]
 
     name: test node-18 ${{ matrix.os }}
     steps:
@@ -170,7 +170,7 @@ jobs:
       matrix: 
        os: [windows-2025, windows-11-arm, macos-13, macos-15]
     runs-on: ${{ matrix.os }}
-    needs: build-20
+    needs: [upload-artifacts, build-20]
 
     name: test node-20 ${{ matrix.os }}
     steps:
@@ -190,7 +190,7 @@ jobs:
       matrix: 
        os: [windows-2025, windows-11-arm, macos-13, macos-15]
     runs-on: ${{ matrix.os }}
-    needs: build-22
+    needs: [upload-artifacts, build-22]
 
     name: test node-22 ${{ matrix.os }}
     steps:
@@ -210,7 +210,7 @@ jobs:
       matrix: 
        os: [windows-2025, windows-11-arm, macos-13, macos-15]
     runs-on: ${{ matrix.os }}
-    needs: build-23
+    needs: [upload-artifacts, build-23]
 
     name: test node-23 ${{ matrix.os }}
     steps:
