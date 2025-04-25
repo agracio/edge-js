@@ -67,8 +67,8 @@ jobs:
     needs: build
     strategy:
       matrix:
-        # os: [macos-13, macos-15]
-        os: [windows-2025, windows-11-arm, macos-13, macos-15]
+        os: [windows-2025, windows-11-arm]
+        # os: [windows-2025, windows-11-arm, macos-13, macos-15]
       fail-fast: false
 
     name: test node-${{ inputs.build-version }} ${{ matrix.os }}

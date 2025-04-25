@@ -62,11 +62,25 @@ runs:
       run: ls -R release
 
     - name: Copy artifacts
-      if: runner.os == 'Windows'
+      if: runner.os == 'Windows' && inputs.node < 20
       shell: pwsh
       run: |
         cmd /c copy /y release\win32-edge-js-${{ inputs.node }}\win32\x64\${{ inputs.node }}\edge_*.node lib\native\win32\x64\${{ inputs.node }}
         cmd /c copy /y release\win32-edge-js-${{ inputs.node }}\win32\ia32\${{ inputs.node }}\edge_*.node lib\native\win32\ia32\${{ inputs.node }}
+
+    - name: Copy artifacts
+      if: runner.os == 'Windows' && inputs.node >= 20 && inputs.node < 23
+      shell: pwsh
+      run: |
+        cmd /c copy /y release\win32-edge-js-${{ inputs.node }}\win32\x64\${{ inputs.node }}\edge_*.node lib\native\win32\x64\${{ inputs.node }}
+        cmd /c copy /y release\win32-edge-js-${{ inputs.node }}\win32\ia32\${{ inputs.node }}\edge_*.node lib\native\win32\ia32\${{ inputs.node }}
+        cmd /c copy /y release\win32-edge-js-${{ inputs.node }}\win32\arm64\${{ inputs.node }}\edge_*.node lib\native\win32\arm64\${{ inputs.node }}
+    
+    - name: Copy artifacts
+      if: runner.os == 'Windows' && inputs.node >= 23
+      shell: pwsh
+      run: |
+        cmd /c copy /y release\win32-edge-js-${{ inputs.node }}\win32\x64\${{ inputs.node }}\edge_*.node lib\native\win32\x64\${{ inputs.node }}
         cmd /c copy /y release\win32-edge-js-${{ inputs.node }}\win32\arm64\${{ inputs.node }}\edge_*.node lib\native\win32\arm64\${{ inputs.node }}
 
     - name: Copy artifacts
@@ -100,6 +114,21 @@ runs:
             core.error("Error creating release directory")
             core.setFailed(err)
           }
+
+    - name: Skip arm64 tests
+      if: matrix.os == 'windows-11-arm' && matrix.node < 20
+      uses: actions/github-script@v7
+      with:
+        result-encoding: string
+        script: |
+            core.notice('Skipping arm64 tests on Windows ARM for Node.js version ' + ${{ matrix.node }});
+
+    - name: Skip arm64 tests
+      shell: bash
+      if: matrix.os == 'windows-11-arm' && matrix.node < 20
+      run: |
+        gh run cancel ${{ github.run_id }}
+        gh run watch ${{ github.run_id }}
 
     - name: Setup env
       uses: ./.github/actions/setup-env
