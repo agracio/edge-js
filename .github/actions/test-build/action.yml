@@ -116,16 +116,16 @@ runs:
           }
 
     - name: Skip arm64 tests
-      if: matrix.os == 'windows-11-arm' && matrix.node < 20
+      if: matrix.os == 'windows-11-arm' && inputs.node < 20
       uses: actions/github-script@v7
       with:
         result-encoding: string
         script: |
-            core.notice('Skipping arm64 tests on Windows ARM for Node.js version ' + ${{ matrix.node }});
+            core.notice('Skipping arm64 tests on Windows ARM for Node.js version ' + ${{ inputs.node }});
 
     - name: Skip arm64 tests
       shell: bash
-      if: matrix.os == 'windows-11-arm' && matrix.node < 20
+      if: matrix.os == 'windows-11-arm' && inputs.node < 20
       run: |
         gh run cancel ${{ github.run_id }}
         gh run watch ${{ github.run_id }}
