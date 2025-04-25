@@ -85,8 +85,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # os: [macos-13, macos-15, ubuntu-24.04, ubuntu-24.04-arm, windows-2022, windows-11-arm]
-        os: [macos-15, windows-2022, windows-11-arm]
+        os: [macos-13, macos-15, ubuntu-24.04, ubuntu-24.04-arm, windows-2025, windows-11-arm]
+        # os: [macos-15, windows-2025, windows-11-arm]
        # node: [18, 20, 22, 23]
         node: [18, 20, 22, 23]
     steps:

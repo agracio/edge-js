@@ -4,7 +4,7 @@ inputs:
   os:
     description: 'runs-on'
     required: false
-    default: 'windows-2022'
+    default: 'windows-2025'
   node:
     description: 'Node version'
     required: true
