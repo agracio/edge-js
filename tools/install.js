@@ -98,6 +98,11 @@ else {
 		const checkNative = checkMono() ? fs.existsSync(edjeNative) : true;
 
 		if(checkNative && fs.existsSync(edjeNativeClr)){
+
+			if(fs.existsSync(path.resolve(__dirname, '../build'))){
+				fs.rmSync(path.resolve(__dirname, '../build'), { recursive: true, force: true });
+			}
+			
 			spawn('dotnet', ['build', '--configuration', 'Release'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
 
 		}
