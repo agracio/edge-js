@@ -84,7 +84,7 @@ runs:
       shell: bash
       name: Add missing packages for macOS NodeJs 16 
       run: |
-        pip install setuptools
+        pip install --force-reinstall setuptools
 
     - name: npm install
       shell: bash
