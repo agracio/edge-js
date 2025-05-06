@@ -85,7 +85,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, macos-15, ubuntu-24.04, ubuntu-24.04-arm]
+        os: [macos-13, macos-14, ubuntu-24.04, ubuntu-24.04-arm]
         node: [16]
     steps:
 
