@@ -84,35 +84,33 @@ https://github.com/agracio/edge-js-quick-start
 
 | Version | x86                | x64                | arm64              |
 |---------|--------------------|--------------------|--------------------|
-| 16.x    | :heavy_check_mark: | :heavy_check_mark: | :x:                |
 | 18.x    | :heavy_check_mark: | :heavy_check_mark: | :x:                |
 | 20.x    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | 22.x    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| 23.x    | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+| 24.x    | :x:                | :heavy_check_mark: | :heavy_check_mark: |
 
 
 ### macOS binaries pre-compiled for
 
 | Version | x64                | arm64 (M1+)        |
 |---------|--------------------|--------------------|
-| 16.x    | :heavy_check_mark: | :heavy_check_mark: |
 | 18.x    | :heavy_check_mark: | :heavy_check_mark: |
 | 20.x    | :heavy_check_mark: | :heavy_check_mark: |
 | 22.x    | :heavy_check_mark: | :heavy_check_mark: |
-| 23.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 24.x    | :heavy_check_mark: | :heavy_check_mark: |
 
 #### Supports
 
 | Version     | x64                | arm64 (M1+)        |
 |-------------|--------------------|--------------------|
-| 16.x - 23.x | :heavy_check_mark: | :heavy_check_mark: |
+| 16.x - 24.x | :heavy_check_mark: | :heavy_check_mark: |
 
 
 ### Linux
 
 | Version     | x64                | arm64              |
 |-------------|--------------------|--------------------|
-| 14.x - 23.x | :heavy_check_mark: | :heavy_check_mark: |
+| 14.x - 24.x | :heavy_check_mark: | :heavy_check_mark: |
 
 Other Linux architectures might work but have not been tested.
 
