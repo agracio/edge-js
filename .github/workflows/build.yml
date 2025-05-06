@@ -9,11 +9,9 @@ on:
         default: '20'
         type: choice
         options:
-        - 16
         - 18
         - 20
         - 22
-        - 23
         - 24
 
 env:
