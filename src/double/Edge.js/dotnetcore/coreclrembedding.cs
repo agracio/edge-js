@@ -554,6 +554,12 @@ public class CoreCLREmbedding
 
         internal void AddCompiler(string bootstrapDependencyManifest)
         {
+            var compilerPath = Path.GetDirectoryName(bootstrapDependencyManifest);
+            if (!_knownPaths.Contains(compilerPath))
+            {
+                _knownPaths.Add(compilerPath);
+            }
+
             DebugMessage("EdgeAssemblyResolver::AddCompiler (CLR) - Adding compiler from dependency manifest file {0}", bootstrapDependencyManifest);
 
             DependencyContextJsonReader dependencyContextReader = new DependencyContextJsonReader();
@@ -1262,6 +1268,7 @@ public class CoreCLREmbedding
 
         else
         {
+            DebugMessage("CoreCLREmbedding::MarshalCLRToV8 (CLR) - clrObject: {0}", clrObject.GetType().FullName);
             v8Type = clrObject is Exception
                 ? V8Type.Exception
                 : V8Type.Object;
@@ -1272,6 +1279,7 @@ public class CoreCLREmbedding
 
                 if (aggregateException?.InnerExceptions != null && aggregateException.InnerExceptions.Count > 0)
                 {
+                    DebugMessage("CoreCLREmbedding::MarshalCLRToV8 (CLR) - aggregateException.InnerException: {0}", aggregateException.InnerExceptions[0].GetType().FullName);
                     clrObject = aggregateException.InnerExceptions[0];
                 }
 
@@ -1286,6 +1294,7 @@ public class CoreCLREmbedding
                 }
             }
 
+
             List<Tuple<string, Func<object, object>>> propertyAccessors = GetPropertyAccessors(clrObject.GetType());
             V8ObjectData objectData = new V8ObjectData();
             int counter = 0;
@@ -1298,24 +1307,36 @@ public class CoreCLREmbedding
             foreach (Tuple<string, Func<object, object>> propertyAccessor in propertyAccessors)
             {
                 Marshal.WriteIntPtr(objectData.propertyNames, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(propertyAccessor.Item1));
-
                 V8Type propertyType;
                 if(clrObject.GetType().FullName.StartsWith("System.Reflection"))
                 {
                     propertyType = V8Type.String;
                     Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(string.Empty));
-                }else
+                }
+                else if (clrObject is FileNotFoundException ex1)
+                {
+                    
+                    propertyType = V8Type.String;
+                    Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(clrObject.GetType().FullName + "\n" + ex1.Message));
+                }
+                else if (clrObject is TypeLoadException ex2)
+                {
+                    propertyType = V8Type.String;
+                    Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(clrObject.GetType().FullName + "\n" + ex2.Message));
+                }
+                else
                 {
                     Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, MarshalCLRToV8(propertyAccessor.Item2(clrObject), out propertyType));
                 }
                 Marshal.WriteInt32(objectData.propertyTypes, counter*sizeof (int), (int) propertyType);
                 counter++;
             }
-
+            
             IntPtr destinationPointer = Marshal.AllocCoTaskMem(V8ObjectDataSize);
             Marshal.StructureToPtr(objectData, destinationPointer, false);
 
             return destinationPointer;
+
         }
     }
     
