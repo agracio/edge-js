@@ -558,7 +558,7 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 			runtimeconfigfile = pal::string_t(edgeAppDir);
 			append_path(&runtimeconfigfile, appConfigFiles[0].c_str());
 
-			trace::info(_X("CoreClrEmbedding::Initialize - No SDK directory found - Exactly one (%s) app runtimeconfig file found in the Edge app directory, using that"), runtimeconfigfile.c_str());
+			trace::info(_X("CoreClrEmbedding::Initialize - Exactly one (%s) app runtimeconfig file found in the Edge app directory, using that"), runtimeconfigfile.c_str());
 			configFile = pal::string_t(runtimeconfigfile);
 		}
 		if (!sdkDirectory.empty()) // Fallback: SDK is installed and found - using dotnet.runtimeconfig.json from SDK folder
@@ -566,7 +566,7 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 			runtimeconfigfile = pal::string_t(sdkDirectory);
 			append_path(&runtimeconfigfile, _X("dotnet.dll"));
 
-			trace::info(_X("CoreClrEmbedding::Initialize - SDK directory found - Using dotnet.runtimeconfig.json from SDK folder"));
+			trace::info(_X("CoreClrEmbedding::Initialize - No app runtimeconfig file found, but SDK directory found - Using dotnet.runtimeconfig.json from SDK directory"));
 			get_runtime_config_paths_from_app(runtimeconfigfile, &configFile, &devConfigFile);
 		}
 		else if (appConfigFiles.size() > 1) // Throw error: No SDK found but more than one runtimeconfig.json found in app folder - Which one is correct?
