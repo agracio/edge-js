@@ -561,7 +561,7 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 			trace::info(_X("CoreClrEmbedding::Initialize - Exactly one (%s) app runtimeconfig file found in the Edge app directory, using that"), runtimeconfigfile.c_str());
 			configFile = pal::string_t(runtimeconfigfile);
 		}
-		if (!sdkDirectory.empty()) // Fallback: SDK is installed and found - using dotnet.runtimeconfig.json from SDK folder
+		else if (!sdkDirectory.empty()) // Fallback: SDK is installed and found - using dotnet.runtimeconfig.json from SDK folder
 		{
 			runtimeconfigfile = pal::string_t(sdkDirectory);
 			append_path(&runtimeconfigfile, _X("dotnet.dll"));
