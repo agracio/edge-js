@@ -360,7 +360,7 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 	{
 		dotnetExecutablePath = _X("");
 		dotnetDirectory = _X("");
-		trace::info(_X("CoreClrEmbedding::Initialize - dotnet not found in DOTNET_ROOT"));
+		trace::info(_X("CoreClrEmbedding::Initialize - dotnet not found in in DOTNET_ROOT"));
 	}
 
 	// 2. Get path to .NET from registry
@@ -553,21 +553,19 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 
 		fx_muxer_t::resolve_sdk_dotnet_path(dotnetDirectory, &sdkDirectory);
 		
-		if (appConfigFiles.size() == 1) // Default case: No SDK directory found (probably only .NET runtime installed), trying to use [appname].runtimeconfig.json instead
+		if (!sdkDirectory.empty()) // Default case: SDK is installed and found - using dotnet.runtimeconfig.json from SDK folder
+		{
+			runtimeconfigfile = pal::string_t(sdkDirectory);
+			append_path(&runtimeconfigfile, _X("dotnet.dll"));
+			get_runtime_config_paths_from_app(runtimeconfigfile, &configFile, &devConfigFile);
+		}
+		else if (appConfigFiles.size() == 1) // Fallback: No SDK directory found (probably only .NET runtime installed), trying to use [appname].runtimeconfig.json instead
 		{
 			runtimeconfigfile = pal::string_t(edgeAppDir);
 			append_path(&runtimeconfigfile, appConfigFiles[0].c_str());
 
-			trace::info(_X("CoreClrEmbedding::Initialize - Exactly one (%s) app runtimeconfig file found in the Edge app directory, using that"), runtimeconfigfile.c_str());
+			trace::info(_X("CoreClrEmbedding::Initialize - No SDK directory found - Exactly one (%s) app runtimeconfig file found in the Edge app directory, using that"), runtimeconfigfile.c_str());
 			configFile = pal::string_t(runtimeconfigfile);
-		}
-		else if (!sdkDirectory.empty()) // Fallback: SDK is installed and found - using dotnet.runtimeconfig.json from SDK folder
-		{
-			runtimeconfigfile = pal::string_t(sdkDirectory);
-			append_path(&runtimeconfigfile, _X("dotnet.dll"));
-
-			trace::info(_X("CoreClrEmbedding::Initialize - No app runtimeconfig file found, but SDK directory found - Using dotnet.runtimeconfig.json from SDK directory"));
-			get_runtime_config_paths_from_app(runtimeconfigfile, &configFile, &devConfigFile);
 		}
 		else if (appConfigFiles.size() > 1) // Throw error: No SDK found but more than one runtimeconfig.json found in app folder - Which one is correct?
 		{
