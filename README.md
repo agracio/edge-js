@@ -199,6 +199,15 @@ export default nextConfig;
 
 ## Additional languages support
 
+### SQL scripting
+
+Provides simple access to SQL without the need to write separate C# code.
+
+| Framework | Platform | NPM Package | Language code | Documentation                                                        |
+|-----------|----------|-------------|---------------|----------------------------------------------------------------------|
+| .NET 4.5  | Windows  | `edge-sql`  | `sql`         | [Script SQL in Node.js](https://github.com/agracio/edge-sql) :link:  |
+| CoreCLR   | Any      | `edge-sql`  | `sql`         | [Script SQL in Node.js](https://github.com/agracio/edge-sql) :link:  |
+
 ### Python (IronPython) scripting
 
 **NOTE** This functionality requires IronPython 3.4
@@ -217,14 +226,6 @@ export default nextConfig;
 | .NET 4.5  | Windows  | `edge-ps`   | `ps`          | [Script PowerShell in Node.js](https://github.com/agracio/edge-ps) :link: |
 | CoreCLR   | Windows  | `edge-ps`   | `ps`          | [Script PowerShell in Node.js](https://github.com/agracio/edge-ps) :link: |
 
-### MS SQL scripting
-
-Provides simple access to MS SQL without the need to write separate C# code.     
-
-| Framework | Platform | NPM Package | Language code | Documentation                                                         |
-|-----------|----------|-------------|---------------|-----------------------------------------------------------------------|
-| .NET 4.5  | Windows  | `edge-sql`  | `sql`         | [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
-| CoreCLR   | Any      | `edge-sql`  | `sql`         | [Script T-SQL in Node.js](https://github.com/agracio/edge-sql) :link: |
 
 ### F# scripting
 
