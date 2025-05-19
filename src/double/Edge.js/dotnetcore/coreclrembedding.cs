@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Numerics;
 using System.Security.Policy;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyModel;
 
 // ReSharper disable InconsistentNaming
@@ -245,7 +246,7 @@ public class CoreCLREmbedding
             DebugMessage("EdgeAssemblyResolver::LoadDependencyManifest (CLR) - Finished");
         }
         
-        private void AddDependencies(DependencyContext dependencyContext, bool standalone)
+        private void AddDependencies(DependencyContext dependencyContext, bool standalone, bool compilerDependencies = false)
         {
             DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Adding dependencies for: {0}, standalone: {1}", dependencyContext.Target.Framework, standalone);
 
@@ -282,7 +283,7 @@ public class CoreCLREmbedding
                 {
                     string assetPath = assets[0];
                     
-                    var assemblyPath = ResolveAssemblyPath(assetPath, runtimeLibrary.Version, runtimeLibrary.Type, standalone);
+                    var assemblyPath = ResolveAssemblyPath(assetPath, runtimeLibrary.Version, runtimeLibrary.Type, standalone, compilerDependencies);
 
                     if (!_libraries.ContainsKey(runtimeLibrary.Name))
                     {
@@ -314,7 +315,7 @@ public class CoreCLREmbedding
             }
         }
 
-        private string ResolveAssemblyPath(string libraryName, string libraryVersion, string libraryType, bool standalone)
+        private string ResolveAssemblyPath(string libraryName, string libraryVersion, string libraryType, bool standalone, bool compilerDependencies = false)
         {
             var runtimePath = Path.GetDirectoryName(RuntimeEnvironment.RuntimePath);
             var assemblyPath = libraryName.Replace('/', Path.DirectorySeparatorChar);
@@ -341,17 +342,33 @@ public class CoreCLREmbedding
             }
             else 
             {
-                assemblyPath = Path.Combine(_packagesPath, libraryName.ToLower(), libraryVersion, normalizedPath.ToLower());
+                
+                // Try to load from Edge.js compiler
+                if (compilerDependencies)
+                {
+                    foreach (var knownPath in _knownPaths)
+                    {
+                        assemblyPath = Path.Combine(knownPath, Path.GetFileName(normalizedPath));
+                        if(File.Exists(assemblyPath)) break;
+                    }
+                }
+
+                // Try to load from nuget packages
                 if(!File.Exists(assemblyPath))
                 {
-                    assemblyPath = Path.Combine(_packagesPath, libraryName.ToLower(), libraryVersion, normalizedPath);
+                    assemblyPath = Path.Combine(_packagesPath, Path.GetFileNameWithoutExtension(libraryName.ToLower()) , libraryVersion,  normalizedPath.ToLower());
                 }
-                if(!File.Exists(assemblyPath) && File.Exists(Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(normalizedPath))))
+                if(!File.Exists(assemblyPath))
+                {
+                    assemblyPath = Path.Combine(_packagesPath, Path.GetFileNameWithoutExtension(libraryName.ToLower()) , libraryVersion, normalizedPath);
+                }
+                // Try to load from application directory
+                if(!File.Exists(assemblyPath))
                 {
                     assemblyPath = Path.Combine(RuntimeEnvironment.ApplicationDirectory, Path.GetFileName(normalizedPath));
                 }
             }
-            
+            // Try to load from dotnet runtime directory
             if (!File.Exists(assemblyPath) && !string.IsNullOrEmpty(runtimePath))
             {
                 assemblyPath = Path.Combine(runtimePath, Path.GetFileName(assemblyPath));
@@ -483,19 +500,19 @@ public class CoreCLREmbedding
             return asset;
         }
 
-        private void AddCompileDependencies(DependencyContext dependencyContext, bool standalone)
+        private void AddCompileDependencies(DependencyContext dependencyContext, bool standalone, bool compilerDependencies = false)
         {
             foreach (CompilationLibrary compileLibrary in dependencyContext.CompileLibraries)
             {
-                if (compileLibrary.Assemblies.Count == 0 || CompileAssemblies.ContainsKey(compileLibrary.Name))
+                if ((compileLibrary.Assemblies.Count == 0 || CompileAssemblies.ContainsKey(compileLibrary.Name)) && !compilerDependencies)
                 {
                     continue;
                 }
                 
                 DebugMessage("EdgeAssemblyResolver::AddDependencies (CLR) - Processing compile assembly {1} {0} {2}", compileLibrary.Name, compileLibrary.Type, compileLibrary.Assemblies[0]);
-                var assemblyPath = ResolveAssemblyPath(compileLibrary.Assemblies[0], compileLibrary.Version, compileLibrary.Type, standalone);
+                var assemblyPath = ResolveAssemblyPath(compileLibrary.Assemblies[0], compileLibrary.Version, compileLibrary.Type, standalone, compilerDependencies);
 
-                if (!CompileAssemblies.ContainsKey(compileLibrary.Name))
+                if (!CompileAssemblies.ContainsKey(compileLibrary.Name) && !compilerDependencies)
                 {
                     if (File.Exists(assemblyPath))
                     {
@@ -555,10 +572,7 @@ public class CoreCLREmbedding
         internal void AddCompiler(string bootstrapDependencyManifest)
         {
             var compilerPath = Path.GetDirectoryName(bootstrapDependencyManifest);
-            if (!_knownPaths.Contains(compilerPath))
-            {
-                _knownPaths.Add(compilerPath);
-            }
+            AddAssemblyPath(compilerPath);
 
             DebugMessage("EdgeAssemblyResolver::AddCompiler (CLR) - Adding compiler from dependency manifest file {0}", bootstrapDependencyManifest);
 
@@ -570,7 +584,7 @@ public class CoreCLREmbedding
 
                 DebugMessage("EdgeAssemblyResolver::AddCompiler (CLR) - Adding dependencies for compiler");
 
-                AddDependencies(compilerDependencyContext, false);
+                AddDependencies(compilerDependencyContext, false, true);
 
                 DebugMessage("EdgeAssemblyResolver::AddCompiler (CLR) - Finished");
             }
@@ -1279,7 +1293,6 @@ public class CoreCLREmbedding
 
                 if (aggregateException?.InnerExceptions != null && aggregateException.InnerExceptions.Count > 0)
                 {
-                    DebugMessage("CoreCLREmbedding::MarshalCLRToV8 (CLR) - aggregateException.InnerException: {0}", aggregateException.InnerExceptions[0].GetType().FullName);
                     clrObject = aggregateException.InnerExceptions[0];
                 }
 
@@ -1294,11 +1307,9 @@ public class CoreCLREmbedding
                 }
             }
 
-
             List<Tuple<string, Func<object, object>>> propertyAccessors = GetPropertyAccessors(clrObject.GetType());
             V8ObjectData objectData = new V8ObjectData();
             int counter = 0;
-
             objectData.propertiesCount = propertyAccessors.Count;
             objectData.propertyNames = Marshal.AllocCoTaskMem(PointerSize*propertyAccessors.Count);
             objectData.propertyTypes = Marshal.AllocCoTaskMem(sizeof (int)*propertyAccessors.Count);
@@ -1312,17 +1323,6 @@ public class CoreCLREmbedding
                 {
                     propertyType = V8Type.String;
                     Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(string.Empty));
-                }
-                else if (clrObject is FileNotFoundException ex1)
-                {
-                    
-                    propertyType = V8Type.String;
-                    Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(clrObject.GetType().FullName + "\n" + ex1.Message));
-                }
-                else if (clrObject is TypeLoadException ex2)
-                {
-                    propertyType = V8Type.String;
-                    Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(clrObject.GetType().FullName + "\n" + ex2.Message));
                 }
                 else
                 {
