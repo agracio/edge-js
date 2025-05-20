@@ -267,6 +267,9 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 
 	pal::string_t edgeAppName;
 	pal::getenv(_X("EDGE_APP_NAME"), &edgeAppName);
+	
+	pal::string_t edgeUseRuntimeConfig;
+	pal::getenv(_X("EDGE_USE_RUNTIME_CONFIG"), &edgeUseRuntimeConfig);
 
 	pal::string_t edgeAppDir;
 	pal::getenv(_X("EDGE_APP_ROOT"), &edgeAppDir);
@@ -553,13 +556,13 @@ HRESULT CoreClrEmbedding::Initialize(BOOL debugMode)
 
 		fx_muxer_t::resolve_sdk_dotnet_path(dotnetDirectory, &sdkDirectory);
 		
-		if (!sdkDirectory.empty()) // Default case: SDK is installed and found - using dotnet.runtimeconfig.json from SDK folder
+		if (!sdkDirectory.empty() && edgeUseRuntimeConfig.empty()) // Default case: SDK is installed and found and EDGE_USE_RUNTIME_CONFIG not defined - using dotnet.runtimeconfig.json from SDK folder
 		{
 			runtimeconfigfile = pal::string_t(sdkDirectory);
 			append_path(&runtimeconfigfile, _X("dotnet.dll"));
 			get_runtime_config_paths_from_app(runtimeconfigfile, &configFile, &devConfigFile);
 		}
-		else if (appConfigFiles.size() == 1) // Fallback: No SDK directory found (probably only .NET runtime installed), trying to use [appname].runtimeconfig.json instead
+		else if (appConfigFiles.size() == 1) // Fallback: No SDK directory found or EDGE_USE_RUNTIME_CONFIG defined, trying to use [appname].runtimeconfig.json instead
 		{
 			runtimeconfigfile = pal::string_t(edgeAppDir);
 			append_path(&runtimeconfigfile, appConfigFiles[0].c_str());
