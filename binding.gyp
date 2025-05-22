@@ -18,7 +18,7 @@
   'targets': [
     {
       'target_name': 'edge_coreclr',
-      'win_delay_load_hook': 'false',
+      'win_delay_load_hook': 'true',
       'include_dirs': [
         "<!(node -e \"require('nan')\")"
       ],
