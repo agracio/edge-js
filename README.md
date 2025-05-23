@@ -71,6 +71,9 @@ VS Code uses Electron shell, to write extensions for it using Edge.js use
 Sample app that shows how to work with .NET Core using inline code and compiled C# libraries.  
 https://github.com/agracio/edge-js-quick-start
 
+## Pre-requisites
+- Windows: [Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version)
+
 ## Node.js Support
 
 ### edge-js support policy
@@ -172,6 +175,7 @@ module.exports = {
   target: 'node',
   externals: {
     'edge-js': 'commonjs2 edge-js',
+    'edge-cs': 'commonjs2 edge-cs',
   },
   node: {
     __dirname: true,
@@ -199,6 +203,10 @@ const nextConfig: NextConfig = {
 
 export default nextConfig;
 ```
+
+## Node.js single executable application packaging
+
+**[`edge-js-pkg`](https://github.com/agracio/edge-js-pkg)**
 
 ## Additional languages support
 
@@ -593,10 +601,9 @@ Listen to the [Edge.js podcast on Herdingcode](http://herdingcode.com/herding-co
 
 [Scripting CLR from Node.js](#scripting-clr-from-nodejs)  
 &nbsp;&nbsp;&nbsp;&nbsp;[What you need](#what-you-need)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Windows](#windows)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Linux](#linux)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[OSX](#osx)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Docker](#docker)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Windows](#windows-setup)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Linux](#linux-setup)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[OSX](#osx-setup)  
 &nbsp;&nbsp;&nbsp;&nbsp;[How to: C# hello, world](#how-to-c-hello-world)  
 &nbsp;&nbsp;&nbsp;&nbsp;[How to: integrate C# code into Node.js code](#how-to-integrate-c-code-into-nodejs-code)  
 &nbsp;&nbsp;&nbsp;&nbsp;[How to: specify additional CLR assembly references in C# code](#how-to-specify-additional-clr-assembly-references-in-c-code)  
@@ -642,25 +649,26 @@ Edge.js runs on Windows, Linux, and OSX and requires supported version of Node.j
 
 **NOTE** there is a known issue with Mono after 4.2.4 that will be addressed in Mono 4.6.
 
-#### Windows
+#### Windows setup
 
 * Supported Node.js version
 * [.NET 4.6.2](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net462) and/or [.NET Core](https://www.microsoft.com/net/core)
+* [Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version)
 * to use Python, you also need [IronPython 3.4 or later](https://ironpython.net/download/)  
 * to use F#, read [Dave Thomas blog post](https://web.archive.org/web/20160323224525/http://7sharpnine.com/posts/i-node-something/)
 
 If you have both desktop CLR and .NET Core installed, read [using .NET Core](#using-net-core) for how to configure Edge to use one or the other. 
 
-#### Linux
+#### Linux setup
 
 * Supported Node.js version  
-* .NET Core
+* Mono and/or [.NET Core](https://www.microsoft.com/net/core) or Mono
 * Follow [Linux setup instructions](#building-on-linux)
 
-#### OSX  
+#### OSX setup
 
 * Supported Node.js version  
-* Mono 4.x - 6.x and/or .NET Core
+* Mono and/or [.NET Core](https://www.microsoft.com/net/core)
 * Follow [OSX setup instructions](#building-on-osx)  
 
 ### How to: C# hello, world
@@ -1103,7 +1111,7 @@ console.log(counter(null, true)); // prints 14
 
 Edge.js enables you to run Python and Node.js in-process.
 
-In addition to [platform specific prerequisites](#what-you-need) you need [IronPython 2.7.3](http://ironpython.codeplex.com/releases/view/81726) to proceed.
+In addition to [platform specific prerequisites](#what-you-need) you need [IronPython 3.4](http://ironpython.codeplex.com/releases/) to proceed.
 
 #### Hello, world
 
