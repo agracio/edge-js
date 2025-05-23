@@ -168,6 +168,8 @@ When packaging your application using Webpack make sure that `edge-js` is specif
 ### Webpack
 
 ```js
+module.exports = {
+  target: 'node',
   externals: {
     'edge-js': 'commonjs2 edge-js',
   },
@@ -175,6 +177,7 @@ When packaging your application using Webpack make sure that `edge-js` is specif
     __dirname: true,
     __filename: true,
   },
+}
 ```
 
 ### Next.js

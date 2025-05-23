@@ -747,23 +747,36 @@ public class CoreCLREmbedding
 
             IDictionary<string, object> options = (IDictionary<string, object>)MarshalV8ToCLR(v8Options, (V8Type)payloadType);
             string compiler = (string)options["compiler"];
+            string boostrapDeps = (string)options["bootstrapDependencyManifest"];
 
             MethodInfo compileMethod;
             Type compilerType;
             DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - Compiler loading {0} assembly", compiler);
-            
+            DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - bootstrapDependencyManifest {0}", boostrapDeps);
+
             if (!Compilers.ContainsKey(compiler))
             {
                 if (DependencyContext.Default == null || !DependencyContext.Default.RuntimeLibraries.Any(l => l.Name == compiler))
                 {
-                    if (!File.Exists(options["bootstrapDependencyManifest"].ToString()))
+                    if (!File.Exists(boostrapDeps))
                     {
-                        throw new Exception(
-                            String.Format(
-                                "Compiler package {0} was not found in the application dependency manifest and no bootstrap dependency manifest was found for the compiler.  Make sure that you either have {0} in your project.json or, if you do not have a project.json, that you have the .NET Core SDK installed.", compiler));
+                        // Handle case when compiler path is specified through env variable
+                        if(Path.GetDirectoryName(compiler) != Path.GetDirectoryName(boostrapDeps))
+                        {
+                            boostrapDeps = Path.GetDirectoryName(compiler) + Path.DirectorySeparatorChar + Path.GetFileName(boostrapDeps);
+                            DebugMessage("CoreCLREmbedding::CompileFunc (CLR) - bootstrapDependencyManifest {0}", boostrapDeps);
+                        }
+
+                        if (!File.Exists(boostrapDeps))
+                        {
+                            throw new Exception(
+                                String.Format(
+                                    "Compiler package {0} was not found in the application dependency manifest and no bootstrap dependency manifest was found for the compiler.",
+                                    compiler));
+                        }
                     }
 
-                    Resolver.AddCompiler(options["bootstrapDependencyManifest"].ToString());
+                    Resolver.AddCompiler(boostrapDeps);
                 }
 
                 Assembly compilerAssembly;
