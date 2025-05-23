@@ -80,12 +80,6 @@ runs:
       run: |
         node -v && npm -v && dotnet --version && node -p process.platform && node -p process.arch
 
-    - if: runner.os == 'macOS' && inputs.node <= 16
-      shell: bash
-      name: Add missing packages for macOS NodeJs 16 
-      run: |
-        pip install --force-reinstall setuptools
-
     - name: npm install
       shell: bash
       run: npm i
