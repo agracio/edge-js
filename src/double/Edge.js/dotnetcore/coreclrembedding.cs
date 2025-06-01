@@ -1332,7 +1332,7 @@ public class CoreCLREmbedding
             {
                 Marshal.WriteIntPtr(objectData.propertyNames, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(propertyAccessor.Item1));
                 V8Type propertyType;
-                if(clrObject.GetType().FullName.StartsWith("System.Reflection"))
+                if(clrObject.GetType().FullName.StartsWith("System.Reflection") || clrObject.GetType().FullName.StartsWith("Npgsql.NpgsqlParameter"))
                 {
                     propertyType = V8Type.String;
                     Marshal.WriteIntPtr(objectData.propertyValues, counter*PointerSize, Marshal.StringToCoTaskMemUTF8(string.Empty));
