@@ -55,8 +55,8 @@ refs:
         command: npm install
     - &DistUtils
       run:
-        name: pip install setuptools
-        command: pip install setuptools
+        name: install distutils
+        command: sudo apt-get install -y python3-distutils
     - &Test
       run:
         shell: bash
