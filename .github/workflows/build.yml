@@ -21,6 +21,7 @@ env:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    environment: edge-js-${{ inputs.build-version }}
     # outputs:
     #   node-version: ${{ steps.node-test-version.outputs.node-version }}
     strategy:
@@ -40,7 +41,6 @@ jobs:
         with:
           node: ${{ inputs.build-version }}
           os: ${{ matrix.os }}
-          environment: release
 
   upload-artifacts:
     runs-on: ubuntu-latest
