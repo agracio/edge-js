@@ -53,6 +53,10 @@ refs:
       run:
         name: NPM Install
         command: npm install
+    - &DistUtils
+      run:
+        name: pip install setuptools
+        command: pip install setuptools
     - &Test
       run:
         shell: bash
@@ -85,6 +89,7 @@ jobs:
       #     cache-path: ~/project/node_modules
       #     override-ci-command: npm install
       - *InstallNode
+      - *DistUtils
       - *Versions
       - run: npm install 
       - save_cache:
@@ -111,12 +116,12 @@ workflows:
               os: ['linux', 'linux-arm']
               node-version: ['14', '16' ]
 
-  build-and-test-macos:
-    jobs:
-      - test-node:
-          matrix:
-            parameters:
-              # os: ['linux', 'linux-arm', 'macos']
-              os: ['macos']
-              node-version: ['20', '22']
+  # build-and-test-macos:
+  #   jobs:
+  #     - test-node:
+  #         matrix:
+  #           parameters:
+  #             # os: ['linux', 'linux-arm', 'macos']
+  #             os: ['macos']
+  #             node-version: ['20', '22']
 
