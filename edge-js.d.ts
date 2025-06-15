@@ -16,6 +16,8 @@ declare module 'edge-js' {
         source: string
         connectionString?: string
         commandTimeout?: number
+        db?: string
+        nonQuery?: boolean
     }
 
     interface Func<TInput, TOutput> {
