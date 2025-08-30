@@ -36,14 +36,25 @@ refs:
         name: Install dotnet
         command: |
           if [[ $OSTYPE == darwin* ]]; then
-              /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-              brew install --cask dotnet-sdk
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            brew install --cask dotnet-sdk
           elif [[ $OSTYPE == linux* ]]; then
             wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
             sudo dpkg -i packages-microsoft-prod.deb
             sudo apt-get update
             sudo apt-get install -y dotnet-sdk-8.0
             sudo rm packages-microsoft-prod.deb
+          fi
+    - &InstallMono
+      run:
+        shell: bash
+        name: Install Mono
+        command: |
+          if [[ $OSTYPE == darwin* ]]; then
+            brew install mono --overwrite
+            brew reinstall pkg-config
+          elif [[ $OSTYPE == linux* ]]; then
+            sudo apt -q install mono-complete pkg-config libglib2.0-dev
           fi
     - &Versions
       run:
@@ -56,7 +67,12 @@ refs:
     - &DistUtils
       run:
         name: install distutils
-        command: sudo apt install -y python3-setuptools
+        command: |
+          if [[ $OSTYPE == darwin* ]]; then
+            pip install setuptools
+          elif [[ $OSTYPE == linux* ]]; then
+            sudo apt install -y python3-setuptools
+          fi
     - &Test
       run:
         shell: bash
@@ -85,6 +101,7 @@ jobs:
           keys: 
           - v1-deps-{{ arch }}-{{ checksum "package-lock.json" }}
       - *InstallDotnet
+      - *InstallMono
       # - node/install-packages:
       #     cache-path: ~/project/node_modules
       #     override-ci-command: npm install
@@ -112,16 +129,14 @@ workflows:
       - test-node:
           matrix:
             parameters:
-              # os: ['linux', 'linux-arm', 'macos']
               os: ['linux', 'linux-arm']
               node-version: ['14', '16' ]
 
-  # build-and-test-macos:
-  #   jobs:
-  #     - test-node:
-  #         matrix:
-  #           parameters:
-  #             # os: ['linux', 'linux-arm', 'macos']
-  #             os: ['macos']
-  #             node-version: ['20', '22']
+  build-and-test-macos:
+    jobs:
+      - test-node:
+          matrix:
+            parameters:
+              os: ['macos']
+              node-version: ['16', '18']
 
