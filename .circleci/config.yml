@@ -52,7 +52,7 @@ refs:
         command: |
           if [[ $OSTYPE == darwin* ]]; then
             brew install mono --overwrite
-            brew reinstall pkg-config
+            brew install pkg-config --overwrite
           elif [[ $OSTYPE == linux* ]]; then
             sudo apt -q install mono-complete pkg-config libglib2.0-dev
           fi
@@ -78,12 +78,14 @@ refs:
         shell: bash
         name: Test
         command: |
-          if [[ $OSTYPE == darwin* || $OSTYPE == linux* ]]; then
-              node tools/test.js circleci
-          else
+          # if [[ $OSTYPE == darwin* || $OSTYPE == linux* ]]; then
+          #     node tools/test.js circleci
+          # else
+          #   node tools/test.js circleci
+          #   node tools/test.js circleci coreclr
+          # fi
             node tools/test.js circleci
             node tools/test.js circleci coreclr
-          fi
 
 jobs:
   test-node:
