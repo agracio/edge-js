@@ -81,7 +81,7 @@ https://github.com/agracio/edge-js-quick-start
 - Windows supports 4 latest LTS or candidate LTS releases (even numbered).
 - Windows supports up to 1 "Current" (odd numbered) release and drops it when superseeded by new LTS candidate.
 - macOS comes precompiled with same releases as Windows. When using Node.js version that is not pre-compiled `edge-js` binaries will be compiled during `npm install` using `node-gyp`.
-- Linux will will always compile `edge-js` binaries during `npm install` using `node-gyp`.
+- Linux will always compile `edge-js` binaries during `npm install` using `node-gyp`.
 
 ### Windows
 
