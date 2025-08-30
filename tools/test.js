@@ -13,10 +13,6 @@ const checkMono = require('./checkMono');
 
 var runner = process.argv[2];
 
-// if (process.platform !== 'win32') {
-//     process.env.EDGE_USE_CORECLR = 1
-// }
-
 if(process.platform === 'linux' && !process.env.EDGE_USE_CORECLR){
     Object.assign(process.env, {
         // Work around Mono problem: undefined symbol: mono_add_internal_call_with_flags
@@ -28,8 +24,13 @@ if(process.argv[3] === 'coreclr'){
     process.env.EDGE_USE_CORECLR = 1
 }
 
-if(runner === 'all' && process.platform === 'win32'){
+if(runner === 'all'){
     delete process.env.EDGE_USE_CORECLR
+    if(process.platform !== 'win32'){
+        if(!checkMono()){
+            process.env.EDGE_USE_CORECLR = 1
+        }
+    }
 }
 
 function build(){
@@ -65,25 +66,21 @@ function dotnet(compiler, buildParameters){
 }
 
 function coreclr(){
-    run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['restore'], function(code, signal) {
+    run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], function(code, signal) {
         if (code === 0) {
-            run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], function(code, signal) {
-                if (code === 0) {
-                    try{
-                        fs.mkdirSync('test/测试', { recursive: true })
-                    }
-                    catch (e){
-                        console.error(e);
-                        throw e;
-                    }
-                    fs.copyFile('test/bin/Debug/net6.0/test.dll', 'test/测试/Edge.Tests.CoreClr.dll', (e) => {
-                        if (e) {
-                            console.error(e);
-                            throw e;
-                        }
-                        runOnSuccess(0);
-                    });
+            try{
+                fs.mkdirSync('test/测试', { recursive: true })
+            }
+            catch (e){
+                console.error(e);
+                throw e;
+            }
+            fs.copyFile('test/bin/Debug/test.dll', 'test/测试/Edge.Tests.CoreClr.dll', (e) => {
+                if (e) {
+                    console.error(e);
+                    throw e;
                 }
+                runOnSuccess(0);
             });
         }
     });
@@ -111,6 +108,7 @@ function run(cmd, args, onClose){
     });
 
     command.on('close', function(code){
+        console.log(result);
         onClose(code, '');
 	});
 }
@@ -118,7 +116,7 @@ function run(cmd, args, onClose){
 function runOnSuccess(code, signal) {
 	if (code === 0) {
 
-		process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug', 'net6.0');
+		process.env['EDGE_APP_ROOT'] = path.join(testDir, 'bin', 'Debug');
 
         if(runner === 'all')
         {
