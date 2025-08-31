@@ -1,0 +1,112 @@
+name: Pipeline Segment - build electron-edge-js
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: 'Node.js version to build for'
+        required: true
+        type: string
+      os:
+        description: 'OS'
+        required: true
+        type: string
+      environment:
+        description: 'environment'
+        required: false
+        default: 'build edge-js'
+        type: string
+      arch:
+        description: 'arch'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+
+  node-version:
+    runs-on: ubuntu-latest
+    outputs:
+      node-version: ${{ steps.node-test-version.outputs.node-version }}
+    name: node-version
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get Node.js version
+        id: node-test-version
+        shell: bash
+        run: |
+          node tools/getVersion.js ${{ inputs.version }}
+          version=$(cat node.txt)
+          echo "node-version=$version" >> $GITHUB_OUTPUT
+          echo "::notice::Node.js version is $version"
+
+  build-edge:
+    runs-on: ${{ inputs.os }}
+    environment: ${{ inputs.environment }}
+    needs: node-version
+    name: build
+    timeout-minutes: 20
+    steps:
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup env
+        uses: ./.github/actions/setup-env
+        with:
+          node: '${{ inputs.version }}'
+          os: ${{ inputs.os }}
+
+      - name: install node-gyp
+        shell: bash
+        run: npm i -g node-gyp
+
+      - name: Create release folder
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            try {
+              const fs = require('fs')
+              fs.mkdirSync(`release/${process.platform}/${{ inputs.arch }}/${{ inputs.version }}`, { recursive: true });
+            } catch(err) {
+              core.error("Error creating release directory")
+              core.setFailed(err)
+            }
+
+      - name: Create node.version file
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            try {
+              const fs = require('fs')
+              fs.writeFileSync('release/${process.platform}/${{ inputs.arch }}/${{ inputs.version }}/node.version', '${{ needs.node-version.outputs.node-version }}');
+            } catch(err) {
+              core.error("Error writing node.version file")
+              core.setFailed(err)
+            }
+
+      - name: Build ${{ inputs.arch }}
+        uses: ./.github/actions/build
+        with:
+          electron: ${{ inputs.version }}
+          arch: ${{ inputs.arch }}
+    
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows' && success()
+        with:
+          name: win32-edge-js-${{ inputs.arch }}-${{ inputs.version }}
+          path: |
+            release
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'macOS' && success()
+        with:
+          name: darwin-edge-js-${{ inputs.arch }}-${{ inputs.version }}
+          path: |
+            release

@@ -33,7 +33,7 @@ runs:
         path: ~/.cache/node-gyp
         key: '${{ inputs.os }}-${{ inputs.node}}'
 
-    - name: Cache node-gyp macOs
+    - name: Cache node-gyp macOS
       if: runner.os == 'macOS'
       uses: actions/cache@v4
       env:

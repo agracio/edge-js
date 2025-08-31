@@ -3,52 +3,111 @@ name: Build
 on:
   workflow_dispatch:
     inputs:
-      build-version:
+      version:
         description: 'Node.js version to build'
         required: true
         default: '20'
         type: choice
         options:
-        - 18
-        - 20
-        - 22
-        - 24
+        - '18'
+        - '20'
+        - '22'
+        - '24'
+
+  workflow_call:
+    inputs:
+      version:
+        description: 'Node.js version to build'
+        required: true
+        type: string
+      build-all:
+        description: 'Building for all versions?'
+        required: true
+        default: false
+        type: boolean
 
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1 
   DOTNET_NOLOGO: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
 
 jobs:
-  build:
+  test-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.test-matrix.outputs.matrix }}
+    name: test-os-matrix
+    steps:
+      - name: Test versions
+        shell: bash
+        id: test-matrix
+        run: |
+          echo "::notice::Starting build for Node.js ${{ inputs.version }}"
+          echo "matrix={'include':[{\"name\":\"test-win-x64\",\"os\":\"windows-2025\"},{\"name\":\"test-win-arm64\",\"os\":\"windows-11-arm\"},{\"name\":\"test-darwin-x64\",\"os\":\"macos-13\"},{\"name\":\"test-darwin-arm64\",\"os\":\"macos-15\"}]}" >> $GITHUB_OUTPUT
+
+  build-win-x86:
+    if: ${{ inputs.version }} < 23
+    uses: ./.github/workflows/build-edge.yml
+    with:
+      version: ${{ inputs.version }}
+      os: windows-2025
+      arch: ia32
+
+  build-win-x64:
+    uses: ./.github/workflows/build-edge.yml
+    with:
+      version: ${{ inputs.version }}
+      os: windows-2025
+      arch: x64
+
+  build-win-arm64:
+    if: ${{ inputs.version }} > 18
+    uses: ./.github/workflows/build-edge.yml
+    with:
+      version: ${{ inputs.version }}
+      os: windows-2025
+      arch: arm64
+
+  build-darwin-x64:
+    uses: ./.github/workflows/build-edge.yml
+    with:
+      version: ${{ inputs.version }}
+      os: macos-13
+      arch: x64
+
+  build-darwin-arm64:
+    uses: ./.github/workflows/build-edge.yml
+    with:
+      version: ${{ inputs.version }}
+      os: macos-15
+      arch: arm64
+ 
+  test:
     runs-on: ${{ matrix.os }}
-    # environment: edge-js-${{ inputs.build-version }}
-    # outputs:
-    #   node-version: ${{ steps.node-test-version.outputs.node-version }}
+    needs: [test-matrix, build-win-x86, build-win-x64, build-win-arm64, build-darwin-x64, build-darwin-arm64]
     strategy:
       matrix:
-        # os: [windows-2025]
-        os: [windows-2025, macos-13, macos-15]
-      fail-fast: true
-       
-    name: build node-${{ inputs.build-version }} ${{ matrix.os }}
+        os: [windows-2025, windows-11-arm, macos-13, macos-15]
+      fail-fast: false
+
+    name: test node-${{ inputs.version }} ${{ matrix.os }}
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Node ${{ inputs.build-version }}
-        uses: ./.github/actions/build-node
+      - name: Test build
+        uses: ./.github/actions/test-build
         with:
-          node: ${{ inputs.build-version }}
+          node: ${{ inputs.version }}
           os: ${{ matrix.os }}
 
   upload-artifacts:
+    if: ${{ inputs.build-all == false }}
     runs-on: ubuntu-latest
     needs: test
-    strategy:
-      fail-fast: false
 
-    name: upload artifacts node-${{ inputs.build-version }}
+    name: upload artifacts node-${{ inputs.version }}
     steps:
 
       - name: Download artifacts
@@ -68,25 +127,6 @@ jobs:
         uses: actions/upload-artifact/merge@v4
         if: success()
         with:
-          name: edge-js-${{ inputs.build-version }}
-  
-  test:
-    runs-on: ${{ matrix.os }}
-    needs: build
-    strategy:
-      matrix:
-        # os: [windows-2025, windows-11-arm]
-        os: [windows-2025, windows-11-arm, macos-13, macos-15]
-      fail-fast: false
-
-    name: test node-${{ inputs.build-version }} ${{ matrix.os }}
-    steps:
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Test build
-        uses: ./.github/actions/test-build
-        with:
-          node: ${{ inputs.build-version }}
-          os: ${{ matrix.os }}
+          name: edge-js-${{ inputs.version }}
+          pattern: '*edge-js*'
+          delete-merged: true

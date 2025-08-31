@@ -95,4 +95,5 @@ mochawesome.json
 
 release
 *.zip
+node.txt
 
