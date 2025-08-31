@@ -99,6 +99,6 @@ else {
 		}
 	}
 	else{
-		spawn('node-gyp', ['configure', 'build', '--release'], { stdio: 'inherit' });
+		spawn('node-gyp', ['configure', 'build'], { stdio: 'inherit' });
 	}
 }
