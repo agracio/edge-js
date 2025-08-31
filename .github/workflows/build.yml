@@ -65,7 +65,7 @@ jobs:
 
   build-win-x86:
     needs: node-version
-    if: ${{ inputs.version }} < 23
+    if: ${{ fromJSON(inputs.version) }} < 23
     uses: ./.github/workflows/build-edge.yml
     with:
       version: ${{ inputs.version }}
@@ -83,7 +83,7 @@ jobs:
       node: ${{ needs.node-version.outputs.node-version }}
 
   build-win-arm64:
-    if: ${{ inputs.version }} > 18
+    if: ${{ fromJSON(inputs.version) }} > 18
     needs: node-version
     uses: ./.github/workflows/build-edge.yml
     with:
@@ -111,24 +111,15 @@ jobs:
       node: ${{ needs.node-version.outputs.node-version }}
  
   test:
-    runs-on: ${{ matrix.os }}
+    uses: ./.github/workflows/build-test.yml
+    with:
+      version: ${{ inputs.version }}
+      os: ${{ matrix.os }}
     needs: [test-matrix, build-win-x86, build-win-x64, build-win-arm64, build-darwin-x64, build-darwin-arm64]
     strategy:
-      matrix:
-        os: [windows-2025, windows-11-arm, macos-13, macos-15]
+      matrix: ${{ fromJSON(needs.test-matrix.outputs.matrix) }}
       fail-fast: false
-
-    name: test node-${{ inputs.version }} ${{ matrix.os }}
-    steps:
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Test build
-        uses: ./.github/actions/test-build
-        with:
-          node: ${{ inputs.version }}
-          os: ${{ matrix.os }}
+    name: ${{ matrix.name }}
 
   upload-artifacts:
     if: ${{ inputs.build-all == false }}

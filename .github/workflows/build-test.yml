@@ -1,0 +1,193 @@
+name: Pipeline Segment - test edge-js
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: 'runs-on'
+        required: true
+        default: 'windows-2025'
+        type: string
+      version:
+        description: 'Node major version'
+        required: true
+        type: string
+      node:
+        description: 'Node version'
+        required: false
+        type: string
+      arch:
+        description: 'arch'
+        required: false
+        default: ''
+        type: string
+      environment:
+        description: 'environment'
+        required: false
+        default: 'test edge-js'
+        type: string
+
+jobs:
+  test-build:
+    runs-on: ${{ inputs.os }}
+    environment: ${{ inputs.environment }}
+    name: test
+    timeout-minutes: 20
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create release folder
+        if:  runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cmd /c if not exist "lib\native\win32\ia32\${{ inputs.version }}" mkdir "lib\native\win32\ia32\${{ inputs.version }}"
+          cmd /c if not exist "lib\native\win32\x64\${{ inputs.version }}" mkdir "lib\native\win32\x64\${{ inputs.version }}"
+          cmd /c if not exist "lib\native\win32\arm64\${{ inputs.version }}" mkdir "lib\native\win32\arm64\${{ inputs.version }}"
+
+      - name: Create release folder
+        if:  runner.os == 'macOS'
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            try {
+              const fs = require('fs')
+              fs.mkdirSync('lib/native/darwin/x64/${{ inputs.version }}', { recursive: true });
+              fs.mkdirSync('lib/native/darwin/arm64/${{ inputs.version }}', { recursive: true });
+            } catch(err) {
+              core.error("Error creating release directory")
+              core.setFailed(err)
+            }
+
+      - name: Download artifacts
+        if: runner.os == 'Windows'
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          pattern: win32-edge-js-*-${{ inputs.version }}*
+
+      - name: Download artifacts
+        if:  inputs.os == 'macos-15'
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          pattern: darwin-edge-js-arm64-${{ inputs.version }}*
+
+      - name: Download artifacts
+        if: inputs.os == 'macos-13'
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          pattern: darwin-edge-js-x64-${{ inputs.version }}*
+        
+      - name: List artifacts
+        shell: bash
+        run: ls -R release
+
+      - name: Copy artifacts
+        if: runner.os == 'Windows' && inputs.version < 20
+        shell: pwsh
+        run: |
+          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
+          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\ia32\${{ inputs.version }}\edge_*.node lib\native\win32\ia32\${{ inputs.version }}
+
+      - name: Copy artifacts
+        if: runner.os == 'Windows' && inputs.version >= 20 && inputs.version < 23
+        shell: pwsh
+        run: |
+          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
+          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\ia32\${{ inputs.version }}\edge_*.node lib\native\win32\ia32\${{ inputs.version }}
+          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\arm64\${{ inputs.version }}\edge_*.node lib\native\win32\arm64\${{ inputs.version }}
+      
+      - name: Copy artifacts
+        if: runner.os == 'Windows' && inputs.version >= 23
+        shell: pwsh
+        run: |
+          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
+          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\arm64\${{ inputs.version }}\edge_*.node lib\native\win32\arm64\${{ inputs.version }}
+
+      - name: Copy artifacts
+        if: inputs.os == 'macos-13'
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            try {
+              const fs = require('fs')
+                fs.copyFileSync('release/darwin-edge-js-x64-${{ inputs.version }}/darwin/x64/${{ inputs.version }}/edge_coreclr.node', 'lib/native/darwin/x64/${{ inputs.version }}/edge_coreclr.node');
+                fs.copyFileSync('release/darwin-edge-js-x64-${{ inputs.version }}/darwin/x64/${{ inputs.version }}/edge_nativeclr.node', 'lib/native/darwin/x64/${{ inputs.version }}/edge_nativeclr.node');
+                fs.copyFileSync('release/darwin-edge-js-x64-${{ inputs.version }}/darwin/x64/${{ inputs.version }}/MonoEmbedding.exe', 'lib/native/darwin/x64/${{ inputs.version }}/MonoEmbedding.exe');
+            } catch(err) {
+              core.error("Error creating release directory")
+              core.setFailed(err)
+            }
+
+      - name: Copy artifacts
+        if: inputs.os == 'macos-15'
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            try {
+              const fs = require('fs')
+                fs.copyFileSync('release/darwin-edge-js-arm64-${{ inputs.version }}/darwin/arm64/${{ inputs.version }}/edge_coreclr.node', 'lib/native/darwin/arm64/${{ inputs.version }}/edge_coreclr.node');
+                fs.copyFileSync('release/darwin-edge-js-arm64-${{ inputs.version }}/darwin/arm64/${{ inputs.version }}/edge_nativeclr.node', 'lib/native/darwin/arm64/${{ inputs.version }}/edge_nativeclr.node');
+                fs.copyFileSync('release/darwin-edge-js-arm64-${{ inputs.version }}/darwin/arm64/${{ inputs.version }}/MonoEmbedding.exe', 'lib/native/darwin/arm64/${{ inputs.version }}/MonoEmbedding.exe');
+            } catch(err) {
+              core.error("Error creating release directory")
+              core.setFailed(err)
+            }
+
+      - name: Skip arm64 tests
+        if: inputs.os == 'windows-11-arm' && inputs.version < 20
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+              core.notice('Skipping arm64 tests on Windows ARM for Node.js version ' + ${{ inputs.version }});
+
+      - name: Setup env
+        if: inputs.os != 'windows-11-arm' || inputs.node >= 20
+        uses: ./.github/actions/setup-env
+        with:
+          node: ${{ inputs.version }}
+          os: ${{ inputs.os }}
+          replace-version: true
+
+      - name: Check edge-js Windows pre-built files
+        if: runner.os == 'Windows' && (inputs.os != 'windows-11-arm' || inputs.node >= 20)
+        uses: andstor/file-existence-action@v3
+        with:
+          files: "lib/native/win32/${{ runner.arch }}/${{ inputs.version }}/edge_coreclr.node, lib/native/win32/${{ runner.arch }}/${{ inputs.version }}/edge_nativeclr.node"
+          fail: true
+          ignore_case: true
+
+      - name: Check edge-js macOS pre-built files
+        if:  runner.os == 'macOS'
+        uses: andstor/file-existence-action@v3
+        with:
+          files: "lib/native/darwin/${{ runner.arch }}/${{ inputs.version }}/edge_coreclr.node, lib/native/darwin/${{ runner.arch }}/${{ inputs.version }}/edge_nativeclr.node"
+          fail: true
+          ignore_case: true
+
+      - name: Run .NET 4.5/Mono tests
+        if: inputs.os != 'windows-11-arm' || inputs.node >= 20
+        shell: bash
+        run: node tools/test.js CI
+
+      - name: "Run .net core tests"
+        if: inputs.os != 'windows-11-arm' || inputs.node >= 20
+        shell: bash
+        run: node tools/test.js CI
+        env:
+          EDGE_USE_CORECLR: 1
+        
+      - name: Test report
+        if: inputs.os != 'windows-11-arm' || inputs.node >= 20
+        uses: ./.github/actions/create-test-report
+        with:
+          node: ${{ inputs.version }}
+          os: ${{ inputs.os }}
+          upload: 'false'
+          name: 'build-tests'
