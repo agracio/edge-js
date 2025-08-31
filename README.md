@@ -95,7 +95,7 @@ https://github.com/agracio/edge-js-quick-start
 
 ### macOS binaries pre-compiled for
 
-| Version | x64                | arm64 (M1+)        |
+| Version | x64                | arm64              |
 |---------|--------------------|--------------------|
 | 18.x    | :heavy_check_mark: | :heavy_check_mark: |
 | 20.x    | :heavy_check_mark: | :heavy_check_mark: |
@@ -104,7 +104,7 @@ https://github.com/agracio/edge-js-quick-start
 
 #### Supports
 
-| Version     | x64                | arm64 (M1+)        |
+| Version     | x64                | arm64              |
 |-------------|--------------------|--------------------|
 | 16.x - 24.x | :heavy_check_mark: | :heavy_check_mark: |
 

@@ -66,7 +66,7 @@ function dotnet(compiler, buildParameters){
 }
 
 function coreclr(){
-    run(process.platform === 'win32' ? 'dotnet.exe' : 'dotnet', ['build'], function(code, signal) {
+    run('dotnet', ['build'], function(code, signal) {
         if (code === 0) {
             try{
                 fs.mkdirSync('test/测试', { recursive: true })

@@ -1,9 +1,7 @@
 const fs = require('fs')
 	, path = require('path')
 	, spawn = require('child_process').spawn
-	, whereis = require('./whereis');
-
-const checkMono = require('./checkMono');
+	, checkMono = require('./checkMono');
 
 if (process.platform === 'win32') {
 	const libroot = path.resolve(__dirname, '../lib/native/win32')
@@ -71,21 +69,11 @@ if (process.platform === 'win32') {
 	copyRedist(lib64bit, dest64dirs);
 	copyRedist(libarm64, destarmdirs);
 
-	const dotnetPath = whereis('dotnet', 'dotnet.exe');
-
-	if (dotnetPath) {
-		spawn(dotnetPath, ['restore'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
-			.on('close', function() {
-				spawn(dotnetPath, ['build', '--configuration', 'Release'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
-					.on('close', function() {
-						require('./checkplatform');
-					});
-			});
-	}
-
-	else {
+	spawn('dotnet', ['build', '--configuration', 'Release'], { stdio: 'inherit', cwd: path.resolve(__dirname, '..', 'lib', 'bootstrap') })
+	.on('close', function() {
 		require('./checkplatform');
-	}
+	});
+
 } 
 
 else {
@@ -107,10 +95,10 @@ else {
 
 		}
 		else{
-			spawn('node-gyp', ['configure', 'build'], { stdio: 'inherit' });
+			spawn('node-gyp', ['configure', 'build', '--release'], { stdio: 'inherit' });
 		}
 	}
 	else{
-		spawn('node-gyp', ['configure', 'build'], { stdio: 'inherit' });
+		spawn('node-gyp', ['configure', 'build', '--release'], { stdio: 'inherit' });
 	}
 }
