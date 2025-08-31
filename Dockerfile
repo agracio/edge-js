@@ -1,33 +1,28 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # update apt-get
-RUN apt-get -y update
+RUN apt -y update
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get install -y apt-utils
-
-# install curl, sudo, wget
-RUN apt-get install -y curl sudo wget
+# install apt-utils, curl, sudo, wget
+RUN apt -q -y install apt-utils curl sudo wget software-properties-common
 
 RUN mkdir /devvol
 VOLUME /devvol
 
-RUN apt-get -y update
-
 # install dependencies
-RUN apt-get install -y apt-transport-https build-essential libgconf-2-4 python3 git libglib2.0-dev
+RUN apt -q -y install apt-transport-https build-essential python3 git libglib2.0-dev
 
 # install node
 
-RUN curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-RUN sudo apt-get install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+RUN sudo apt -q -y install nodejs
 
-# install net core
+# install dotnet
 
-RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-RUN sudo dpkg -i packages-microsoft-prod.deb
-RUN sudo apt-get update
-RUN sudo apt-get install -y dotnet-sdk-8.0
+RUN sudo add-apt-repository ppa:dotnet/backports
+RUN sudo apt update
+RUN sudo apt -q -y install dotnet-sdk-9.0
 
 RUN npm i -g node-gyp
