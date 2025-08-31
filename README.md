@@ -508,7 +508,7 @@ var func = edge.func(function () {/*
 */});
 
 function helloWorld(){
-    return new Promise<T>((resolve, reject) =>{
+    return new Promise((resolve, reject) =>{
         func({name: 'John', surname: 'Smith'}, function (error, result) {
             if(error) reject(error);
             else resolve(result);
