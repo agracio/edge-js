@@ -1,11 +1,11 @@
 name: 'Build Windows binaries'
 description: 'Build Windows binaries'
 inputs:
+  version:
+    description: 'Node major version'
+    required: true
   node:
     description: 'Node version'
-    required: true
-  node-major:
-    description: 'Node major version'
     required: true
   arch:
     description: 'Target arch'
@@ -30,15 +30,15 @@ runs:
           node-gyp build
           
           if ( '${{ runner.os }}' -eq 'Windows'){
-            cmd /c copy /y build\Release\edge_*.node release\win32\${{ inputs.arch }}\${{ inputs.node-major }}
+            cmd /c copy /y build\Release\edge_*.node release\win32\${{ inputs.arch }}\${{ inputs.version }}
             cmd /c rmdir /S /Q build
           }
 
           if ( '${{ runner.os }}' -eq 'macOS'){
             Get-ChildItem -Path build/Release
-            Copy-Item "build/Release/edge_coreclr.node" -Destination "release/darwin/${{ inputs.arch }}/${{ inputs.node-major }}"
-            Copy-Item "build/Release/edge_nativeclr.node" -Destination "release/darwin/${{ inputs.arch }}/${{ inputs.node-major }}"
-            Copy-Item "build/Release/MonoEmbedding.exe" -Destination "release/darwin/${{ inputs.arch }}/${{ inputs.node-major }}"
+            Copy-Item "build/Release/edge_coreclr.node" -Destination "release/darwin/${{ inputs.arch }}/${{ inputs.version }}"
+            Copy-Item "build/Release/edge_nativeclr.node" -Destination "release/darwin/${{ inputs.arch }}/${{ inputs.version }}"
+            Copy-Item "build/Release/MonoEmbedding.exe" -Destination "release/darwin/${{ inputs.arch }}/${{ inputs.version }}"
             
             node-gyp clean
           }

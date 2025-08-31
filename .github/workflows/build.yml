@@ -9,10 +9,10 @@ on:
         default: '20'
         type: choice
         options:
-        - '18'
-        - '20'
-        - '22'
-        - '24'
+        - 18
+        - 20
+        - 22
+        - 24
 
   workflow_call:
     inputs:
@@ -45,42 +45,70 @@ jobs:
           echo "::notice::Starting build for Node.js ${{ inputs.version }}"
           echo "matrix={'include':[{\"name\":\"test-win-x64\",\"os\":\"windows-2025\"},{\"name\":\"test-win-arm64\",\"os\":\"windows-11-arm\"},{\"name\":\"test-darwin-x64\",\"os\":\"macos-13\"},{\"name\":\"test-darwin-arm64\",\"os\":\"macos-15\"}]}" >> $GITHUB_OUTPUT
 
+  node-version:
+    runs-on: ubuntu-latest
+    outputs:
+      node-version: ${{ steps.node-test-version.outputs.node-version }}
+    name: node-version
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get Node.js version
+        id: node-test-version
+        shell: bash
+        run: |
+          node tools/getVersion.js ${{ inputs.version }}
+          version=$(cat node.txt)
+          echo "node-version=$version" >> $GITHUB_OUTPUT
+          echo "::notice::Node.js version is $version"
+
   build-win-x86:
+    needs: node-version
     if: ${{ inputs.version }} < 23
     uses: ./.github/workflows/build-edge.yml
     with:
       version: ${{ inputs.version }}
       os: windows-2025
       arch: ia32
+      node: ${{ needs.node-version.outputs.node-version }}
 
   build-win-x64:
+    needs: node-version
     uses: ./.github/workflows/build-edge.yml
     with:
       version: ${{ inputs.version }}
       os: windows-2025
       arch: x64
+      node: ${{ needs.node-version.outputs.node-version }}
 
   build-win-arm64:
     if: ${{ inputs.version }} > 18
+    needs: node-version
     uses: ./.github/workflows/build-edge.yml
     with:
       version: ${{ inputs.version }}
       os: windows-2025
       arch: arm64
+      node: ${{ needs.node-version.outputs.node-version }}
 
   build-darwin-x64:
+    needs: node-version
     uses: ./.github/workflows/build-edge.yml
     with:
       version: ${{ inputs.version }}
       os: macos-13
       arch: x64
+      node: ${{ needs.node-version.outputs.node-version }}
 
   build-darwin-arm64:
+    needs: node-version
     uses: ./.github/workflows/build-edge.yml
     with:
       version: ${{ inputs.version }}
       os: macos-15
       arch: arm64
+      node: ${{ needs.node-version.outputs.node-version }}
  
   test:
     runs-on: ${{ matrix.os }}

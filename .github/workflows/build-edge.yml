@@ -4,7 +4,11 @@ on:
   workflow_call:
     inputs:
       version:
-        description: 'Node.js version to build for'
+        description: 'Node.js major version'
+        required: true
+        type: string
+      node:
+        description: 'Node.js full version'
         required: true
         type: string
       os:
@@ -23,29 +27,9 @@ on:
         type: string
 
 jobs:
-
-  node-version:
-    runs-on: ubuntu-latest
-    outputs:
-      node-version: ${{ steps.node-test-version.outputs.node-version }}
-    name: node-version
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Get Node.js version
-        id: node-test-version
-        shell: bash
-        run: |
-          node tools/getVersion.js ${{ inputs.version }}
-          version=$(cat node.txt)
-          echo "node-version=$version" >> $GITHUB_OUTPUT
-          echo "::notice::Node.js version is $version"
-
   build-edge:
     runs-on: ${{ inputs.os }}
     environment: ${{ inputs.environment }}
-    needs: node-version
     name: build
     timeout-minutes: 20
     steps:
@@ -83,7 +67,7 @@ jobs:
           script: |
             try {
               const fs = require('fs')
-              fs.writeFileSync('release/${process.platform}/${{ inputs.arch }}/${{ inputs.version }}/node.version', '${{ needs.node-version.outputs.node-version }}');
+              fs.writeFileSync(`release/${process.platform}/${{ inputs.arch }}/${{ inputs.version }}/node.version`, '${{ inputs.node }}');
             } catch(err) {
               core.error("Error writing node.version file")
               core.setFailed(err)
