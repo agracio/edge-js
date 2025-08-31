@@ -553,13 +553,13 @@ class Program
 **Dockerfile: [Dockerfile](https://github.com/agracio/edge-js/blob/master/Dockerfile)**  
 **Docker Hub image: [agracio/ubuntu-node-netcore](https://hub.docker.com/repository/docker/agracio/ubuntu-node-netcore)**
 
-* Based on Ununtu 22.04
+* Based on Ununtu 24.04
 * User directory **`devvol`**
 
 #### Pre-installed packages
 
-* Node.js 20
-* dotnet 8
+* Node.js 22
+* dotnet 9
 * git
 * build tools
 * sudo, curl, wget
