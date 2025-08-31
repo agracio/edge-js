@@ -126,19 +126,12 @@ jobs:
           destination: mochawesome.json
 
 workflows:
-  build-and-test-linux:
+  build-and-test:
     jobs:
       - test-node:
           matrix:
             parameters:
-              os: ['linux', 'linux-arm']
-              node-version: ['14', '16' ]
+              os: ['linux', 'linux-arm', 'macos']
+              node-version: ['16' ]
 
-  build-and-test-macos:
-    jobs:
-      - test-node:
-          matrix:
-            parameters:
-              os: ['macos']
-              node-version: ['16']
 

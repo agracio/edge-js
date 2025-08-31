@@ -113,7 +113,7 @@ https://github.com/agracio/edge-js-quick-start
 
 | Version     | x64                | arm64              |
 |-------------|--------------------|--------------------|
-| 14.x - 24.x | :heavy_check_mark: | :heavy_check_mark: |
+| 16.x - 24.x | :heavy_check_mark: | :heavy_check_mark: |
 
 Other Linux architectures might work but have not been tested.
 
