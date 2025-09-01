@@ -20,8 +20,8 @@ on:
         required: false
         default: 'test edge-js'
         type: string
-      os-name:
-        description: 'OS short name'
+      platform:
+        description: 'process.platform'
         required: true
         type: string
       name:
@@ -74,7 +74,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: release
-          pattern: darwin-edge-js-${{ runner.arch }}-${{ inputs.version }}*
+          pattern: darwin-edge-js-*-${{ inputs.version }}*
 
       # - name: Download artifacts
       #   if: inputs.os == 'macos-13'

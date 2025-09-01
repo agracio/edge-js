@@ -69,7 +69,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: windows-2025
-      os-name: win
+      platform: win
       arch: ia32
       node: ${{ needs.node-version.outputs.node-version }}
 
@@ -79,7 +79,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: windows-2025
-      os-name: win
+      platform: win
       arch: x64
       node: ${{ needs.node-version.outputs.node-version }}
 
@@ -89,7 +89,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: windows-2025
-      os-name: win
+      platform: win
       arch: arm64
       node: ${{ needs.node-version.outputs.node-version }}
 
@@ -99,7 +99,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: macos-13
-      os-name: darwin
+      platform: darwin
       arch: x64
       node: ${{ needs.node-version.outputs.node-version }}
 
@@ -109,7 +109,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: macos-15
-      os-name: darwin
+      platform: darwin
       arch: arm64
       node: ${{ needs.node-version.outputs.node-version }}
  
@@ -118,7 +118,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: ${{ matrix.os }}
-      os-name: ${{ matrix.osname }}
+      platform: ${{ matrix.platform }}
       name: ${{ matrix.name }}
     needs: [test-matrix, build-win-x86, build-win-x64, build-win-arm64, build-darwin-x64, build-darwin-arm64]
     strategy:
