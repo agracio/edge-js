@@ -111,3 +111,4 @@ getVersion*.js
 *.zip
 CMakeLists.txt
 CMake/
+node.txt

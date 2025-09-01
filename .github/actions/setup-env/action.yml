@@ -3,7 +3,8 @@ description: 'Sets up environment'
 inputs:
   node:
     description: 'Node.js version'
-    required: true
+    required: false
+    default: '22'
   os:
     description: 'runs-on'
     required: true
@@ -11,12 +12,17 @@ inputs:
     description: 'Architecture'
     required: false
     default: ''
+  is-build:
+    description: 'is running edge build'
+    required: false
+    default: 'false'
 
 runs:
   using: "composite"
   steps:
 
     - name: Setup NodeJS
+      if: ${{ inputs.is-build != 'true' }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node }}
@@ -31,16 +37,7 @@ runs:
         cache-name: cache-node-gyp
       with:
         path: ~/.cache/node-gyp
-        key: '${{ inputs.os }}-${{ inputs.node}}'
-
-    - name: Cache node-gyp macOs
-      if: runner.os == 'macOS'
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-node-gyp
-      with:
-        path: ~/Library/Caches/node-gyp
-        key: '${{ inputs.os }}-${{ inputs.node}}'
+        key: '${{ inputs.os }}-${{ runner.arch }}-${{ inputs.node}}'
 
     - if: runner.os == 'macOS' && inputs.node == 16
       shell: bash
