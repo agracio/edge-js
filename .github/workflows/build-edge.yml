@@ -51,7 +51,7 @@ jobs:
       - name: install node-gyp
         if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
         shell: bash
-        run: npm i -g node-gyp
+        run: npm i -g node-gyp nan
 
       - name: Create release folder
         if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
@@ -74,7 +74,7 @@ jobs:
           cache-name: cache-node-gyp
         with:
           path: ~\AppData\Local\node-gyp\Cache
-          key: '${{ runner.os }}-${{ runner.arch }}-${{ inputs.version }}'
+          key: '${{ runner.os }}-${{ inputs.arch }}-${{ inputs.version }}'
 
       - if: runner.os == 'macOS'
         name: Cache node-gyp macOS
@@ -83,7 +83,7 @@ jobs:
           cache-name: cache-node-gyp
         with:
           path: ~/Library/Caches/node-gyp/
-          key: '${{ runner.os }}-${{ runner.arch }}-${{ inputs.version }}'
+          key: '${{ runner.os }}-${{ inputs.arch }}-${{ inputs.version }}'
 
       - name: Create node.version file
         if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
