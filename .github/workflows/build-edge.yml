@@ -28,7 +28,6 @@ on:
 jobs:
   build-edge:
     runs-on: ${{ inputs.os }}
-    if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && inputs.os == 'windows-2025' && inputs.version > 19) || (inputs.arch == 'x64') || (inputs.os == 'macos-13') || (inputs.os == 'macos-15') }}
     environment: ${{ inputs.environment }}
     name: build
     timeout-minutes: 20
@@ -38,16 +37,19 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup env
+        if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
         uses: ./.github/actions/setup-env
         with:
           node: '${{ inputs.version }}'
           os: ${{ inputs.os }}
 
       - name: install node-gyp
+        if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
         shell: bash
         run: npm i -g node-gyp
 
       - name: Create release folder
+        if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
         uses: actions/github-script@v7
         with:
           result-encoding: string
@@ -61,6 +63,7 @@ jobs:
             }
 
       - name: Create node.version file
+        if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
         uses: actions/github-script@v7
         with:
           result-encoding: string
@@ -74,6 +77,7 @@ jobs:
             }
 
       - name: Build ${{ inputs.arch }}
+        if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
         uses: ./.github/actions/build
         with:
           version: ${{ inputs.version }}
@@ -81,16 +85,16 @@ jobs:
           arch: ${{ inputs.arch }}
     
       - name: Upload artifacts
+        if: ${{ (runner.os == 'Windows' && success()) && ((inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64')) }}
         uses: actions/upload-artifact@v4
-        if: runner.os == 'Windows' && success()
         with:
           name: win32-edge-js-${{ inputs.arch }}-${{ inputs.version }}
           path: |
             release
 
       - name: Upload artifacts
+        if: ${{ (runner.os == 'macOS' && success())}}
         uses: actions/upload-artifact@v4
-        if: runner.os == 'macOS' && success()
         with:
           name: darwin-edge-js-${{ inputs.arch }}-${{ inputs.version }}
           path: |
