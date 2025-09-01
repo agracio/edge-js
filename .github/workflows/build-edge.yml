@@ -28,7 +28,7 @@ on:
 jobs:
   build-edge:
     runs-on: ${{ inputs.os }}
-    if: ${{ (inputs.arch == 'ia32' && inputs.node < 23) || (inputs.arch == 'arm64' && inputs.os == 'windows-2025' && inputs.node > 19) || (inputs.os == 'macos-13') || (inputs.os == 'macos-15') }}
+    if: ${{ (inputs.arch == 'ia32' && fromJson(inputs.node) < 23) || (inputs.arch == 'arm64' && inputs.os == 'windows-2025' && fromJson(inputs.node) > 19) || (inputs.arch == 'x64') || (inputs.os == 'macos-13') || (inputs.os == 'macos-15') }}
     environment: ${{ inputs.environment }}
     name: build
     timeout-minutes: 20
