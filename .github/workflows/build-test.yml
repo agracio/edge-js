@@ -40,14 +40,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Create release folder
-      #   if:  runner.os == 'Windows'
-      #   shell: pwsh
-      #   run: |
-      #     cmd /c if not exist "lib\native\win32\ia32\${{ inputs.version }}" mkdir "lib\native\win32\ia32\${{ inputs.version }}"
-      #     cmd /c if not exist "lib\native\win32\x64\${{ inputs.version }}" mkdir "lib\native\win32\x64\${{ inputs.version }}"
-      #     cmd /c if not exist "lib\native\win32\arm64\${{ inputs.version }}" mkdir "lib\native\win32\arm64\${{ inputs.version }}"
-
       - name: Create release folder
         uses: actions/github-script@v7
         with:
