@@ -76,41 +76,11 @@ jobs:
           path: release
           pattern: darwin-edge-js-*-${{ inputs.version }}*
 
-      # - name: Download artifacts
-      #   if: inputs.os == 'macos-13'
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     path: release
-      #     pattern: darwin-edge-js-x64-${{ inputs.version }}*
-        
       - name: List artifacts
         shell: bash
         run: ls -R release
 
-      # - name: Copy artifacts
-      #   if: runner.os == 'Windows' && inputs.version < 20
-      #   shell: pwsh
-      #   run: |
-      #     cmd /c copy /y release\win32-edge-js-ia32-${{ inputs.version }}\win32\ia32\${{ inputs.version }}\edge_*.node lib\native\win32\ia32\${{ inputs.version }}
-      #     cmd /c copy /y release\win32-edge-js-x64-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
-
-      # - name: Copy artifacts
-      #   if: runner.os == 'Windows' && inputs.version >= 20 && inputs.version < 23
-      #   shell: pwsh
-      #   run: |
-      #     cmd /c copy /y release\win32-edge-js-ia32-${{ inputs.version }}\win32\ia32\${{ inputs.version }}\edge_*.node lib\native\win32\ia32\${{ inputs.version }}
-      #     cmd /c copy /y release\win32-edge-js-x64-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
-      #     cmd /c copy /y release\win32-edge-js-arm64-${{ inputs.version }}\win32\arm64\${{ inputs.version }}\edge_*.node lib\native\win32\arm64\${{ inputs.version }}
-      
-      # - name: Copy artifacts
-      #   if: runner.os == 'Windows' && inputs.version >= 23
-      #   shell: pwsh
-      #   run: |
-      #     cmd /c copy /y release\win32-edge-js-x64-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
-      #     cmd /c copy /y release\win32-edge-js-arm64-${{ inputs.version }}\win32\arm64\${{ inputs.version }}\edge_*.node lib\native\win32\arm64\${{ inputs.version }}
-
       - name: Copy artifacts
-        # if: runner.os == 'macOS'
         uses: actions/github-script@v7
         with:
           result-encoding: string
