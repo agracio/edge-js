@@ -11,6 +11,10 @@ inputs:
   os:
     description: 'runs-on'
     required: true
+  upload:
+    description: 'Upload artifacts?'
+    required: false
+    default: 'true'
 
 runs:
   using: "composite"
@@ -38,7 +42,7 @@ runs:
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
-      if: success()
+      if: ${{ inputs.upload == 'true' && success() }}
       with:
         name: ${{ inputs.name }}-${{ inputs.os }}-${{ inputs.node }}
         path: |

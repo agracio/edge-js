@@ -1,0 +1,124 @@
+name: Pipeline Segment - build edge-js
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: 'Node.js major version'
+        required: true
+        type: string
+      node:
+        description: 'Node.js full version'
+        required: true
+        type: string
+      os:
+        description: 'OS'
+        required: true
+        type: string
+      environment:
+        description: 'environment'
+        required: false
+        default: 'build edge-js'
+        type: string
+      arch:
+        description: 'arch'
+        required: true
+        type: string
+      platform:
+        description: 'process.platform'
+        required: true
+        type: string
+
+jobs:
+  build-edge:
+    runs-on: ${{ inputs.os }}
+    environment: ${{ inputs.environment }}
+    name: build-${{ inputs.platform }}-${{ inputs.arch }}-node-${{ inputs.version }}
+    timeout-minutes: 20
+    steps:
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup env
+        if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
+        uses: ./.github/actions/setup-env
+        with:
+          node: '${{ inputs.version }}'
+          os: ${{ inputs.os }}
+          is-build: 'true'
+
+      - name: install node-gyp
+        if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
+        shell: bash
+        run: npm i -g node-gyp
+
+      - name: Create release folder
+        if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            try {
+              const fs = require('fs')
+              fs.mkdirSync(`release/${process.platform}/${{ inputs.arch }}/${{ inputs.version }}`, { recursive: true });
+            } catch(err) {
+              core.error("Error creating release directory")
+              core.setFailed(err)
+            }
+
+      - if: runner.os == 'Windows'
+        name: Cache node-gyp Windows
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-gyp
+        with:
+          path: ~\AppData\Local\node-gyp\Cache
+          key: '${{ runner.os }}-${{ inputs.arch }}-${{ inputs.version }}'
+
+      - if: runner.os == 'macOS'
+        name: Cache node-gyp macOS
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-gyp
+        with:
+          path: ~/Library/Caches/node-gyp/
+          key: '${{ runner.os }}-${{ inputs.arch }}-${{ inputs.version }}'
+
+      - name: Create node.version file
+        if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            try {
+              const fs = require('fs')
+              fs.writeFileSync(`release/${process.platform}/${{ inputs.arch }}/${{ inputs.version }}/node.version`, '${{ inputs.node }}');
+            } catch(err) {
+              core.error("Error writing node.version file")
+              core.setFailed(err)
+            }
+
+      - name: Build ${{ inputs.arch }}
+        if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
+        uses: ./.github/actions/build
+        with:
+          version: ${{ inputs.version }}
+          node: ${{ inputs.node }}
+          arch: ${{ inputs.arch }}
+    
+      - name: Upload artifacts
+        if: ${{ (runner.os == 'Windows' && success()) && ((inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64')) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: win32-edge-js-${{ inputs.arch }}-${{ inputs.version }}
+          path: |
+            release
+
+      - name: Upload artifacts
+        if: ${{ (runner.os == 'macOS' && success())}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: darwin-edge-js-${{ inputs.arch }}-${{ inputs.version }}
+          path: |
+            release
