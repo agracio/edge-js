@@ -96,6 +96,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - if: runner.os == 'macOS' && matrix.node == 16
+        shell: bash
+        name: Add missing packages for macOS NodeJs 16 
+        run: |
+          brew install python-setuptools --overwrite
+
       - name: Setup env
         uses: ./.github/actions/setup-env
         with:
