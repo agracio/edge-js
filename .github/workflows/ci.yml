@@ -36,6 +36,7 @@ on:
       - 'README.md'
       - '*.sln'
       - '*.vcxproj'
+      - 'tools/build.js'
   push:
     branches-ignore:
       - 'circleci'
@@ -72,11 +73,13 @@ on:
       - 'README.md'
       - '*.sln'
       - '*.vcxproj'
+      - 'tools/build.js'
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
   DOTNET_CLI_TELEMETRY_OPTOUT: 1 
   DOTNET_NOLOGO: 1 
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
 
 jobs:
   test:

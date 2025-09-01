@@ -36,6 +36,8 @@ on:
   #     - 'README.md'
   #     - '*.sln'
   #     - '*.vcxproj'
+  #     - 'tools/build.js'
+  
   # push:
   #   branches-ignore:
   #     - 'circleci'
@@ -72,6 +74,7 @@ on:
   #     - 'README.md'
   #     - '*.sln'
   #     - '*.vcxproj'
+  #     - 'tools/build.js'
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC

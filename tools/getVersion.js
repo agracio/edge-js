@@ -25,3 +25,4 @@ function getVersion() {
 	}
 }
 
+exports = module.exports = getVersion;
