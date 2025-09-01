@@ -43,7 +43,7 @@ jobs:
         id: test-matrix
         run: |
           echo "::notice::Starting build for Node.js ${{ inputs.version }}"
-          echo "matrix={'include':[{\"name\":\"test-win-x64\",\"os\":\"windows-2025\"},{\"name\":\"test-win-arm64\",\"os\":\"windows-11-arm\"},{\"name\":\"test-darwin-x64\",\"os\":\"macos-13\"},{\"name\":\"test-darwin-arm64\",\"os\":\"macos-15\"}]}" >> $GITHUB_OUTPUT
+          echo "matrix={'include':[{\"name\":\"test-win-x64\",\"os\":\"windows-2025\",\"osname\":\"win\"},{\"name\":\"test-win-arm64\",\"os\":\"windows-11-arm\",\"osname\":\"win\"},{\"name\":\"test-darwin-x64\",\"os\":\"macos-13\",\"osname\":\"darwin\"},{\"name\":\"test-darwin-arm64\",\"os\":\"macos-15\",\"osname\":\"darwin\"}]}" >> $GITHUB_OUTPUT
 
   node-version:
     runs-on: ubuntu-latest
@@ -69,6 +69,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: windows-2025
+      os-name: win
       arch: ia32
       node: ${{ needs.node-version.outputs.node-version }}
 
@@ -78,6 +79,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: windows-2025
+      os-name: win
       arch: x64
       node: ${{ needs.node-version.outputs.node-version }}
 
@@ -87,6 +89,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: windows-2025
+      os-name: win
       arch: arm64
       node: ${{ needs.node-version.outputs.node-version }}
 
@@ -96,6 +99,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: macos-13
+      os-name: darwin
       arch: x64
       node: ${{ needs.node-version.outputs.node-version }}
 
@@ -105,6 +109,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: macos-15
+      os-name: darwin
       arch: arm64
       node: ${{ needs.node-version.outputs.node-version }}
  
@@ -113,6 +118,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       os: ${{ matrix.os }}
+      os-name: ${{ matrix.osname }}
     needs: [test-matrix, build-win-x86, build-win-x64, build-win-arm64, build-darwin-x64, build-darwin-arm64]
     strategy:
       matrix: ${{ fromJSON(needs.test-matrix.outputs.matrix) }}

@@ -24,12 +24,16 @@ on:
         description: 'arch'
         required: true
         type: string
+      os-name:
+        description: 'OS short name'
+        required: true
+        type: string
 
 jobs:
   build-edge:
     runs-on: ${{ inputs.os }}
     environment: ${{ inputs.environment }}
-    name: build
+    name: build-${{ inputs.os-name }}-${{ inputs.arch }}-node${{ inputs.version }}
     timeout-minutes: 20
     steps:
       

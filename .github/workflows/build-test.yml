@@ -25,12 +25,16 @@ on:
         required: false
         default: 'test edge-js'
         type: string
+      os-name:
+        description: 'OS short name'
+        required: true
+        type: string
 
 jobs:
   test-build:
     runs-on: ${{ inputs.os }}
     environment: ${{ inputs.environment }}
-    name: test
+    name: test-${{ inputs.os-name }}-${{ inputs.arch }}-node${{ inputs.version }}
     timeout-minutes: 20
     steps:
 
