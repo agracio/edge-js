@@ -37,7 +37,7 @@ on:
   #     - '*.sln'
   #     - '*.vcxproj'
   #     - 'tools/build.js'
-  
+
   # push:
   #   branches-ignore:
   #     - 'circleci'
@@ -80,6 +80,7 @@ env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
   DOTNET_CLI_TELEMETRY_OPTOUT: 1 
   DOTNET_NOLOGO: 1 
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
 
 jobs:
   test:
@@ -88,7 +89,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, macos-14, ubuntu-24.04, ubuntu-24.04-arm]
+        os: [macos-13, macos-15, ubuntu-24.04, ubuntu-22.04-arm]
         node: [16]
     steps:
 
