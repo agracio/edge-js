@@ -89,55 +89,55 @@ jobs:
         if: runner.os == 'Windows' && inputs.version < 20
         shell: pwsh
         run: |
-          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
-          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\ia32\${{ inputs.version }}\edge_*.node lib\native\win32\ia32\${{ inputs.version }}
+          cmd /c copy /y release\win32-edge-js-ia32-${{ inputs.version }}\win32\ia32\${{ inputs.version }}\edge_*.node lib\native\win32\ia32\${{ inputs.version }}
+          cmd /c copy /y release\win32-edge-js-x64-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
 
       - name: Copy artifacts
         if: runner.os == 'Windows' && inputs.version >= 20 && inputs.version < 23
         shell: pwsh
         run: |
-          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
-          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\ia32\${{ inputs.version }}\edge_*.node lib\native\win32\ia32\${{ inputs.version }}
-          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\arm64\${{ inputs.version }}\edge_*.node lib\native\win32\arm64\${{ inputs.version }}
+          cmd /c copy /y release\win32-edge-js-ia32-${{ inputs.version }}\win32\ia32\${{ inputs.version }}\edge_*.node lib\native\win32\ia32\${{ inputs.version }}
+          cmd /c copy /y release\win32-edge-js-x64-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
+          cmd /c copy /y release\win32-edge-js-arm64-${{ inputs.version }}\win32\arm64\${{ inputs.version }}\edge_*.node lib\native\win32\arm64\${{ inputs.version }}
       
       - name: Copy artifacts
         if: runner.os == 'Windows' && inputs.version >= 23
         shell: pwsh
         run: |
-          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
-          cmd /c copy /y release\win32-edge-js-${{ inputs.version }}\win32\arm64\${{ inputs.version }}\edge_*.node lib\native\win32\arm64\${{ inputs.version }}
+          cmd /c copy /y release\win32-edge-js-x64-${{ inputs.version }}\win32\x64\${{ inputs.version }}\edge_*.node lib\native\win32\x64\${{ inputs.version }}
+          cmd /c copy /y release\win32-edge-js-arm64-${{ inputs.version }}\win32\arm64\${{ inputs.version }}\edge_*.node lib\native\win32\arm64\${{ inputs.version }}
 
       - name: Copy artifacts
-        if: inputs.os == 'macos-13'
+        if: runner.os == 'macOS'
         uses: actions/github-script@v7
         with:
           result-encoding: string
           script: |
             try {
               const fs = require('fs')
-                fs.copyFileSync('release/darwin-edge-js-x64-${{ inputs.version }}/darwin/x64/${{ inputs.version }}/edge_coreclr.node', 'lib/native/darwin/x64/${{ inputs.version }}/edge_coreclr.node');
-                fs.copyFileSync('release/darwin-edge-js-x64-${{ inputs.version }}/darwin/x64/${{ inputs.version }}/edge_nativeclr.node', 'lib/native/darwin/x64/${{ inputs.version }}/edge_nativeclr.node');
-                fs.copyFileSync('release/darwin-edge-js-x64-${{ inputs.version }}/darwin/x64/${{ inputs.version }}/MonoEmbedding.exe', 'lib/native/darwin/x64/${{ inputs.version }}/MonoEmbedding.exe');
+              fs.copyFileSync(`release/darwin-edge-js-${{ runner.arch }}-${{ inputs.version }}/darwin/${{ runner.arch }}/${{ inputs.version }}/edge_coreclr.node`, `lib/native/darwin/${{ runner.arch }}/${{ inputs.version }}/edge_coreclr.node`);
+              fs.copyFileSync(`release/darwin-edge-js-${{ runner.arch }}-${{ inputs.version }}/darwin/${{ runner.arch }}/${{ inputs.version }}/edge_nativeclr.node`, `lib/native/darwin/${{ runner.arch }}/${{ inputs.version }}/edge_nativeclr.node`);
+              fs.copyFileSync(`release/darwin-edge-js-${{ runner.arch }}-${{ inputs.version }}/darwin/${{ runner.arch }}/${{ inputs.version }}/MonoEmbedding.exe`, `lib/native/darwin/${{ runner.arch }}/${{ inputs.version }}/MonoEmbedding.exe`);
             } catch(err) {
               core.error("Error creating release directory")
               core.setFailed(err)
             }
 
-      - name: Copy artifacts
-        if: inputs.os == 'macos-15'
-        uses: actions/github-script@v7
-        with:
-          result-encoding: string
-          script: |
-            try {
-              const fs = require('fs')
-                fs.copyFileSync('release/darwin-edge-js-arm64-${{ inputs.version }}/darwin/arm64/${{ inputs.version }}/edge_coreclr.node', 'lib/native/darwin/arm64/${{ inputs.version }}/edge_coreclr.node');
-                fs.copyFileSync('release/darwin-edge-js-arm64-${{ inputs.version }}/darwin/arm64/${{ inputs.version }}/edge_nativeclr.node', 'lib/native/darwin/arm64/${{ inputs.version }}/edge_nativeclr.node');
-                fs.copyFileSync('release/darwin-edge-js-arm64-${{ inputs.version }}/darwin/arm64/${{ inputs.version }}/MonoEmbedding.exe', 'lib/native/darwin/arm64/${{ inputs.version }}/MonoEmbedding.exe');
-            } catch(err) {
-              core.error("Error creating release directory")
-              core.setFailed(err)
-            }
+      # - name: Copy artifacts
+      #   if: inputs.os == 'macos-15'
+      #   uses: actions/github-script@v7
+      #   with:
+      #     result-encoding: string
+      #     script: |
+      #       try {
+      #         const fs = require('fs')
+      #           fs.copyFileSync('release/darwin-edge-js-arm64-${{ inputs.version }}/darwin/arm64/${{ inputs.version }}/edge_coreclr.node', 'lib/native/darwin/arm64/${{ inputs.version }}/edge_coreclr.node');
+      #           fs.copyFileSync('release/darwin-edge-js-arm64-${{ inputs.version }}/darwin/arm64/${{ inputs.version }}/edge_nativeclr.node', 'lib/native/darwin/arm64/${{ inputs.version }}/edge_nativeclr.node');
+      #           fs.copyFileSync('release/darwin-edge-js-arm64-${{ inputs.version }}/darwin/arm64/${{ inputs.version }}/MonoEmbedding.exe', 'lib/native/darwin/arm64/${{ inputs.version }}/MonoEmbedding.exe');
+      #       } catch(err) {
+      #         core.error("Error creating release directory")
+      #         core.setFailed(err)
+      #       }
 
       - name: Skip arm64 tests
         if: inputs.os == 'windows-11-arm' && inputs.version < 20
@@ -153,7 +153,6 @@ jobs:
         with:
           node: ${{ inputs.version }}
           os: ${{ inputs.os }}
-          replace-version: true
 
       - name: Check edge-js Windows pre-built files
         if: runner.os == 'Windows' && (inputs.os != 'windows-11-arm' || inputs.node >= 20)
