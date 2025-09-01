@@ -33,7 +33,7 @@ jobs:
   build-edge:
     runs-on: ${{ inputs.os }}
     environment: ${{ inputs.environment }}
-    name: build-${{ inputs.os-name }}-${{ inputs.arch }}-node${{ inputs.version }}
+    name: build-${{ inputs.os-name }}-${{ inputs.arch }}-node-${{ inputs.version }}
     timeout-minutes: 20
     steps:
       

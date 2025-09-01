@@ -119,6 +119,7 @@ jobs:
       version: ${{ inputs.version }}
       os: ${{ matrix.os }}
       os-name: ${{ matrix.osname }}
+      name: ${{ matrix.name }}
     needs: [test-matrix, build-win-x86, build-win-x64, build-win-arm64, build-darwin-x64, build-darwin-arm64]
     strategy:
       matrix: ${{ fromJSON(needs.test-matrix.outputs.matrix) }}
@@ -126,29 +127,22 @@ jobs:
     name: ${{ matrix.name }}
 
   upload-artifacts:
-    if: ${{ inputs.build-all == false }}
+    if: ${{ inputs.build-all == false && success() }}
     runs-on: ubuntu-latest
     needs: test
 
-    name: upload artifacts node-${{ inputs.version }}
+    name: upload-artifacts
     steps:
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
-        if: success()
+        
         with:
           path: release
-          pattern: win32-edge-js*
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: release
-          pattern: darwin-edge-js*
+          pattern: '*-edge-js*'
 
       - name: Upload artifacts
         uses: actions/upload-artifact/merge@v4
-        if: success()
         with:
           name: edge-js-${{ inputs.version }}
           pattern: '*edge-js*'

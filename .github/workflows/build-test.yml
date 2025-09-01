@@ -15,11 +15,6 @@ on:
         description: 'Node version'
         required: false
         type: string
-      arch:
-        description: 'arch'
-        required: false
-        default: ''
-        type: string
       environment:
         description: 'environment'
         required: false
@@ -29,12 +24,16 @@ on:
         description: 'OS short name'
         required: true
         type: string
+      name:
+        description: 'short name'
+        required: true
+        type: string
 
 jobs:
   test-build:
     runs-on: ${{ inputs.os }}
     environment: ${{ inputs.environment }}
-    name: test-${{ inputs.os-name }}-${{ inputs.arch }}-node${{ inputs.version }}
+    name: ${{ inputs.name }}-node-${{ inputs.version }}
     timeout-minutes: 20
     steps:
 
