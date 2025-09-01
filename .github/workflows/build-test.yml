@@ -55,8 +55,8 @@ jobs:
           script: |
             try {
               const fs = require('fs')
-              fs.rmdirSync(`lib/native/${process.platform}/${{ runner.arch }}/${{ inputs.version }}`, { recursive: true });
-              fs.mkdirSync(`lib/native/${process.platform}/${{ runner.arch }}/${{ inputs.version }}`, { recursive: true });
+              fs.rmdirSync(`lib/native/${process.platform}/${process.arch}/${{ inputs.version }}`, { recursive: true });
+              fs.mkdirSync(`lib/native/${process.platform}/${process.arch}/${{ inputs.version }}`, { recursive: true });
             } catch(err) {
               core.error("Error creating release directory")
               core.setFailed(err)
@@ -117,9 +117,11 @@ jobs:
           script: |
             try {
               const fs = require('fs')
-              fs.copyFileSync(`release/${process.platform}-edge-js-${{ runner.arch }}-${{ inputs.version }}/${process.platform}/${{ runner.arch }}/${{ inputs.version }}/edge_coreclr.node`, `lib/native/${process.platform}/${{ runner.arch }}/${{ inputs.version }}/edge_coreclr.node`);
-              fs.copyFileSync(`release/${process.platform}-edge-js-${{ runner.arch }}-${{ inputs.version }}/${process.platform}/${{ runner.arch }}/${{ inputs.version }}/edge_nativeclr.node`, `lib/native/${process.platform}/${{ runner.arch }}/${{ inputs.version }}/edge_nativeclr.node`);
-              //fs.copyFileSync(`release/${process.platform}-edge-js-${{ runner.arch }}-${{ inputs.version }}/${process.platform}/${{ runner.arch }}/${{ inputs.version }}/MonoEmbedding.exe`, `lib/native/${process.platform}/${{ runner.arch }}/${{ inputs.version }}/MonoEmbedding.exe`);
+              fs.copyFileSync(`release/${process.platform}-edge-js-${process.arch}-${{ inputs.version }}/${process.platform}/${{ runner.arch }}/${{ inputs.version }}/edge_coreclr.node`, `lib/native/${process.platform}/${process.arch}/${{ inputs.version }}/edge_coreclr.node`);
+              fs.copyFileSync(`release/${process.platform}-edge-js-${process.arch}-${{ inputs.version }}/${process.platform}/${{ runner.arch }}/${{ inputs.version }}/edge_nativeclr.node`, `lib/native/${process.platform}/${process.arch}/${{ inputs.version }}/edge_nativeclr.node`);
+              if(process.platform == 'darwin'){
+                fs.copyFileSync(`release/${process.platform}-edge-js-${process.arch}-${{ inputs.version }}/${process.platform}/${{ runner.arch }}/${{ inputs.version }}/MonoEmbedding.exe`, `lib/native/${process.platform}/${process.arch}/${{ inputs.version }}/MonoEmbedding.exe`);
+              }
             } catch(err) {
               core.error("Error creating release directory")
               core.setFailed(err)
@@ -156,18 +158,18 @@ jobs:
           fail: true
           ignore_case: true
 
-      - name: Run .NET 4.5/Mono tests
-        if: inputs.os != 'windows-11-arm' || inputs.version >= 20
-        shell: bash
-        run: node tools/test.js CI
-
       - name: "Run .net core tests"
         if: inputs.os != 'windows-11-arm' || inputs.version >= 20
         shell: bash
         run: node tools/test.js CI
         env:
           EDGE_USE_CORECLR: 1
-        
+
+      - name: Run .NET 4.5/Mono tests
+        if: inputs.os != 'windows-11-arm' || inputs.version >= 20
+        shell: bash
+        run: node tools/test.js CI
+
       - name: Test report
         if: inputs.os != 'windows-11-arm' || inputs.version >= 20
         uses: ./.github/actions/create-test-report
