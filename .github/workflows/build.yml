@@ -17,7 +17,7 @@ on:
   workflow_call:
     inputs:
       version:
-        description: 'Node.js version to build'
+        description: 'Node.js major version'
         required: true
         type: string
       build-all:
