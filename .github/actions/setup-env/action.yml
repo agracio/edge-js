@@ -12,17 +12,17 @@ inputs:
     description: 'Architecture'
     required: false
     default: ''
-  install:
-    description: 'run npm install?'
+  is-build:
+    description: 'is running edge build'
     required: false
-    default: 'true'
+    default: 'false'
 
 runs:
   using: "composite"
   steps:
 
     - name: Setup NodeJS
-      if: ${{ inputs.install == 'true' }}
+      if: ${{ inputs.is-build != 'true' }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node }}
@@ -46,7 +46,6 @@ runs:
         pip install setuptools
 
     - name: Cache node modules
-      if: ${{ inputs.install == 'true' }}
       id: cache-nodemodules
       uses: actions/cache@v4
       env:
@@ -79,7 +78,6 @@ runs:
         node -v && npm -v && dotnet --version && node -p process.platform && node -p process.arch
 
     - name: npm install
-      if: ${{ inputs.install == 'true' }}
       shell: bash
       run: npm i
       env:

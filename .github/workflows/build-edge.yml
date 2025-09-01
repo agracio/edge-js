@@ -46,12 +46,12 @@ jobs:
         with:
           node: '${{ inputs.version }}'
           os: ${{ inputs.os }}
-          install: 'false'
+          is-build: 'true'
 
       - name: install node-gyp
         if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
         shell: bash
-        run: npm i -g node-gyp nan
+        run: npm i -g node-gyp
 
       - name: Create release folder
         if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
