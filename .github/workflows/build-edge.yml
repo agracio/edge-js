@@ -46,6 +46,7 @@ jobs:
         with:
           node: '${{ inputs.version }}'
           os: ${{ inputs.os }}
+          install: 'false'
 
       - name: install node-gyp
         if: ${{ (inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64') || (runner.os == 'macOS') }}
