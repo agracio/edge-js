@@ -31,6 +31,7 @@ on:
 
 jobs:
   test-build:
+    if: inputs.os != 'windows-11-arm' || inputs.version >= 20
     runs-on: ${{ inputs.os }}
     environment: ${{ inputs.environment }}
     name: ${{ inputs.name }}-node-${{ inputs.version }}
