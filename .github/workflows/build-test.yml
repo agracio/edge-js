@@ -46,9 +46,12 @@ jobs:
           result-encoding: string
           script: |
             try {
-              const fs = require('fs')
-              fs.rmdirSync(`lib/native/${process.platform}/${process.arch}/${{ inputs.version }}`, { recursive: true });
-              fs.mkdirSync(`lib/native/${process.platform}/${process.arch}/${{ inputs.version }}`, { recursive: true });
+              const fs = require('fs');
+              const nativeDir = `lib/native/${process.platform}/${process.arch}/${{ inputs.version }}`;
+              if (fs.existsSync(nativeDir)) {
+                fs.rmSync(nativeDir, { recursive: true });
+              }
+              fs.mkdirSync(nativeDir, { recursive: true });
             } catch(err) {
               core.error("Error creating release directory")
               core.setFailed(err)
