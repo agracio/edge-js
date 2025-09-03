@@ -47,7 +47,8 @@ runs:
           ]
 
             // Add an HTML table
-          core.summary.addTable([tableData])
+          core.summary.addTable([tableData]);
+          core.summary.write();
            // core.notice(JSON.stringify(stats));
             // if(stats.failures > 0) {
             //   core.setFailed(`There are ${stats.failures} test failures`);
