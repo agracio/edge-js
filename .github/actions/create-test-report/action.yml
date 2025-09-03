@@ -38,15 +38,13 @@ runs:
             core.exportVariable('test_skipped', report.stats.pending); 
             core.exportVariable('test_failures', Number(report.stats.failures));
             let resultTable = [
-              [{data: 'Passing ✔️', header: true}, {data: 'Failed ❌', header: true}, {data: 'Skipped ➖ :heavy_minus_sign:', header: true}],
-              [report.stats.passes],
-              [report.stats.failures],
-              [report.stats.pending]
+              [{data: 'Passing ✔️', header: true}, {data: 'Failed ❌', header: true}, {data: 'Skipped ➖', header: true}],
+              [report.stats.passes, report.stats.failures, report.stats.pending]
             ];
-            core.summary.addHeading(`Test results`, 3);
+            core.summary.addHeading(`Test results`, 4);
             core.summary.addTable(resultTable);
             if(Number(report.stats.failures) > 0) {
-              core.summary.addBreak();
+              // core.summary.addBreak();
               let failureTable = [];
               failureTable.push([{data: 'File', header: true}, {data: 'Suite', header: true}, {data: 'Test', header: true}]);
               for (const result of report.results) {
