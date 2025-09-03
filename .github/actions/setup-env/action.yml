@@ -55,7 +55,7 @@ runs:
         key: ${{ inputs.os }}-${{ inputs.node }}-${{ hashFiles('package-lock.json') }}
 
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
 
