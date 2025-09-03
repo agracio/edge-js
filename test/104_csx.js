@@ -20,7 +20,7 @@ describe('edge-cs', function () {
         var func = edge.func(path.join(__dirname, 'hello_lambda.csx'));
         func("JavaScript", function (error, result) {
             assert.ifError(error);
-            assert.equal(result, 'Hello, JavaScript');
+            assert.equal(result, 'Hello, JavaScript1');
             done();
         });
     });
@@ -295,7 +295,7 @@ describe('edge-cs', function () {
         });
         func("JavaScript", function (error, result) {
             assert.ifError(error);
-            assert.equal(result, 'Hello, JavaScript');
+            assert.equal(result, 'Hello, JavaScript1');
             done();
         });
     });

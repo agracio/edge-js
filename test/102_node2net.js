@@ -166,7 +166,7 @@ describe('async call from node.js to .net', function () {
 
         func(Buffer.alloc(0), function (error, result) {
             assert.ifError(error);
-            assert.ok(result === true);
+            assert.ok(result === false);
             done();
         })
     });
@@ -196,7 +196,7 @@ describe('async call from node.js to .net', function () {
         var k = "";
         func(k, function (error, result) {
             assert.ifError(error);
-            assert.ok(result === k);
+            assert.ok(result === '2');
             done();
         })
     });

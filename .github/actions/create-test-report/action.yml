@@ -37,8 +37,37 @@ runs:
             core.exportVariable('test_passing', report.stats.passes);
             core.exportVariable('test_skipped', report.stats.pending); 
             core.exportVariable('test_failures', Number(report.stats.failures));
+            let resultTable = [
+              [{data: 'Passing ✔️', header: true}, {data: 'Failed ❌', header: true}, {data: 'Skipped ➖ :heavy_minus_sign:', header: true}],
+              [report.stats.passes],
+              [report.stats.failures],
+              [report.stats.pending]
+            ];
+            core.summary.addHeading(`Test results`, 3);
+            core.summary.addTable(resultTable);
+            if(Number(report.stats.failures) > 0) {
+              core.summary.addBreak();
+              let failureTable = [];
+              failureTable.push([{data: 'File', header: true}, {data: 'Suite', header: true}, {data: 'Test', header: true}]);
+              for (const result of report.results) {
+                for(const suite of result.suites) {
+                    for (const test of suite.tests) {
+                      if (test.fail) {
+                        let file = suite.file?.replaceAll('\\', '/');
+                        if(file?.startsWith('/')) {
+                            file = file.substring(1);
+                        }
+                        failureTable.push([file, suite.title, test.title]);
+                      }
+                  }
+                }
+              }
+              core.summary.addHeading(`Test failures`, 3);
+              core.summary.addTable(failureTable);
+            }
+            core.summary.write();
             // const tableData = [
-            //   [{data: 'File', header: true}, {data: 'Result', header: true}],
+            //   [{data: 'File', header: true}, {data: 'Suite', header: true}, {data: 'Test', header: true}],
             //   ['foo.js', 'Pass ✅'],
             //   ['bar.js', 'Fail ❌'],
             //   ['test.js', 'Pass ✅']
@@ -58,9 +87,10 @@ runs:
       shell: bash
       run: |
         echo "#### Test results" >> $GITHUB_STEP_SUMMARY
-        echo "| Passing :white_check_mark: | Skipped :arrow_right_hook: | Failed :x:     |" >> $GITHUB_STEP_SUMMARY
-        echo "| -------------------------- | -------------------------- | -------------- |" >> $GITHUB_STEP_SUMMARY
-        echo "| $test_passing              | $test_skipped              | $test_failures |" >> $GITHUB_STEP_SUMMARY
+        echo "| Passing :heavy_check_mark: | Failed :x:     | Skipped :heavy_minus_sign: |" >> $GITHUB_STEP_SUMMARY
+        echo "| -------------------------- | -------------- | -------------------------- |" >> $GITHUB_STEP_SUMMARY
+        echo "| $test_passing              | $test_failures | $test_skipped              |" >> $GITHUB_STEP_SUMMARY
+
         # echo "- Passing tests: $test_passing" >> $GITHUB_STEP_SUMMARY
         # echo "- Skipped tests: $test_skipped" >> $GITHUB_STEP_SUMMARY
         # echo "- Failed tests: $test_failures" >> $GITHUB_STEP_SUMMARY
