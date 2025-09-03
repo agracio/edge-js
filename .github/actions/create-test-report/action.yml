@@ -29,16 +29,37 @@ runs:
             const fs = require('fs')
             const jsonString = fs.readFileSync('mochawesome.json')
             var report = JSON.parse(jsonString);
-            let stats = {
-                passing: report.stats.passes,
-                skipped: report.stats.pending,
-                failures: report.stats.failures
-            };
-            core.notice(JSON.stringify(stats));
+            // let stats = {
+            //     passing: report.stats.passes,
+            //     skipped: report.stats.pending,
+            //     failures: report.stats.failures
+            // };
+            core.exportVariable('test_passing', report.stats.passes);
+            core.exportVariable('test_skipped', report.stats.pending); 
+            core.exportVariable('test_failures', Number(report.stats.failures));
+            // core.notice(JSON.stringify(stats));
+            // if(stats.failures > 0) {
+            //   core.setFailed(`There are ${stats.failures} test failures`);
+          }
           } catch(err) {
             core.error("Error while reading or parsing mochawesome.json")
             core.setFailed(err)
           }
+
+    - name: Output test results
+      shell: bash
+      run: |
+        echo "#### Test results" >> $GITHUB_STEP_SUMMARY
+        echo "| Passing :white_check_mark: | Skipped :arrow_right_hook: | Failed :x:     |" >> $GITHUB_STEP_SUMMARY
+        echo "| -------------------------- | -------------------------- | -------------- |" >> $GITHUB_STEP_SUMMARY
+        echo "| $test_passing              | $test_skipped              | $test_failures |" >> $GITHUB_STEP_SUMMARY
+        # echo "- Passing tests: $test_passing" >> $GITHUB_STEP_SUMMARY
+        # echo "- Skipped tests: $test_skipped" >> $GITHUB_STEP_SUMMARY
+        # echo "- Failed tests: $test_failures" >> $GITHUB_STEP_SUMMARY
+        if [ $test_failures -gt 0 ]; then
+          echo "##[error]There are $test_failures test failures"
+          exit 1
+        fi
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -50,7 +71,6 @@ runs:
           mochawesome.json
           mochawesome.html
           assets/
-
     # - name: Create test report
     #   uses: phoenix-actions/test-reporting@v15
     #   if: success()
