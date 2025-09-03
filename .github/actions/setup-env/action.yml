@@ -85,8 +85,8 @@ runs:
       run: |
         node -v && npm -v && dotnet --version && node -p process.platform && node -p process.arch
 
-    - name: npm install --no-audit
+    - name: npm install
       shell: bash
-      run: npm i
+      run: npm i --no-audit
       env:
         DOTNET_CLI_TELEMETRY_OPTOUT: 1
