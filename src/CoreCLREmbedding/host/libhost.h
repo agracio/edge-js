@@ -16,7 +16,7 @@ enum host_mode_t
     split_fx
 };
 
-class fx_ver_t;
+struct fx_ver_t;
 class runtime_config_t;
 
 #define _HOST_INTERFACE_PACK 1
