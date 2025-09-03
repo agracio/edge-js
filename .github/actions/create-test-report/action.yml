@@ -37,18 +37,15 @@ runs:
             core.exportVariable('test_passing', report.stats.passes);
             core.exportVariable('test_skipped', report.stats.pending); 
             core.exportVariable('test_failures', Number(report.stats.failures));
-            const tableData = [
-            {data: 'Header1', header: true},
-            {data: 'Header2', header: true},
-            {data: 'Header3', header: true},
-            {data: 'MyData1'},
-            {data: 'MyData2'},
-            {data: 'MyData3'}
-          ]
-
+            // const tableData = [
+            //   [{data: 'File', header: true}, {data: 'Result', header: true}],
+            //   ['foo.js', 'Pass ✅'],
+            //   ['bar.js', 'Fail ❌'],
+            //   ['test.js', 'Pass ✅']
+            // ]
             // Add an HTML table
-          core.summary.addTable([tableData]);
-          core.summary.write();
+            // core.summary.addTable([tableData]);
+            // core.summary.write();
            // core.notice(JSON.stringify(stats));
             // if(stats.failures > 0) {
             //   core.setFailed(`There are ${stats.failures} test failures`);
