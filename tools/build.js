@@ -4,6 +4,7 @@ const { execSync } = require('child_process');
 
 let nodejsVersion = process.argv[2];
 let version;
+let nodeGyp;
 const arch = ['ia32', 'x64', 'arm64'];
 
 if (!nodejsVersion) {
@@ -21,9 +22,15 @@ if(!nodejsVersion.includes('.')){
     console.log(`Resolved Node.js version ${version}`);
 }
 else{
+    console.log();
     console.log(`Using specified Node.js version ${nodejsVersion}`);
     version = nodejsVersion;
     nodejsVersion = version.split('.')[0];
+}
+
+if(Number(nodejsVersion) < 16){
+    console.error('Node.js version 16 or higher is required');
+    process.exit(1);
 }
 
 function deleteBuildDir() {
@@ -38,17 +45,24 @@ function deleteBuildDir() {
 }
 
 function findNodeGyp() {
+
+    if(nodeGyp){
+        return nodeGyp;
+    }
+        
     try {
-        //console.log();
+        console.log();
         console.log('Locating node-gyp...');
         let result = execSync('npm config get prefix').toString().trim();
         if (fs.existsSync(result)) {
-            result = path.join(result, 'node_modules', 'node-gyp', 'bin', 'node-gyp.js');
-            console.log(`Found node-gyp at ${result}`);
-            return result;
+            nodeGyp = path.join(result, 'node_modules', 'node-gyp', 'bin', 'node-gyp.js');
+            console.log(`Found node-gyp at ${nodeGyp}`);
+            return nodeGyp;
         }
         else{
-            throw new Error('node-gyp not found');
+            console.error();
+            console.error('node-gyp not found');
+            process.exit(1);
         }
     } catch (err) {
         throw err;
@@ -64,7 +78,6 @@ function fixArmBuild() {
             let data = fs.readFileSync(filePath, 'utf8');
             data = data.replace(/<FloatingPointModel>Strict<\/FloatingPointModel>/g, '<!-- <FloatingPointModel>Strict</FloatingPointModel> -->');
             fs.writeFileSync(filePath, data, 'utf8');
-
         }
     }
 }
@@ -74,12 +87,11 @@ function buildNode(arch) {
     try {
         deleteBuildDir()
         console.log();
-        console.log(`Building edge-js ${arch} for Node.js ${version}...`);
+        console.log(`Building edge-js ${process.platform}-${arch} for Node.js ${version}...`);
+        findNodeGyp();
         console.log();
-        const nodeGyp = findNodeGyp();
-        console.log();
-        execSync(`node "${nodeGyp}" configure --target=${version} --arch=${arch} --release`, { stdio: 'inherit' });
-        if(arch === 'arm64'){
+        execSync(`node "${nodeGyp}" configure --target=${version} --arch=${arch} --runtime=node --release`, { stdio: 'inherit' });
+        if(arch === 'arm64' && process.platform === 'win32'){
             console.log();
             fixArmBuild(process.cwd());
             console.log();
@@ -98,6 +110,8 @@ function buildNode(arch) {
 function copyBuildOutput(arch) {
     const buildDir = path.join(__dirname, '..', 'build', 'Release');
     const outputDir = path.join(__dirname, '..', 'lib', 'native', process.platform, arch, nodejsVersion);
+
+    console.log(`Copying built binaries from ${buildDir} to ${outputDir}...`);
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
     }
@@ -108,39 +122,42 @@ function copyBuildOutput(arch) {
             console.log(`Copied ${file} to ${outputDir}`);
         }
     }
+    console.log(`Completed copying built binaries from ${buildDir} to ${outputDir}`);
+    console.log();
+    console.log(`Creating ${outputDir}/node.version file...`);
     fs.writeFileSync(`${outputDir}/node.version`, version);
+    console.log(`Created ${outputDir}/node.version file`);
 }
 
 function buildAll() {
-    for (const a of arch) {
-        if(a === 'arm64' && process.platform === 'win32' && Number(nodejsVersion) < 20){
+    if(process.platform === 'linux'){
+        buildNode(process.arch);
+    }
+    else{
+        for (const a of arch) {
+            if(a === 'arm64' && process.platform === 'win32' && Number(nodejsVersion) < 20){
+                console.log();
+                console.log(`Skipping arm64 build for Node.js ${version}`);
+                continue;
+            }
+            if(a === 'ia32' && process.platform === 'win32' && Number(nodejsVersion) > 22){
+                console.log();
+                console.log(`Skipping x86 build for Node.js ${version}`);
+                continue;
+            }
+            if(a === 'ia32' && process.platform !== 'win32'){
+                console.log();
+                console.log(`Skipping x86 build on non-windows platform`);
+                continue;
+            }
+            buildNode(a);
             console.log();
-            console.log(`Skipping arm64 build for Node.js ${version}`);
-            continue;
-        }
-        if(a === 'ia32' && process.platform === 'win32' && Number(nodejsVersion) > 22){
-            console.log();
-            console.log(`Skipping x86 build for Node.js ${version}`);
-            continue;
-        }
-        if(a === 'ia32' && process.platform !== 'win32'){
-            console.log();
-            console.log(`Skipping x86 build on non-windows platform`);
-            continue;
-        }
-        buildNode(a);
-        copyBuildOutput(a);
-    } 
-    deleteBuildDir();
+            copyBuildOutput(a);
+        } 
+        deleteBuildDir();
+    }
+    console.log();
+    console.log('All builds completed successfully');
 }
 
 buildAll();
-//
-
-
-
-
-
-
-
-
