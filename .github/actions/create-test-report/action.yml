@@ -40,7 +40,6 @@ runs:
             // core.notice(JSON.stringify(stats));
             // if(stats.failures > 0) {
             //   core.setFailed(`There are ${stats.failures} test failures`);
-          }
           } catch(err) {
             core.error("Error while reading or parsing mochawesome.json")
             core.setFailed(err)
