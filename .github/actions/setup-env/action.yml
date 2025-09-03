@@ -58,6 +58,16 @@ runs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
+        cache: true
+        key: ${{ inputs.os }}-${{ hashFiles('**/*.csproj') }}
+
+    - name: Cache NuGet
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ inputs.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ inputs.os }}-nuget-
 
     - name: Setup Mono
       if: runner.os == 'macOS'
