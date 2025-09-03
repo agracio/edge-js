@@ -85,7 +85,7 @@ runs:
       run: |
         node -v && npm -v && dotnet --version && node -p process.platform && node -p process.arch
 
-    - name: npm install
+    - name: npm install --no-audit
       shell: bash
       run: npm i
       env:
