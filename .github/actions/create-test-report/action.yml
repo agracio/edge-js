@@ -37,8 +37,10 @@ runs:
             core.exportVariable('test_passing', report.stats.passes);
             core.exportVariable('test_skipped', report.stats.pending); 
             core.exportVariable('test_failures', Number(report.stats.failures));
-            core.exportVariable('GITHUB_STEP_SUMMARY', '### This is a test');
-            // core.notice(JSON.stringify(stats));
+            core.notice('| :white_check_mark: | :arrow_right_hook: | :x:     |');
+            core.notice('| -------------------------- | -------------------------- | -------------- |');
+            core.notice('| a | b | c |');
+           // core.notice(JSON.stringify(stats));
             // if(stats.failures > 0) {
             //   core.setFailed(`There are ${stats.failures} test failures`);
           } catch(err) {
