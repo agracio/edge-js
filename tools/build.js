@@ -23,7 +23,7 @@ if(!nodejsVersion.includes('.')){
 else{
     console.log(`Using specified Node.js version ${nodejsVersion}`);
     version = nodejsVersion;
-    nodejsVersion = Number(version.split('.')[0]);
+    nodejsVersion = version.split('.')[0];
 }
 
 function deleteBuildDir() {
@@ -113,12 +113,12 @@ function copyBuildOutput(arch) {
 
 function buildAll() {
     for (const a of arch) {
-        if(a === 'arm64' && process.platform === 'win32' && nodejsVersion < 20){
+        if(a === 'arm64' && process.platform === 'win32' && Number(nodejsVersion) < 20){
             console.log();
             console.log(`Skipping arm64 build for Node.js ${version}`);
             continue;
         }
-        if(a === 'ia32' && process.platform === 'win32' && nodejsVersion > 22){
+        if(a === 'ia32' && process.platform === 'win32' && Number(nodejsVersion) > 22){
             console.log();
             console.log(`Skipping x86 build for Node.js ${version}`);
             continue;
