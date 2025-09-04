@@ -20,7 +20,7 @@ runs:
   using: "composite"
   steps:
 
-    - name: Read mochawesome.json
+    - name: Test report
       uses: actions/github-script@v7
       with:
         result-encoding: string
@@ -29,45 +29,107 @@ runs:
             const fs = require('fs')
             const jsonString = fs.readFileSync('mochawesome.json')
             var report = JSON.parse(jsonString);
+
             // let stats = {
             //     passing: report.stats.passes,
             //     skipped: report.stats.pending,
             //     failures: report.stats.failures
             // };
-            core.exportVariable('test_passing', report.stats.passes);
-            core.exportVariable('test_skipped', report.stats.pending); 
-            core.exportVariable('test_failures', Number(report.stats.failures));
-            // const tableData = [
-            //   [{data: 'File', header: true}, {data: 'Result', header: true}],
-            //   ['foo.js', 'Pass ✅'],
-            //   ['bar.js', 'Fail ❌'],
-            //   ['test.js', 'Pass ✅']
-            // ]
-            // Add an HTML table
-            // core.summary.addTable([tableData]);
-            // core.summary.write();
-           // core.notice(JSON.stringify(stats));
-            // if(stats.failures > 0) {
-            //   core.setFailed(`There are ${stats.failures} test failures`);
+            // core.exportVariable('test_passing', report.stats.passes);
+            // core.exportVariable('test_skipped', report.stats.pending); 
+            // core.exportVariable('test_failures', Number(report.stats.failures));
+
+            let duration = Number(report.stats.duration) || (report.stats.end - report.stats.start);
+            let time;
+            if(duration < 1000){
+              time = `${duration}ms`;
+            }
+            else{
+              time = `${(duration / 1000).toFixed(3)}s`;
+            }
+
+            let skipped = report.stats.pending == 0 ? '' : `${report.stats.pending} ➖`;
+
+            let resultTable = [
+              [{data: 'Passed', header: true}, {data: 'Failed', header: true}, {data: 'Skipped', header: true}, {data: 'Time', header: true}],
+              [`${report.stats.passes} ✔️`, `${report.stats.failures} ❌`, `${skipped} `, `${time}`]
+            ];
+            core.summary.addHeading(`Test results`, 4);
+            core.summary.addTable(resultTable);
+            if(Number(report.stats.failures) > 0) {
+              // core.summary.addBreak();
+              // let failureTable = [];
+              // failureTable.push([{data: 'File', header: true}, {data: 'Suite', header: true}, {data: 'Test', header: true}]);
+              // for (const result of report.results) {
+              //   for(const suite of result.suites) {
+              //       for (const test of suite.tests) {
+              //         if (test.fail) {
+              //           let file = suite.file?.replaceAll('\\', '/');
+              //           if(file?.startsWith('/')) {
+              //               file = file.substring(1);
+              //           }
+              //           failureTable.push([file, suite.title, test.title]);
+              //         }
+              //     }
+              //   }
+                let failures = {}
+                if(report.results?.length !== 0 ) {
+                    for (let i = 0; i < report.results.length; i++) {
+                        report.results[i].suites = report.results[i].suites.filter((suite) =>suite.tests.filter((test) => test.fail).length > 0);
+                        for (let j = 0; j < report.results[i].suites.length; j++) {
+                            report.results[i].suites[j].tests = report.results[i].suites[j].tests.filter((test) => test.fail);
+                            report.results[i].suites[j].file = report.results[i].suites[j].file?.replaceAll('\\', '/');
+                            if(report.results[i].suites[j].file?.startsWith('/')) {
+                                report.results[i].suites[j].file = report.results[i].suites[j].file.substring(1);
+                            }
+                            let suite = report.results[i].suites[j];
+                            let name = suite.file && suite.file !== '' ?  suite.file : suite.title;
+                            failures[name] = failures[name] || [];
+                            failures[name].title = failures[name].title || suite.title;
+                            failures[name].text = failures[name].text || suite.title;
+                            for (const test of suite.tests) {
+                              let message = test.err.message;
+                              if(message) {
+                                  message = message.replaceAll('\n', '  ');
+                              }
+
+                              failures[name].text += `\n  ❌ ${test.title}\n      ${message}`;
+                            }
+                        }
+                    }
+                }
+                for(const key in failures) {
+                    let failure = failures[key];
+                    core.summary.addHeading(`❌ ${key}`, 5);
+                    core.summary.addCodeBlock(failure.text, 'bash');
+                }
+              // core.summary.addHeading(`Test failures`, 4);
+              // core.summary.addTable(failureTable);
+            }
+            core.summary.write();
+            if(Number(report.stats.failures) > 0) {
+              core.setFailed(`There are ${report.stats.failures} test failures`);
+            }
           } catch(err) {
             core.error("Error while reading or parsing mochawesome.json")
             core.setFailed(err)
           }
 
-    - name: Output test results
-      shell: bash
-      run: |
-        echo "#### Test results" >> $GITHUB_STEP_SUMMARY
-        echo "| Passing :white_check_mark: | Skipped :arrow_right_hook: | Failed :x:     |" >> $GITHUB_STEP_SUMMARY
-        echo "| -------------------------- | -------------------------- | -------------- |" >> $GITHUB_STEP_SUMMARY
-        echo "| $test_passing              | $test_skipped              | $test_failures |" >> $GITHUB_STEP_SUMMARY
-        # echo "- Passing tests: $test_passing" >> $GITHUB_STEP_SUMMARY
-        # echo "- Skipped tests: $test_skipped" >> $GITHUB_STEP_SUMMARY
-        # echo "- Failed tests: $test_failures" >> $GITHUB_STEP_SUMMARY
-        if [ $test_failures -gt 0 ]; then
-          echo "##[error]There are $test_failures test failures"
-          exit 1
-        fi
+    # - name: Output test results
+    #   shell: bash
+    #   run: |
+    #     echo "#### Test results" >> $GITHUB_STEP_SUMMARY
+    #     echo "| Passing :heavy_check_mark: | Failed :x:     | Skipped :heavy_minus_sign: |" >> $GITHUB_STEP_SUMMARY
+    #     echo "| -------------------------- | -------------- | -------------------------- |" >> $GITHUB_STEP_SUMMARY
+    #     echo "| $test_passing              | $test_failures | $test_skipped              |" >> $GITHUB_STEP_SUMMARY
+
+    #     # echo "- Passing tests: $test_passing" >> $GITHUB_STEP_SUMMARY
+    #     # echo "- Skipped tests: $test_skipped" >> $GITHUB_STEP_SUMMARY
+    #     # echo "- Failed tests: $test_failures" >> $GITHUB_STEP_SUMMARY
+    #     if [ $test_failures -gt 0 ]; then
+    #       echo "##[error]There are $test_failures test failures"
+    #       exit 1
+    #     fi
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -79,6 +141,7 @@ runs:
           mochawesome.json
           mochawesome.html
           assets/
+
     # - name: Create test report
     #   uses: phoenix-actions/test-reporting@v15
     #   if: success()

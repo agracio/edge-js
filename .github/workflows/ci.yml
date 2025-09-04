@@ -89,9 +89,9 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-13, macos-15, ubuntu-24.04, ubuntu-22.04-arm, windows-2025, windows-11-arm]
+        node: [18, 20, 22, 24]
         # os: [macos-15]
         # node: [20]
-        node: [18, 20, 22, 24]
     steps:
 
       - name: Checkout code
