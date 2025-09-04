@@ -98,14 +98,14 @@ runs:
                         }
                     }
                 }
-              }
+                for(const key in failures) {
+                    let failure = failures[key];
+                    core.summary.addHeading(`❌ ${key}`, 5);
+                    core.summary.addCodeBlock(failure.text, 'bash');
+                }
               // core.summary.addHeading(`Test failures`, 4);
-              for(const key in failures) {
-                  let failure = failures[key];
-                  core.summary.addHeading(`❌ ${key}`, 5);
-                  core.summary.addCodeBlock(failure.text, 'bash');
+              // core.summary.addTable(failureTable);
               }
-              //core.summary.addTable(failureTable);
             core.summary.write();
             if(Number(report.stats.failures) > 0) {
               core.setFailed(`There are ${report.stats.failures} test failures`);
