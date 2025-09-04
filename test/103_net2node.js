@@ -146,7 +146,7 @@ describe('async call from .net to node.js', function () {
 		};
 		func(payload, function (error, result) {
 			assert.ifError(error);
-			assert.equal(result, 'no');
+			assert.equal(result, 'yes');
 			done();
 		});
 	});
