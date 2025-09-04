@@ -21,6 +21,13 @@ runs:
   using: "composite"
   steps:
 
+    - uses: actions/checkout@v4
+    - uses: awalsh128/cache-apt-pkgs-action@latest
+      if: runner.os == 'Linux'
+      with:
+        packages: mono-complete pkg-config libglib2.0-dev
+        version: 1.0
+
     - name: Setup NodeJS
       if: ${{ inputs.is-build != 'true' }}
       uses: actions/setup-node@v4
@@ -39,11 +46,17 @@ runs:
         path: ~/.cache/node-gyp
         key: '${{ inputs.os }}-${{ runner.arch }}-${{ inputs.node}}'
 
-    - if: runner.os == 'macOS' && inputs.node == 16
-      shell: bash
-      name: Add missing packages for macOS NodeJs 16 
-      run: |
-        pip install setuptools
+    # - if: runner.os == 'macOS' && matrix.node == 16
+    #   shell: bash
+    #   name: Add missing packages for macOS NodeJs 16 
+    #   run: |
+    #     brew install python-setuptools --overwrite
+
+    - if: runner.os == 'macOS' && matrix.node == 16
+      uses: tecolicom/actions-use-homebrew-tools@v1
+      with:
+        tools: python-setuptools
+        key: ${{ inputs.os }}-homebrew
 
     - name: Cache node modules
       id: cache-nodemodules

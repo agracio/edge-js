@@ -89,19 +89,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, macos-15, ubuntu-24.04, ubuntu-22.04-arm]
-        # os: [macos-15]
+        # os: [macos-13, macos-15, ubuntu-24.04, ubuntu-22.04-arm]
+        os: [ubuntu-24.04]
         node: [16]
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - if: runner.os == 'macOS' && matrix.node == 16
-        shell: bash
-        name: Add missing packages for macOS NodeJs 16 
-        run: |
-          brew install python-setuptools --overwrite
 
       - if: runner.os == 'macOS'
         name: Cache node-gyp macOS
