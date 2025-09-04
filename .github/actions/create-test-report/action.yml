@@ -19,6 +19,15 @@ inputs:
 runs:
   using: "composite"
   steps:
+  
+    - name: Create test report
+      uses: phoenix-actions/test-reporting@v15
+      if: success()
+      with:
+        name: ${{ inputs.name }}-${{ inputs.os }}-node-${{ inputs.node }}
+        fail-on-error: true
+        path: mochawesome.json   # Path to test results
+        reporter: mochawesome-json 
 
     - name: Test report
       uses: actions/github-script@v7
@@ -109,12 +118,4 @@ runs:
           mochawesome.json
           mochawesome.html
           assets/
-          
-    - name: Create test report
-      uses: phoenix-actions/test-reporting@v15
-      if: success()
-      with:
-        name: ${{ inputs.name }}-${{ inputs.os }}-node-${{ inputs.node }}
-        fail-on-error: true
-        path: mochawesome.json   # Path to test results
-        reporter: mochawesome-json 
+
