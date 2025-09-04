@@ -48,11 +48,11 @@ runs:
               time = `${(duration / 1000).toFixed(3)}s`;
             }
 
-            let skipped = report.stats.pending == 0 ? ' ' : `${report.stats.pending} ➖`;
+            let skipped = report.stats.pending == 0 ? '' : `${report.stats.pending} ➖`;
 
             let resultTable = [
               [{data: 'Passed', header: true}, {data: 'Failed', header: true}, {data: 'Skipped', header: true}, {data: 'Time', header: true}],
-              [`${report.stats.passes} ✔️`, `${report.stats.failures} ❌`, `${skipped}`, `${time}`]
+              [`${report.stats.passes} ✔️`, `${report.stats.failures} ❌`, `${skipped} `, `${time}`]
             ];
             core.summary.addHeading(`Test results`, 4);
             core.summary.addTable(resultTable);
@@ -107,7 +107,6 @@ runs:
               }
               //core.summary.addTable(failureTable);
             core.summary.write();
-            }
             if(Number(report.stats.failures) > 0) {
               core.setFailed(`There are ${report.stats.failures} test failures`);
             }
