@@ -90,10 +90,10 @@ runs:
                             for (const test of suite.tests) {
                               let message = test.err.message;
                               if(message) {
-                                  message = message.replaceAll('\n', '\n      ');
+                                  message = message.replaceAll('\n', '  ');
                               }
 
-                              failures[name].text += `\n  ❌ ${test.title}\n      ${test.err.message}`;
+                              failures[name].text += `\n  ❌ ${test.title}\n      ${message}`;
                             }
                         }
                     }
