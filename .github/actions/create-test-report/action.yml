@@ -90,10 +90,10 @@ runs:
                             for (const test of suite.tests) {
                               let message = test.err.message;
                               if(message) {
-                                  message = message.replaceAll('\n', '\n    ');
+                                  message = message.replaceAll('\n', '\n      ');
                               }
 
-                              failures[name].text += `\n  ❌ ${test.title}\n      ${message}`;
+                              failures[name].text += `\n  ❌ ${test.title}\n      ${test.err.message}`;
                             }
                         }
                     }
@@ -105,7 +105,7 @@ runs:
                 }
               // core.summary.addHeading(`Test failures`, 4);
               // core.summary.addTable(failureTable);
-              }
+            }
             core.summary.write();
             if(Number(report.stats.failures) > 0) {
               core.setFailed(`There are ${report.stats.failures} test failures`);
