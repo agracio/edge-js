@@ -48,7 +48,7 @@ runs:
               time = `${(duration / 1000).toFixed(3)}s`;
             }
 
-            let skipped = report.stats.pending == 0 ? '' : `, ${report.stats.pending} ➖`;
+            let skipped = report.stats.pending == 0 ? ' ' : `${report.stats.pending} ➖`;
 
             let resultTable = [
               [{data: 'Passed', header: true}, {data: 'Failed', header: true}, {data: 'Skipped', header: true}, {data: 'Time', header: true}],
@@ -73,9 +73,37 @@ runs:
                   }
                 }
               }
+              let failures = {}
+              if(report.results?.length !== 0 ) {
+                  for (let i = 0; i < report.results.length; i++) {
+                      report.results[i].suites = report.results[i].suites.filter((suite) =>suite.tests.filter((test) => test.fail).length > 0);
+                      for (let j = 0; j < report.results[i].suites.length; j++) {
+                          report.results[i].suites[j].tests = report.results[i].suites[j].tests.filter((test) => test.fail);
+                          report.results[i].suites[j].file = report.results[i].suites[j].file?.replaceAll('\\', '/');
+                          if(report.results[i].suites[j].file?.startsWith('/')) {
+                              report.results[i].suites[j].file = report.results[i].suites[j].file.substring(1);
+                          }
+                          let suite = report.results[i].suites[j];
+                          let name = suite.file && suite.file !== '' ?  suite.file : suite.title;
+                          failures[name] = failures[name] || [];
+                          failures[name].title = failures[name].title || suite.title;
+                          failures[name].text = failures[name].text || suite.title;
+                          for (const test of suite.tests) {
+                              failures[name].text += `\n  ❌ ${test.title}\n     ${test.err.message}`;
+                          }
+
+                      }
+
+                  }
+              }
               core.summary.addHeading(`Test failures`, 4);
-              core.summary.addTable(failureTable);
-              core.summary.addCodeBlock('console.log(\'hello world\') \n  ❌ failure', 'bash')
+              for(const name in Object.keys(failures)) {
+                  let failure = failures[name];
+                  core.summary.addHeading(`❌ ${name}`, 5);
+                  core.summary.addCodeBlock(failure.text, 'bash');
+              }
+              //core.summary.addTable(failureTable);
+              //core.summary.addCodeBlock('console.log(\'hello world\') \n  ❌ failure', 'bash')
             core.summary.write();
             }
             if(Number(report.stats.failures) > 0) {
