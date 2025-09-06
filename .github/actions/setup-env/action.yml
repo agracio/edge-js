@@ -92,8 +92,6 @@ runs:
         echo "----------------------------------------------"
         ls $(brew --prefix)/Cellar
         # echo "$(cat ./Brewfile)"
-        echo "----------------------------------------------"
-        ls ~$(brew --prefix)/Cellar
 
     # - name: Setup Mono
     #   if: runner.os == 'Linux'
