@@ -48,17 +48,14 @@ runs:
         path: node_modules
         key: "node-modules-${{ inputs.os }}-${{ inputs.node }}-${{ hashFiles('package-lock.json') }}"
 
-    - name: Cache Homebrew
-      if: runner.os == 'macOS'
-      uses: actions/cache@v4
-      with:
-        path: |
-          $(brew --prefix)/Cellar
-          $(brew --prefix)/Cellar/mono/
-          $(brew --prefix)/Cellar/pkgconf/
-          $(brew --prefix)/Cellar/python-setuptools/
-        # key: brew-${{ inputs.os }}-${{ hashFiles('./Brewfile') }}
-        key: brew-${{ inputs.os }}
+    # - name: Cache Homebrew
+    #   if: runner.os == 'macOS'
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: |
+    #       $(brew --prefix)
+    #     # key: brew-${{ inputs.os }}-${{ hashFiles('./Brewfile') }}
+    #     key: brew-${{ inputs.os }}
 
     - name: Cache NuGet
       uses: actions/cache@v4
@@ -84,20 +81,20 @@ runs:
       if: runner.os == 'macOS'
       shell: bash
       run: |
-        echo $(date +%T);
-        echo "----------------------------------------------"
+        # echo $(date +%T);
+        # echo "----------------------------------------------"
         brew install mono --overwrite
         brew reinstall pkg-config
-        brew bundle dump --file ./Brewfile --force
-        echo "$(brew --prefix)"
+        # brew bundle dump --file ./Brewfile --force
+        # echo "$(brew --prefix)"
         # echo "----------------------------------------------"
         # ls $(brew --prefix)
         # echo "----------------------------------------------"
         # ls $(brew --prefix)/Cellar
         # # echo "$(cat ./Brewfile)"
         # echo "----------------------------------------------"
-        echo "----------------------------------------------"
-        echo $(date +%T);
+        # echo "----------------------------------------------"
+        # echo $(date +%T);
 
 
     # - name: Setup Mono
@@ -113,15 +110,6 @@ runs:
       with:
         packages: mono-complete pkg-config libglib2.0-dev
         version: 1.0
-
-    # - name: Cache Homebrew
-    #   if: runner.os == 'macOS'
-    #   uses: actions/cache@v4
-    #   with:
-    #     path: |
-    #       ~/opt/homebrew/Cellar/mono
-    #       ~/opt/homebrew/Cellar/pkgconf
-    #     key: brew-${{ inputs.os }}
 
     - name: Versions
       shell: bash
