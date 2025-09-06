@@ -90,7 +90,7 @@ jobs:
       fail-fast: false
       matrix:
         # os: [macos-13, macos-15, ubuntu-24.04, ubuntu-22.04-arm]
-        os: [ubuntu-24.04, macos-13, macos-15]
+        os: [macos-15]
         node: [16]
     steps:
 

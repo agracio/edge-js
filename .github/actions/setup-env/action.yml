@@ -53,9 +53,10 @@ runs:
       uses: actions/cache@v4
       with:
         path: |
-          ~$(brew --prefix)/Cellar/mono/
-          ~$(brew --prefix)/Cellar/pkgconf/
-          ~$(brew --prefix)/Cellar/python-setuptools/
+          $(brew --prefix)/Cellar
+          $(brew --prefix)/Cellar/mono/
+          $(brew --prefix)/Cellar/pkgconf/
+          $(brew --prefix)/Cellar/python-setuptools/
         # key: brew-${{ inputs.os }}-${{ hashFiles('./Brewfile') }}
         key: brew-${{ inputs.os }}
 
@@ -83,15 +84,22 @@ runs:
       if: runner.os == 'macOS'
       shell: bash
       run: |
+        current_date_time="`%H%M%S`";
+        echo $current_date_time;
+        echo "----------------------------------------------"
         brew install mono --overwrite
         brew reinstall pkg-config
         brew bundle dump --file ./Brewfile --force
         echo "$(brew --prefix)"
-        echo "----------------------------------------------"
-        ls $(brew --prefix)
-        echo "----------------------------------------------"
-        ls $(brew --prefix)/Cellar
-        # echo "$(cat ./Brewfile)"
+        # echo "----------------------------------------------"
+        # ls $(brew --prefix)
+        # echo "----------------------------------------------"
+        # ls $(brew --prefix)/Cellar
+        # # echo "$(cat ./Brewfile)"
+        # echo "----------------------------------------------"
+        current_date_time="`%H%M%S`";
+        echo $current_date_time;
+
 
     # - name: Setup Mono
     #   if: runner.os == 'Linux'
