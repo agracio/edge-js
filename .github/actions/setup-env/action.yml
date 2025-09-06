@@ -37,7 +37,7 @@ runs:
         cache-name: cache-node-gyp
       with:
         path: ~/.cache/node-gyp
-        key: '${{ inputs.os }}-${{ runner.arch }}-${{ inputs.node}}'
+        key: 'node-gyp-${{ inputs.os }}-${{ runner.arch }}-${{ inputs.node}}'
 
     - name: Cache node modules
       id: cache-nodemodules
@@ -46,7 +46,7 @@ runs:
         cache-name: cache-node-modules
       with:
         path: node_modules
-        key: ${{ inputs.os }}-${{ inputs.node }}-${{ hashFiles('package-lock.json') }}
+        key: "node-modules-${{ inputs.os }}-${{ inputs.node }}-${{ hashFiles('package-lock.json') }}"
 
     - name: Setup dotnet
       uses: actions/setup-dotnet@v5
@@ -57,7 +57,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: ~/.nuget/packages
-        key: ${{ inputs.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        key: nuget-${{ inputs.os }}-${{ hashFiles('**/*.csproj') }}
         restore-keys: |
           ${{ inputs.os }}-nuget-
 
@@ -65,7 +65,7 @@ runs:
       shell: bash
       name: Add missing packages for macOS NodeJs 16 
       run: |
-        brew install python-setuptools --overwrite
+        # brew install python-setuptools --overwrite
         pip install --upgrade --force-reinstall setuptools
 
     - name: Setup Mono
@@ -75,6 +75,7 @@ runs:
         brew install mono --overwrite
         brew reinstall pkg-config
         brew bundle dump --file ./Brewfile --force
+        echo "$(cat ./Brewfile)"
 
     - name: Homebrew cache
       if: runner.os == 'macOS'
@@ -83,7 +84,7 @@ runs:
         path: |
           ~/Library/Caches/Homebrew
           ~/opt/homebrew/Cellar
-        key: ${{ inputs.os }}-brew-${{ hashFiles('./Brewfile') }}
+        key: brew-${{ inputs.os }}-${{ hashFiles('./Brewfile') }}
 
     - name: Setup Mono
       if: runner.os == 'Linux'
