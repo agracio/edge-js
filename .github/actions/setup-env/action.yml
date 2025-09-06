@@ -84,8 +84,7 @@ runs:
       if: runner.os == 'macOS'
       shell: bash
       run: |
-        current_date_time="`%H%M%S`";
-        echo $current_date_time;
+        echo $(date +%T);
         echo "----------------------------------------------"
         brew install mono --overwrite
         brew reinstall pkg-config
@@ -97,8 +96,8 @@ runs:
         # ls $(brew --prefix)/Cellar
         # # echo "$(cat ./Brewfile)"
         # echo "----------------------------------------------"
-        current_date_time="`%H%M%S`";
-        echo $current_date_time;
+        echo "----------------------------------------------"
+        echo $(date +%T);
 
 
     # - name: Setup Mono
