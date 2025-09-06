@@ -39,11 +39,11 @@ runs:
         path: ~/.cache/node-gyp
         key: '${{ inputs.os }}-${{ runner.arch }}-${{ inputs.node}}'
 
-    - if: runner.os == 'macOS' && matrix.node == 16
-      shell: bash
-      name: Add missing packages for macOS NodeJs 16 
-      run: |
-        brew install python-setuptools --overwrite
+    # - if: runner.os == 'macOS' && inputs.node == 16
+    #   shell: bash
+    #   name: Add missing packages for macOS NodeJs 16 
+    #   run: |
+    #     brew install python-setuptools --overwrite
 
     - name: Cache node modules
       id: cache-nodemodules
@@ -58,7 +58,6 @@ runs:
       uses: actions/setup-dotnet@v5
       with:
         dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
-
 
     - name: Cache NuGet
       uses: actions/cache@v4
@@ -75,26 +74,26 @@ runs:
         brew install mono --overwrite
         brew reinstall pkg-config
 
-    - name: Homebrew cache
-      uses: actions/cache@v4
-      with:
-        path: |
-          $(brew --prefix)/Cellar
-        key: ${{ inputs.os }}-brew--${{ hashFiles('.config/brew/Brewfile') }}
+    # - name: Homebrew cache
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: |
+    #       $(brew --prefix)/Cellar
+    #     key: ${{ inputs.os }}-brew-${{ hashFiles('.config/brew/Brewfile') }}
 
-    # - name: Setup Mono
-    #   if: runner.os == 'Linux'
-    #   shell: bash
-    #   run: |
-    #     sudo apt -q install mono-complete pkg-config libglib2.0-dev
-
-    - uses: actions/checkout@v4
-    - uses: awalsh128/cache-apt-pkgs-action@latest
-      name: Setup Mono
+    - name: Setup Mono
       if: runner.os == 'Linux'
-      with:
-        packages: mono-complete pkg-config libglib2.0-dev
-        version: 1.0
+      shell: bash
+      run: |
+        sudo apt -q install mono-complete pkg-config libglib2.0-dev
+
+    # - uses: actions/checkout@v4
+    # - uses: awalsh128/cache-apt-pkgs-action@latest
+    #   name: Setup Mono
+    #   if: runner.os == 'Linux'
+    #   with:
+    #     packages: mono-complete pkg-config libglib2.0-dev
+    #     version: 1.0
 
     - name: Versions
       shell: bash
