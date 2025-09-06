@@ -53,16 +53,11 @@ runs:
       uses: actions/cache@v4
       with:
         path: |
-          $(brew --prefix)/Cellar/mono
-          $(brew --prefix)/Cellar/pkgconf
-          $(brew --prefix)/Cellar/python-setuptools
+          ~$(brew --prefix)/Cellar/mono/
+          ~$(brew --prefix)/Cellar/pkgconf/
+          ~$(brew --prefix)/Cellar/python-setuptools/
         # key: brew-${{ inputs.os }}-${{ hashFiles('./Brewfile') }}
         key: brew-${{ inputs.os }}
-
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v5
-      with:
-        dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
 
     - name: Cache NuGet
       uses: actions/cache@v4
@@ -71,6 +66,11 @@ runs:
         key: nuget-${{ inputs.os }}-${{ hashFiles('**/*.csproj') }}
         restore-keys: |
           ${{ inputs.os }}-nuget-
+
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: '8.0.x' # SDK Version to use; x will use the latest version of the 8.0 channel
 
     - if: runner.os == 'macOS' && inputs.node == 16
       shell: bash
@@ -87,10 +87,13 @@ runs:
         brew reinstall pkg-config
         brew bundle dump --file ./Brewfile --force
         echo "$(brew --prefix)"
+        echo "----------------------------------------------"
         ls $(brew --prefix)
         echo "----------------------------------------------"
         ls $(brew --prefix)/Cellar
         # echo "$(cat ./Brewfile)"
+        echo "----------------------------------------------"
+        ls ~$(brew --prefix)/Cellar
 
     # - name: Setup Mono
     #   if: runner.os == 'Linux'
