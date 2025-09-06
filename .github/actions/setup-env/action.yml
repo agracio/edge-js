@@ -66,6 +66,7 @@ runs:
       name: Add missing packages for macOS NodeJs 16 
       run: |
         brew install python-setuptools --overwrite
+        pip install --upgrade --force-reinstall setuptools
 
     - name: Setup Mono
       if: runner.os == 'macOS'
@@ -80,7 +81,8 @@ runs:
       uses: actions/cache@v4
       with:
         path: |
-          $(brew --prefix)/Cellar
+          ~/Library/Caches/Homebrew
+          ~/opt/homebrew/Cellar
         key: ${{ inputs.os }}-brew-${{ hashFiles('./Brewfile') }}
 
     - name: Setup Mono
