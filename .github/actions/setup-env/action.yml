@@ -48,6 +48,17 @@ runs:
         path: node_modules
         key: "node-modules-${{ inputs.os }}-${{ inputs.node }}-${{ hashFiles('package-lock.json') }}"
 
+    - name: Cache Homebrew
+      if: runner.os == 'macOS'
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/opt/homebrew/Cellar/mono
+          ~/opt/homebrew/Cellar/pkgconf
+          ~/opt/homebrew/Cellar/python-setuptools
+        # key: brew-${{ inputs.os }}-${{ hashFiles('./Brewfile') }}
+        key: brew-${{ inputs.os }}
+
     - name: Setup dotnet
       uses: actions/setup-dotnet@v5
       with:
@@ -65,8 +76,8 @@ runs:
       shell: bash
       name: Add missing packages for macOS NodeJs 16 
       run: |
-        # brew install python-setuptools --overwrite
-        pip install --upgrade --force-reinstall setuptools
+        brew install python-setuptools --overwrite # required macos-15
+        pip install --upgrade --force-reinstall setuptools # required macos-13
 
     - name: Setup Mono
       if: runner.os == 'macOS'
@@ -76,15 +87,6 @@ runs:
         brew reinstall pkg-config
         brew bundle dump --file ./Brewfile --force
         echo "$(cat ./Brewfile)"
-
-    - name: Homebrew cache
-      if: runner.os == 'macOS'
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/Library/Caches/Homebrew
-          ~/opt/homebrew/Cellar
-        key: brew-${{ inputs.os }}-${{ hashFiles('./Brewfile') }}
 
     - name: Setup Mono
       if: runner.os == 'Linux'
@@ -99,6 +101,15 @@ runs:
     #   with:
     #     packages: mono-complete pkg-config libglib2.0-dev
     #     version: 1.0
+
+    # - name: Cache Homebrew
+    #   if: runner.os == 'macOS'
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: |
+    #       ~/opt/homebrew/Cellar/mono
+    #       ~/opt/homebrew/Cellar/pkgconf
+    #     key: brew-${{ inputs.os }}
 
     - name: Versions
       shell: bash

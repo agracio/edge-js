@@ -104,7 +104,7 @@ jobs:
           cache-name: cache-node-gyp
         with:
           path: ~/Library/Caches/node-gyp/
-          key: '${{ matrix.os }}-${{ runner.arch }}-${{ matrix.node }}'
+          key: 'node-gyp-${{ runner.os }}-${{ runner.arch }}-${{ matrix.node }}'
 
       - name: Setup env
         uses: ./.github/actions/setup-env
