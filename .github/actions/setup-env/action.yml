@@ -86,21 +86,25 @@ runs:
         brew install mono --overwrite
         brew reinstall pkg-config
         brew bundle dump --file ./Brewfile --force
-        echo "$(cat ./Brewfile)"
+        echo "$(brew --prefix)"
+        ls $(brew --prefix)
+        echo "----------------------------------------------"
+        ls $(brew --prefix)/Cellar
+        # echo "$(cat ./Brewfile)"
 
-    - name: Setup Mono
-      if: runner.os == 'Linux'
-      shell: bash
-      run: |
-        sudo apt -q install mono-complete pkg-config libglib2.0-dev
-
-    # - uses: actions/checkout@v4
-    # - uses: awalsh128/cache-apt-pkgs-action@latest
-    #   name: Setup Mono
+    # - name: Setup Mono
     #   if: runner.os == 'Linux'
-    #   with:
-    #     packages: mono-complete pkg-config libglib2.0-dev
-    #     version: 1.0
+    #   shell: bash
+    #   run: |
+    #     sudo apt -q install mono-complete pkg-config libglib2.0-dev
+
+    - uses: actions/checkout@v4
+    - uses: awalsh128/cache-apt-pkgs-action@latest
+      name: Setup Mono
+      if: runner.os == 'Linux'
+      with:
+        packages: mono-complete pkg-config libglib2.0-dev
+        version: 1.0
 
     # - name: Cache Homebrew
     #   if: runner.os == 'macOS'
