@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'test/double/**'
+      - 'test/double/double_test/*'
+      - 'test/double/double_test/**/*'
+      - 'appveyor_double.yml'
+      - 'src/double/Edge.js/dotnet/EdgeJs.cs'
+  push:
+    paths:
+      - 'test/double/**'
+      - 'test/double/double_test/*'
+      - 'test/double/double_test/**/*'
+      - 'appveyor_double.yml'
+      - 'src/double/Edge.js/dotnet/EdgeJs.cs'
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true # required to setup CSC
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1 
+  DOTNET_NOLOGO: 1 
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+
+jobs:
+  test:
+    runs-on: windows-2025
+    name: test-double-windows-2025
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install NUnit.ConsoleRunner
+        run: nuget install NUnit.ConsoleRunner -Version 3.20.1 -DirectDownload -OutputDirectory .
+
+      - name: build
+        run: dotnet build test/double/double_test/double_test.sln --configuration Release
+
+      - name: test
+        run: ./NUnit.ConsoleRunner.3.20.1/tools/nunit3-console.exe test/double/double_test/bin/Release/net462/double_test.dll --result=test-results.xml
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-2025-double-test-results
+          path: |
+            test-results.xml
+
+
