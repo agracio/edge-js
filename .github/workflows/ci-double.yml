@@ -1,9 +1,10 @@
-name: CI
+name: CI-nuget
 
 on:
   workflow_dispatch:
   pull_request:
     paths:
+      - '.github/workflows/ci-double.yml'
       - 'test/double/**'
       - 'test/double/double_test/*'
       - 'test/double/double_test/**/*'
@@ -11,6 +12,7 @@ on:
       - 'src/double/Edge.js/dotnet/EdgeJs.cs'
   push:
     paths:
+      - '.github/workflows/ci-double.yml'
       - 'test/double/**'
       - 'test/double/double_test/*'
       - 'test/double/double_test/**/*'
@@ -45,7 +47,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: windows-2025-double-test-results
+          name: windows-2025-nuget-test-results
           path: |
             test-results.xml
 
