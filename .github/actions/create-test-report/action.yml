@@ -5,6 +5,10 @@ inputs:
     description: 'name'
     required: false
     default: 'test-results'
+  test-name:
+    description: 'test name'
+    required: false
+    default: ''
   node:
     description: 'Node.js version'
     required: true
@@ -112,6 +116,21 @@ runs:
             }
           } catch(err) {
             core.error("Error while reading or parsing mochawesome.json")
+            core.setFailed(err)
+          }
+
+    - name: Test report name
+      uses: actions/github-script@v7
+      with:
+        result-encoding: string
+        script: |
+          try {
+            let testName = `${{ inputs.name }}-${{ inputs.os }}-node-${{ inputs.node }}`;
+            if(${{ inputs.test-name }} && ${{ inputs.test-name }} !== '') {
+              testName = `${{ inputs.test-name }}`;
+            }
+          } catch(err) {
+            core.error("Error creating test report name")
             core.setFailed(err)
           }
 
