@@ -129,6 +129,7 @@ runs:
             if(${{ inputs.test-name }} && ${{ inputs.test-name }} !== '') {
               testName = `${{ inputs.test-name }}`;
             }
+            core.exportVariable('test-name', testName);
           } catch(err) {
             core.error("Error creating test report name")
             core.setFailed(err)
@@ -154,7 +155,7 @@ runs:
       uses: actions/upload-artifact@v4
       if: ${{ inputs.upload == 'true' && success() }}
       with:
-        name: ${{ inputs.name }}-${{ inputs.os }}-${{ inputs.node }}
+        name: ${{ env.test-name }}
         path: |
           test-results.xml
           mochawesome.json
