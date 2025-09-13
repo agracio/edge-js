@@ -126,7 +126,7 @@ runs:
         script: |
           try {
             let testName = `${{ inputs.name }}-${{ inputs.os }}-node-${{ inputs.node }}`;
-            if(${{ inputs.test-name }} && ${{ inputs.test-name }} !== '') {
+            if(${{ inputs.test-name }} !== '') {
               testName = `${{ inputs.test-name }}`;
             }
             core.exportVariable('test-name', testName);
