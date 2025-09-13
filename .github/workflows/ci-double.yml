@@ -46,7 +46,7 @@ jobs:
         run: ./NUnit.ConsoleRunner.3.20.1/tools/nunit3-console.exe test/double/double_test/bin/Release/net462/double_test.dll --result=test-results.xml
 
       - name: Convert test results
-        run: mochawesome-converter --testFile test-results.xml --testType nunit --reportDir . --reportFilename mochawesome.json
+        run: mochawesome-converter --testFile test-results.xml --testType nunit --reportDir . --reportFile mochawesome.json
 
       - name: Test report
         uses: ./.github/actions/create-test-report
