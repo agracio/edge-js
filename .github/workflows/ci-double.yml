@@ -1,4 +1,4 @@
-name: CI-nuget
+name: CI nuget
 
 on:
   workflow_dispatch:
@@ -38,17 +38,30 @@ jobs:
       - name: Install NUnit.ConsoleRunner
         run: nuget install NUnit.ConsoleRunner -Version 3.20.1 -DirectDownload -OutputDirectory .
 
+      - name: Install mochawesome-converter
+        run: npm install -g mochawesome-converter
+
       - name: build
         run: dotnet build test/double/double_test/double_test.sln --configuration Release
 
       - name: test
         run: ./NUnit.ConsoleRunner.3.20.1/tools/nunit3-console.exe test/double/double_test/bin/Release/net462/double_test.dll --result=test-results.xml
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - name: convert test results
+        run: mochawesome-convert --testFile test-results.xml  --testType nunit --reportDir . --reportFilename mochawesome.json
+
+      - name: Test report
+        uses: ./.github/actions/create-test-report
         with:
-          name: windows-2025-nuget-test-results
-          path: |
-            test-results.xml
+          node: 22
+          os: windows-2025
+          test-name: windows-2025-nuget-test-results
+
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: windows-2025-nuget-test-results
+      #     path: |
+      #       test-results.xml
 
 
