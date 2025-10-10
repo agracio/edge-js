@@ -10,6 +10,7 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
 
 jobs:
+
   build-18:
     uses: ./.github/workflows/build.yml
     with:
@@ -34,9 +35,15 @@ jobs:
       version: 24
       build-all: true
 
+  build-25:
+    uses: ./.github/workflows/build.yml
+    with:
+      version: 25
+      build-all: true
+
   upload-artifacts:
     runs-on: ubuntu-latest
-    needs: [build-18, build-20, build-22, build-24]
+    needs: [build-18, build-20, build-22, build-24, build-25]
     timeout-minutes: 20
 
     name: upload artifcts
