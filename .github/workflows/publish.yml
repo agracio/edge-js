@@ -41,6 +41,7 @@ jobs:
       - name: Publish package
         run: |
           echo "Publishing version ${{ env.version }}"
+          mkdir package
           npm pack --pack-destination package
           ls -R package
           #   npm publish
