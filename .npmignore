@@ -113,3 +113,5 @@ CMakeLists.txt
 CMake/
 node.txt
 tools/build*.js
+.gitattributes
+Dockerfile
