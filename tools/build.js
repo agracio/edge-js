@@ -18,7 +18,8 @@ if (!nodejsVersion) {
 if(!nodejsVersion.includes('.')){
     console.log();
     console.log(`Resolving latest Node.js version for major version ${nodejsVersion}...`);
-    version = require('./getVersion')(nodejsVersion);
+    // version = require('./getVersion')(nodejsVersion);
+    version = execSync(`node tools/getVersion.js ${nodejsVersion}`);
     console.log(`Resolved Node.js version ${version}`);
 }
 else{
