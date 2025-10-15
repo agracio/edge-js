@@ -38,12 +38,10 @@ jobs:
       # Ensure npm 11.5.1 or later is installed
       - run: npm install -g npm@latest
 
-      - name: Publish package
+      - name: Publish edge-js-${{ env.version }} to npm
         run: |
-          echo "Publishing version ${{ env.version }}"
           mkdir package
           npm pack --pack-destination package
-          ls -R package
           #   npm publish
 
       - name: Upload artifacts
