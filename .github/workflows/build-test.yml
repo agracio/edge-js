@@ -103,13 +103,6 @@ jobs:
           script: |
               core.notice('Skipping arm64 tests on Windows ARM for Node.js version ' + ${{ inputs.version }});
 
-      - name: Setup env
-        if: inputs.os != 'windows-11-arm' || inputs.version >= 20
-        uses: ./.github/actions/setup-env
-        with:
-          node: ${{ inputs.version }}
-          os: ${{ inputs.os }}
-
       - name: Check edge-js Windows pre-built files
         if: runner.os == 'Windows' && (inputs.os != 'windows-11-arm' || inputs.version >= 20)
         uses: andstor/file-existence-action@v3
@@ -125,6 +118,13 @@ jobs:
           files: "lib/native/darwin/${{ runner.arch }}/${{ inputs.version }}/edge_coreclr.node, lib/native/darwin/${{ runner.arch }}/${{ inputs.version }}/edge_nativeclr.node"
           fail: true
           ignore_case: true
+
+      - name: Setup env
+        if: inputs.os != 'windows-11-arm' || inputs.version >= 20
+        uses: ./.github/actions/setup-env
+        with:
+          node: ${{ inputs.version }}
+          os: ${{ inputs.os }}
 
       - name: "Run .net core tests"
         if: inputs.os != 'windows-11-arm' || inputs.version >= 20
