@@ -90,6 +90,7 @@ https://github.com/agracio/edge-js-quick-start
 | 20.x    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | 22.x    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | 24.x    | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+| 25.x    | :x:                | :heavy_check_mark: | :heavy_check_mark: |
 
 
 ### macOS binaries pre-compiled for
@@ -100,19 +101,20 @@ https://github.com/agracio/edge-js-quick-start
 | 20.x    | :heavy_check_mark: | :heavy_check_mark: |
 | 22.x    | :heavy_check_mark: | :heavy_check_mark: |
 | 24.x    | :heavy_check_mark: | :heavy_check_mark: |
+| 25.x    | :heavy_check_mark: | :heavy_check_mark: |
 
 #### Supports
 
 | Version     | x64                | arm64              |
 |-------------|--------------------|--------------------|
-| 16.x - 24.x | :heavy_check_mark: | :heavy_check_mark: |
+| 16.x - 25.x | :heavy_check_mark: | :heavy_check_mark: |
 
 
 ### Linux
 
 | Version     | x64                | arm64              |
 |-------------|--------------------|--------------------|
-| 16.x - 24.x | :heavy_check_mark: | :heavy_check_mark: |
+| 16.x - 25.x | :heavy_check_mark: | :heavy_check_mark: |
 
 Other Linux architectures might work but have not been tested.
 
