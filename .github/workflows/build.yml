@@ -44,7 +44,7 @@ jobs:
         id: test-matrix
         run: |
           echo "::notice::Starting build for Node.js ${{ inputs.version }}"
-          echo "matrix={'include':[{\"name\":\"test-win-x64\",\"os\":\"windows-2025\",\"platform\":\"win\"},{\"name\":\"test-win-arm64\",\"os\":\"windows-11-arm\",\"platform\":\"win\"},{\"name\":\"test-darwin-x64\",\"os\":\"macos-13\",\"platform\":\"darwin\"},{\"name\":\"test-darwin-arm64\",\"os\":\"macos-15\",\"platform\":\"darwin\"}]}" >> $GITHUB_OUTPUT
+          echo "matrix={'include':[{\"name\":\"test-win-x64\",\"os\":\"windows-2025\",\"platform\":\"win\"},{\"name\":\"test-win-arm64\",\"os\":\"windows-11-arm\",\"platform\":\"win\"},{\"name\":\"test-darwin-x64\",\"os\":\"macos-15-intel\",\"platform\":\"darwin\"},{\"name\":\"test-darwin-arm64\",\"os\":\"macos-15\",\"platform\":\"darwin\"}]}" >> $GITHUB_OUTPUT
 
   node-version:
     runs-on: ubuntu-latest
@@ -99,7 +99,7 @@ jobs:
     uses: ./.github/workflows/build-edge.yml
     with:
       version: ${{ inputs.version }}
-      os: macos-13
+      os: macos-15-intel
       platform: darwin
       arch: x64
       node: ${{ needs.node-version.outputs.node-version }}
