@@ -93,9 +93,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15-intel, macos-15, ubuntu-24.04, ubuntu-22.04-arm]
+        os: [macos-13, macos-15, ubuntu-24.04, ubuntu-22.04-arm]
         # os: [macos-15]
-        node: [16, 25]
+        node: [16]
     steps:
 
       - name: Checkout code
