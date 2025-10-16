@@ -103,7 +103,7 @@ runs:
     #   run: |
     #     sudo apt -q install mono-complete pkg-config libglib2.0-dev
 
-    - uses: actions/checkout@v4
+    # - uses: actions/checkout@v4
     - uses: awalsh128/cache-apt-pkgs-action@latest
       name: Setup Mono
       if: runner.os == 'Linux'
