@@ -15,6 +15,9 @@
 # permissions and limitations under the License.
 ##
 {
+  'variables' : {
+    'openssl_fips': '',
+  },
   'targets': [
     {
       'target_name': 'edge_coreclr',
