@@ -7,7 +7,7 @@ permissions:
   id-token: write  # Required for OIDC
   contents: read
 env:
-  node: 22
+  node: 24
 
 jobs:
   publish:
