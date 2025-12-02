@@ -171,7 +171,7 @@ describe('edge-cs', function () {
     });
 
     it(prefix + ' fails when Startup class is missing', function () {
-        if(process.env.EDGE_USE_CORECLR && process.platform == 'linux'){
+        if(process.env.EDGE_USE_CORECLR && (process.platform == 'linux' || process.platform == 'darwin')) {
             this.skip();
         }
         assert.throws(
