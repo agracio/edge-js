@@ -93,7 +93,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-15-intel, macos-15, ubuntu-24.04, ubuntu-22.04-arm, windows-2025, windows-11-arm]
-        node: [18, 20, 22, 24, 25]
+        node: [20, 22, 24, 26]
         # os: [macos-15]
         # node: [20]
     steps:
