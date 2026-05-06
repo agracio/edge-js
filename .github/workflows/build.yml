@@ -6,14 +6,13 @@ on:
       version:
         description: 'Node.js version to build'
         required: true
-        default: '20'
+        default: '26'
         type: choice
         options:
-        - 18
         - 20
         - 22
         - 24
-        - 25
+        - 26
 
   workflow_call:
     inputs:

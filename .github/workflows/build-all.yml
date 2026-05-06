@@ -11,12 +11,6 @@ env:
 
 jobs:
 
-  build-18:
-    uses: ./.github/workflows/build.yml
-    with:
-      version: 18
-      build-all: true
-
   build-20:
     uses: ./.github/workflows/build.yml
     with:
@@ -35,15 +29,15 @@ jobs:
       version: 24
       build-all: true
 
-  build-25:
+  build-26:
     uses: ./.github/workflows/build.yml
     with:
-      version: 25
+      version: 26
       build-all: true
 
   upload-artifacts:
     runs-on: ubuntu-latest
-    needs: [build-18, build-20, build-22, build-24, build-25]
+    needs: [build-20, build-22, build-24, build-26]
     timeout-minutes: 20
 
     name: upload artifcts
