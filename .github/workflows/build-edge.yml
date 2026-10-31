@@ -109,7 +109,7 @@ jobs:
     
       - name: Upload artifacts
         if: ${{ (runner.os == 'Windows' && success()) && ((inputs.arch == 'ia32' && inputs.version < 23) || (inputs.arch == 'arm64' && runner.os == 'Windows' && inputs.version > 19) || (inputs.arch == 'x64')) }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: win32-edge-js-${{ inputs.arch }}-${{ inputs.version }}
           path: |
@@ -117,7 +117,7 @@ jobs:
 
       - name: Upload artifacts
         if: ${{ (runner.os == 'macOS' && success())}}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: darwin-edge-js-${{ inputs.arch }}-${{ inputs.version }}
           path: |
