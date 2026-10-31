@@ -6,7 +6,11 @@ NAN_METHOD(coreClrV8FuncCallback)
 
     Nan::HandleScope scope;
     v8::Local<v8::External> correlator = v8::Local<v8::External>::Cast(info[2]);
+#ifdef V8_EXTERNAL_POINTER_TAG_COUNT
+    CoreClrNodejsFuncInvokeContext* context = (CoreClrNodejsFuncInvokeContext*)(correlator->Value(v8::kExternalPointerTypeTagDefault));
+#else
     CoreClrNodejsFuncInvokeContext* context = (CoreClrNodejsFuncInvokeContext*)(correlator->Value());
+#endif
 
     if (!info[0]->IsUndefined() && !info[0]->IsNull())
     {

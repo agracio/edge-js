@@ -16,7 +16,11 @@ NAN_METHOD(coreClrFuncProxy)
     DBG("coreClrFuncProxy");
     Nan::EscapableHandleScope scope;
     v8::Local<v8::External> correlator = v8::Local<v8::External>::Cast(info[2]);
+#ifdef V8_EXTERNAL_POINTER_TAG_COUNT
+    CoreClrFuncWrap* wrap = (CoreClrFuncWrap*)(correlator->Value(v8::kExternalPointerTypeTagDefault));
+#else
     CoreClrFuncWrap* wrap = (CoreClrFuncWrap*)(correlator->Value());
+#endif
     CoreClrFunc* clrFunc = wrap->clrFunc;
     info.GetReturnValue().Set(clrFunc->Call(info[0], info[1]));
 }

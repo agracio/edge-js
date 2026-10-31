@@ -21,7 +21,11 @@ NAN_METHOD(v8FuncCallback)
     DBG("v8FuncCallback");
     Nan::HandleScope scope;
     v8::Local<v8::External> correlator = v8::Local<v8::External>::Cast(info[2]);
+#ifdef V8_EXTERNAL_POINTER_TAG_COUNT
+    NodejsFuncInvokeContextWrap* wrap = (NodejsFuncInvokeContextWrap*)(correlator->Value(v8::kExternalPointerTypeTagDefault));
+#else
     NodejsFuncInvokeContextWrap* wrap = (NodejsFuncInvokeContextWrap*)(correlator->Value());
+#endif
     NodejsFuncInvokeContext^ context = wrap->context;
     wrap->context = nullptr;
     if (!info[0]->IsUndefined() && !info[0]->IsNull())
