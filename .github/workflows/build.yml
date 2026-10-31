@@ -53,7 +53,7 @@ jobs:
     name: node-version
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Get Node.js version
         id: node-test-version
@@ -136,14 +136,14 @@ jobs:
     steps:
 
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         
         with:
           path: release
           pattern: '*-edge-js*'
 
       - name: Upload artifacts
-        uses: actions/upload-artifact/merge@v4
+        uses: actions/upload-artifact/merge@v7
         with:
           name: edge-js-${{ inputs.version }}
           pattern: '*edge-js*'

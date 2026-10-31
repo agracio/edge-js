@@ -31,7 +31,7 @@ jobs:
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install NUnit.ConsoleRunner
         run: nuget install NUnit.ConsoleRunner -Version 3.20.1 -DirectDownload -OutputDirectory .

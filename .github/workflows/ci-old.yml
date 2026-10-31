@@ -99,11 +99,11 @@ jobs:
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - if: runner.os == 'macOS'
         name: Cache node-gyp macOS
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         env:
           cache-name: cache-node-gyp
         with:

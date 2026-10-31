@@ -25,7 +25,7 @@ runs:
   steps:
 
     - name: Test report
-      uses: actions/github-script@v7
+      uses: actions/github-script@v9
       with:
         result-encoding: string
         script: |
@@ -120,7 +120,7 @@ runs:
           }
 
     - name: Test report name
-      uses: actions/github-script@v7
+      uses: actions/github-script@v9
       with:
         result-encoding: string
         script: |

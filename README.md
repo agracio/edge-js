@@ -41,7 +41,7 @@ Read more about the background and motivations of the project [here](http://toma
 
 ## Updates
 * Support for new versions of Node.Js.
-* Support for .NET Core 3.1 - 9.x on Windows/Linux/macOS.
+* Support for latest .NET Core versions on Windows/Linux/macOS.
 * Fixes AccessViolationException when running Node.js code from C# [PR #573](https://github.com/tjanczuk/edge/pull/573).
 * Fixes StackOverflowException [PR #566](https://github.com/tjanczuk/edge/pull/566) that occurs when underlying C# code throws complex exception.
 * Fixes issues [#469](https://github.com/tjanczuk/edge/issues/469), [#713](https://github.com/tjanczuk/edge/issues/713)

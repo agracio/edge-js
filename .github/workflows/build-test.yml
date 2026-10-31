@@ -34,15 +34,15 @@ jobs:
     runs-on: ${{ inputs.os }}
     environment: ${{ inputs.environment }}
     name: ${{ inputs.name }}-node-${{ inputs.version }}
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Create release folder
         if: inputs.os != 'windows-11-arm' || inputs.version >= 20
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           result-encoding: string
           script: |
@@ -58,16 +58,26 @@ jobs:
               core.setFailed(err)
             }
 
+      - name: Update version for Node 27 Alpha
+        uses: actions/github-script@v9
+        with:
+          result-encoding: string
+          script: |
+              const version = inputs.version;
+              console.log(`Node version: ${version}`)
+              core.exportVariable('node_version', Number(version) == 27 ? 'latest' : version)
+
+
       - name: Download artifacts
         if: runner.os == 'Windows' && (inputs.os != 'windows-11-arm' || inputs.version >= 20)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: release
           pattern: win32-edge-js-*-${{ inputs.version }}*
 
       - name: Download artifacts
         if: runner.os == 'macOS'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: release
           pattern: darwin-edge-js-*-${{ inputs.version }}*
@@ -79,7 +89,7 @@ jobs:
 
       - name: Copy artifacts
         if: inputs.os != 'windows-11-arm' || inputs.version >= 20
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           result-encoding: string
           script: |
@@ -97,7 +107,7 @@ jobs:
 
       - name: Skip arm64 tests
         if: inputs.os == 'windows-11-arm' && inputs.version < 20
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           result-encoding: string
           script: |
@@ -123,7 +133,7 @@ jobs:
         if: inputs.os != 'windows-11-arm' || inputs.version >= 20
         uses: ./.github/actions/setup-env
         with:
-          node: ${{ inputs.version }}
+          node: ${{ env.node_version }}
           os: ${{ inputs.os }}
 
       - name: "Run .net core tests"
