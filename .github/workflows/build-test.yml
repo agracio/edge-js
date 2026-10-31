@@ -63,7 +63,7 @@ jobs:
         with:
           result-encoding: string
           script: |
-              const version = inputs.version;
+              const version = ${{ inputs.version }};
               console.log(`Node version: ${version}`)
               core.exportVariable('node_version', Number(version) == 27 ? 'latest' : version)
 
