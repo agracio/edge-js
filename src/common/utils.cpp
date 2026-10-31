@@ -21,7 +21,7 @@ v8::Local<Value> throwV8Exception(const char* format, ...)
 	Nan::EscapableHandleScope scope;
 
 	v8::Local<v8::Object> exception = Nan::New<v8::Object>();
-#if defined(V8_MAJOR_VERSION) && (V8_MAJOR_VERSION >= 14)
+#if defined(V8_MAJOR_VERSION) && V8_MAJOR_VERSION == 14 && (!defined(V8_MINOR_VERSION) || V8_MINOR_VERSION < 7)
 	exception->SetPrototypeV2(Nan::GetCurrentContext(), v8::Exception::Error(Nan::New<v8::String>(message).ToLocalChecked()));
 #else
 	exception->SetPrototype(Nan::GetCurrentContext(), v8::Exception::Error(Nan::New<v8::String>(message).ToLocalChecked()));
