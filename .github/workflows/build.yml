@@ -13,6 +13,7 @@ on:
         - 22
         - 24
         - 26
+        - 27
 
   workflow_call:
     inputs:
