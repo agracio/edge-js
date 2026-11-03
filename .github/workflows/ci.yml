@@ -101,34 +101,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Skip arm64 tests
-        if: matrix.os == 'windows-11-arm' && matrix.node < 20
-        uses: actions/github-script@v9
-        with:
-          result-encoding: string
-          script: |
-              core.notice('Skipping arm64 tests on Windows ARM for Node.js version ' + ${{ matrix.node }});
+      # - name: Skip arm64 tests
+      #   if: matrix.os == 'windows-11-arm' && matrix.node < 20
+      #   uses: actions/github-script@v9
+      #   with:
+      #     result-encoding: string
+      #     script: |
+      #         core.notice('Skipping arm64 tests on Windows ARM for Node.js version ' + ${{ matrix.node }});
 
       - name: Setup env
-        if: matrix.os != 'windows-11-arm' || matrix.node >= 20
+        # if: matrix.os != 'windows-11-arm' || matrix.node >= 20 || matrix.node == 'latest'
         uses: ./.github/actions/setup-env
         with:
           node: ${{ matrix.node }}
           os: ${{ matrix.os }}
 
-      - name: Run .NET 4.5 tests
-        if: matrix.os != 'windows-11-arm' || matrix.node >= 20
+      - name: Run .NET 4.5/Mono tests
+        # if: matrix.os != 'windows-11-arm' || matrix.node >= 20 || matrix.node == 'latest'
         shell: bash
         run: node tools/test.js CI
 
       - name: "Run .net core tests"
-        if: matrix.os != 'windows-11-arm' || matrix.node >= 20
+        # if: matrix.os != 'windows-11-arm' || matrix.node >= 20 || matrix.node == 'latest'
         run: node tools/test.js CI
         env:
           EDGE_USE_CORECLR: 1
 
       - name: Test report
-        if: matrix.os != 'windows-11-arm' || matrix.node >= 20
+        # if: matrix.os != 'windows-11-arm' || matrix.node >= 20 || matrix.node == 'latest'
         uses: ./.github/actions/create-test-report
         with:
           node: ${{ matrix.node }}
